@@ -54,7 +54,7 @@
       return;
     }
 
-    // Build cloud buttons matching the existing header style (.btn .btn-outline / .btn-primary .btn-sm).
+    // Build cloud buttons matching the existing header style.
     const cloudWrap = document.createElement('div');
     cloudWrap.style.cssText = 'display:inline-flex;gap:6px;align-items:center;padding-right:8px;margin-right:4px;border-right:1px solid rgba(0,0,0,0.12)';
 
@@ -63,7 +63,7 @@
     btnCloudOpen.id = 'op-btnCloudOpen';
     btnCloudOpen.className = 'btn btn-outline btn-sm';
     btnCloudOpen.title = 'Open a saved RAMS from your account';
-    btnCloudOpen.textContent = 'Cloud Open…';
+    btnCloudOpen.textContent = 'Cloud Open\u2026';
     btnCloudOpen.addEventListener('click', openSavedModal);
 
     const btnCloudSave = document.createElement('button');
@@ -92,15 +92,24 @@
       window.location.href = LOGIN_PAGE;
     });
 
-    // If the URL says ?id=<uuid>, auto-load that record on entry.
+    // If the URL has ?id=<uuid>, auto-load that record on entry — but use
+    // sessionStorage to break the load -> reload -> load loop. After loadById
+    // applies state and reloads, on the next page-load we see the flag and
+    // skip re-loading (the record's state is already in localStorage).
     const params = new URLSearchParams(window.location.search);
     const idFromUrl = params.get('id');
-    if (idFromUrl) loadById(idFromUrl);
+    if (idFromUrl) {
+      const justLoaded = sessionStorage.getItem('op-just-loaded-id');
+      if (justLoaded === idFromUrl) {
+        sessionStorage.removeItem('op-just-loaded-id');
+        currentId = idFromUrl;
+      } else {
+        loadById(idFromUrl);
+      }
+    }
   }
 
   // ---------- State snapshot / restore ----------
-  // Read every localStorage key matching the OP RAMS prefixes into a plain
-  // object. Returns { keys: { "easytravel.ramsv1.ra.forms": "...", ... } }.
   function snapshotState() {
     const keys = {};
     try {
@@ -117,14 +126,10 @@
     return { keys, savedAt: new Date().toISOString() };
   }
 
-  // Replace local state with the saved state, then reload so the app's own
-  // DOMContentLoaded → restoreAll() rehydrates the DOM from localStorage.
   function applyStateAndReload(state) {
     if (!state || typeof state !== 'object') return;
     const keys = state.keys || {};
     try {
-      // Wipe existing entries under our prefixes so a load is a true replace,
-      // not a merge (otherwise stale rows from the previous record would survive).
       const toDelete = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
@@ -133,8 +138,6 @@
         }
       }
       toDelete.forEach(k => localStorage.removeItem(k));
-
-      // Write the saved snapshot.
       Object.entries(keys).forEach(([k, v]) => {
         if (typeof v === 'string') localStorage.setItem(k, v);
       });
@@ -143,7 +146,6 @@
       alert('Could not load record into local storage: ' + (err && err.message || 'unknown'));
       return;
     }
-    // Reload so the app's init runs with the new state present.
     location.reload();
   }
 
@@ -151,7 +153,7 @@
   async function handleCloudSave() {
     const btn = document.getElementById('op-btnCloudSave');
     const original = btn ? btn.textContent : '';
-    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving\u2026'; }
 
     try {
       const state = snapshotState();
@@ -160,18 +162,17 @@
       if (currentId) {
         await window.api.updateAssessment(currentId, { name, state });
       } else {
-        // Ask the user to confirm/edit the name on first save.
         const userName = prompt('Save this RAMS to your account as:', name);
         if (userName == null) {
           if (btn) { btn.disabled = false; btn.textContent = original; }
-          return; // cancelled
+          return;
         }
         const finalName = (userName.trim() || name).slice(0, 250);
         const { assessment } = await window.api.createAssessment(finalName, state);
         currentId = assessment.id;
         rewriteUrlWithId(currentId);
       }
-      if (btn) btn.textContent = 'Saved ✓';
+      if (btn) btn.textContent = 'Saved \u2713';
       flashSaveIndicator('Cloud saved');
       setTimeout(() => { if (btn) { btn.textContent = original; btn.disabled = false; } }, 1500);
     } catch (err) {
@@ -183,12 +184,10 @@
     }
   }
 
-  // Build a friendly record name from brand name + active sheet info.
   function derivePrettyName() {
     try {
       const brandName = (localStorage.getItem('brand.name') || '').trim();
       const date = new Date().toISOString().slice(0, 10);
-      // Try to grab a project/site label from the first letterhead field if present.
       const firstHeadField = document.querySelector('[data-key*="title"], [data-key*="project"], [data-key*="site"], .letterhead [contenteditable]');
       let projectLabel = '';
       if (firstHeadField) {
@@ -198,13 +197,12 @@
       if (brandName) parts.push(brandName);
       if (projectLabel) parts.push(projectLabel);
       parts.push('RAMS ' + date);
-      return parts.join(' — ').slice(0, 250);
+      return parts.join(' \u2014 ').slice(0, 250);
     } catch {
-      return 'Operational RAMS — ' + new Date().toISOString().slice(0, 10);
+      return 'Operational RAMS \u2014 ' + new Date().toISOString().slice(0, 10);
     }
   }
 
-  // Briefly flash a message in the existing #saveIndicator span.
   function flashSaveIndicator(msg) {
     const ind = document.getElementById('saveIndicator');
     if (!ind) return;
@@ -225,22 +223,18 @@
   async function openSavedModal() {
     const backdrop = document.createElement('div');
     backdrop.id = 'op-saved-backdrop';
-    backdrop.style.cssText = `
-      position:fixed;inset:0;background:rgba(17,24,39,0.55);z-index:9999;
-      display:flex;align-items:center;justify-content:center;padding:20px;
-      font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
-    `;
+    backdrop.style.cssText = 'position:fixed;inset:0;background:rgba(17,24,39,0.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,-apple-system,Segoe UI,sans-serif;';
     backdrop.innerHTML = `
       <div style="background:#fff;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,0.25);width:100%;max-width:560px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden">
         <div style="padding:16px 20px;border-bottom:1px solid #e6e8ec;display:flex;justify-content:space-between;align-items:center">
           <div>
             <div style="font-size:15px;font-weight:700;color:#1f2a44">Your saved RAMS</div>
-            <div style="font-size:12px;color:#6b7280;margin-top:2px">Cloud-synced — available from any device</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:2px">Cloud-synced \u2014 available from any device</div>
           </div>
           <button type="button" id="op-modal-close" class="btn btn-outline btn-sm">Close</button>
         </div>
         <div id="op-modal-body" style="padding:16px 20px;overflow:auto;flex:1">
-          <div style="color:#6b7280;font-style:italic">Loading…</div>
+          <div style="color:#6b7280;font-style:italic">Loading\u2026</div>
         </div>
         <div style="padding:12px 20px;border-top:1px solid #e6e8ec;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#6b7280">
           <span>Tip: click <b>Cloud Save</b> to push the current RAMS to your account.</span>
@@ -257,7 +251,6 @@
       if (!confirm('Start a blank RAMS? Unsaved changes in the current form will be lost.')) return;
       currentId = null;
       rewriteUrlWithId('');
-      // Wipe local prefix keys so reload starts clean.
       try {
         const toDelete = [];
         for (let i = 0; i < localStorage.length; i++) {
@@ -266,7 +259,7 @@
         }
         toDelete.forEach(k => localStorage.removeItem(k));
       } catch {}
-      window.location.href = window.location.pathname; // reload with no query
+      window.location.href = window.location.pathname;
     });
 
     await populateSavedList(document.getElementById('op-modal-body'), close);
@@ -307,7 +300,7 @@
       container.querySelectorAll('[data-rename]').forEach((b) => b.addEventListener('click', async () => {
         const id = b.dataset.rename;
         const row = container.querySelector(`[data-row="${id}"]`);
-        const currentName = row?.querySelector('div > div')?.textContent || '';
+        const currentName = row ? row.querySelector('div > div').textContent : '';
         const newName = prompt('Rename to:', currentName);
         if (!newName || newName.trim() === currentName) return;
         try {
@@ -337,7 +330,7 @@
         }
       }));
     } catch (err) {
-      container.innerHTML = `<div style="color:#c0392b">Could not load your saved records: ${escapeHtml(err && err.message ? err.message : 'unknown error')}</div>`;
+      container.innerHTML = '<div style="color:#c0392b">Could not load your saved records: ' + escapeHtml(err && err.message ? err.message : 'unknown error') + '</div>';
     }
   }
 
@@ -346,6 +339,10 @@
       const { assessment } = await window.api.getAssessment(id);
       currentId = assessment.id;
       rewriteUrlWithId(currentId);
+      // Mark that we just loaded this record. On the post-reload page-load
+      // the auto-load block in injectHeader sees this flag and skips
+      // re-fetching, breaking the load -> reload -> load loop.
+      try { sessionStorage.setItem('op-just-loaded-id', String(currentId)); } catch {}
       applyStateAndReload(assessment.state);
     } catch (err) {
       console.error('[oprams-adapter] loadById failed', err);
