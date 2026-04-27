@@ -7,7 +7,10 @@ export function cookieOptions() {
   return {
     httpOnly: true,
     secure: isProd,
-    sameSite: 'lax',
+    // In prod, frontend (oprams.archerhs.co.uk) and backend (oprams-api.onrender.com)
+    // are on different eTLD+1 — sameSite:'lax' would strip the cookie from every
+    // cross-site fetch, looping the user back to login. 'none' + Secure fixes it.
+    sameSite: isProd ? 'none' : 'lax',
     path: '/',
     // 7 days — matches session TTL.
     maxAge: 7 * 24 * 60 * 60 * 1000,
