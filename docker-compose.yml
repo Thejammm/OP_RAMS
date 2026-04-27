@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: oprams
+      POSTGRES_PASSWORD: oprams
+      POSTGRES_DB: oprams
+    ports:
+      - "5432:5432"
+    volumes:
+      - oprams_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oprams"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://oprams:oprams@db:5432/oprams
+      PORT: "3000"
+      NODE_ENV: development
+      FRONTEND_ORIGIN: http://localhost:3001
+      SESSION_SECRET: ${SESSION_SECRET:-dev-only-secret-change-me}
+    ports:
+      - "3000:3000"
+
+volumes:
+  oprams_pg_data:

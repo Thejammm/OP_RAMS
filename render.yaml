@@ -1,0 +1,51 @@
+# Render.com Blueprint — creates the Postgres DB and the backend web service
+# in one click. See: https://render.com/docs/blueprint-spec
+#
+# To deploy:
+#   1. Commit & push this file to the main branch of github.com/Thejammm/OP_RAMS.
+#   2. In Render: New + -> Blueprint -> pick this repo -> Apply.
+#   3. Fill in the "sync: false" env vars when prompted:
+#        ADMIN_EMAIL      — email you'll log in with as the first admin
+#        ADMIN_PASSWORD   — 12+ characters (or seed-admin.js will reject it)
+#        FRONTEND_ORIGIN  — https://oprams.archerhs.co.uk  (NO trailing slash)
+#   4. First deploy auto-runs migrations + seeds the admin user, then starts.
+#      Watch the logs in the Render dashboard for the "Server listening" line.
+
+databases:
+  - name: oprams-db
+    plan: free
+    databaseName: oprams
+    user: oprams
+    region: frankfurt             # must match the web service region below
+
+services:
+  - type: web
+    name: oprams-api
+    runtime: node
+    plan: free
+    region: frankfurt            # closest free region to the UK
+    rootDir: backend
+    # Free tier: builder has NO database access, so migrate/seed must run at
+    # startup. Render Shell is paid-only, so we bake the idempotent seed-admin
+    # into the startCommand too — running it on every boot is safe.
+    buildCommand: npm install
+    startCommand: npm run migrate && npm run seed && npm start
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: oprams-db
+          property: connectionString
+      - key: DATABASE_SSL
+        value: "true"
+      - key: SESSION_SECRET
+        generateValue: true       # Render generates a strong random value
+      - key: ADMIN_EMAIL
+        sync: false               # You fill this in on first apply
+      - key: ADMIN_PASSWORD
+        sync: false               # You fill this in on first apply (12+ chars)
+      - key: FRONTEND_ORIGIN
+        sync: false               # https://oprams.archerhs.co.uk

@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: oprams
+          POSTGRES_PASSWORD: oprams
+          POSTGRES_DB: oprams
+        ports: [ "5432:5432" ]
+        options: >-
+          --health-cmd "pg_isready -U oprams"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgres://oprams:oprams@localhost:5432/oprams
+      SESSION_SECRET: ci-secret-not-used-in-prod
+      NODE_ENV: test
+      FRONTEND_ORIGIN: http://localhost:3001
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend deps
+        working-directory: backend
+        run: npm install
+
+      - name: Run migrations
+        working-directory: backend
+        run: npm run migrate
+
+      - name: Run tests
+        working-directory: backend
+        run: npm test

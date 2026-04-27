@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Operational RAMS</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f5f6fa;color:#2c3e50;line-height:1.5}
+  .header{background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;padding:20px 30px;display:flex;justify-content:space-between;align-items:center}
+  .header h1{font-size:20px}
+  .header .actions a,.header .actions button{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:13px;cursor:pointer;text-decoration:none;margin-left:8px}
+  .container{max-width:1100px;margin:0 auto;padding:24px 30px}
+  .card{background:#fff;border-radius:10px;padding:24px;margin-bottom:18px;border:1px solid #dce1e8;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+  .card h2{font-size:15px;color:#1a5276;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #dce1e8}
+  .form-row{display:grid;grid-template-columns:2fr 2fr 1fr 1fr auto;gap:10px;align-items:end}
+  label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#7f8c8d;margin-bottom:4px;display:block}
+  input,select{width:100%;padding:8px 10px;border:1.5px solid #dce1e8;border-radius:6px;font-family:inherit;font-size:13px}
+  button{padding:9px 16px;background:#1a5276;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer}
+  button.red{background:#e74c3c}
+  button.amber{background:#f39c12}
+  button.small{padding:5px 10px;font-size:11px}
+  table{width:100%;border-collapse:collapse;margin-top:6px}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #eef0f4;font-size:13px}
+  th{font-size:11px;text-transform:uppercase;color:#7f8c8d;letter-spacing:.4px}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+  .badge.ok{background:#eafaf1;color:#27ae60}
+  .badge.off{background:#fdf2f1;color:#c0392b}
+  .badge.admin{background:#eaf2f8;color:#1a5276}
+  .msg{padding:10px;border-radius:6px;font-size:13px;margin-top:10px;display:none}
+  .msg.ok{background:#eafaf1;color:#27ae60;display:block}
+  .msg.err{background:#fdf2f1;color:#c0392b;display:block}
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>User Administration</h1>
+    <div class="actions">
+      <a href="oprams.html">App</a>
+      <button id="logout">Log out</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2>Create a user</h2>
+      <form class="form-row" id="create-form">
+        <div>
+          <label for="new-email">Email</label>
+          <input type="email" id="new-email" required>
+        </div>
+        <div>
+          <label for="new-password">Password (min 12 chars)</label>
+          <input type="password" id="new-password" minlength="12" required>
+        </div>
+        <div>
+          <label for="new-role">Role</label>
+          <select id="new-role">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div>
+          <label for="new-expiry">Access expires (optional)</label>
+          <input type="date" id="new-expiry">
+        </div>
+        <button type="submit">Create</button>
+      </form>
+      <div class="msg" id="create-msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>Users</h2>
+      <table id="users-table">
+        <thead><tr>
+          <th>Email</th><th>Role</th><th>Status</th><th>Access expires</th><th>Actions</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script>
+    let currentUser = null;
+
+    async function bootstrap() {
+      try {
+        const { user } = await window.api.me();
+        if (user.role !== 'admin') { window.location.href = 'oprams.html'; return; }
+        currentUser = user;
+        await loadUsers();
+      } catch {
+        window.location.href = 'index.html';
+      }
+    }
+
+    async function loadUsers() {
+      const { users } = await window.api.listUsers();
+      const tbody = document.querySelector('#users-table tbody');
+      tbody.innerHTML = '';
+      users.forEach((u) => {
+        const tr = document.createElement('tr');
+        const expiry = u.access_expires_at ? new Date(u.access_expires_at).toLocaleDateString() : '—';
+        tr.innerHTML = `
+          <td>${escapeHtml(u.email)}</td>
+          <td><span class="badge ${u.role === 'admin' ? 'admin' : ''}">${u.role}</span></td>
+          <td><span class="badge ${u.is_active ? 'ok' : 'off'}">${u.is_active ? 'active' : 'inactive'}</span></td>
+          <td>
+            <input type="date" class="expiry-input" data-id="${u.id}" value="${u.access_expires_at ? u.access_expires_at.slice(0,10) : ''}" style="width:150px">
+            <button class="small" data-action="save-expiry" data-id="${u.id}">Save</button>
+          </td>
+          <td>
+            <button class="small amber" data-action="revoke" data-id="${u.id}">Revoke sessions</button>
+            ${u.is_active ? `<button class="small red" data-action="deactivate" data-id="${u.id}" ${u.id === currentUser.id ? 'disabled' : ''}>Deactivate</button>` : `<button class="small" data-action="reactivate" data-id="${u.id}">Reactivate</button>`}
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    document.getElementById('create-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('create-msg');
+      msg.className = 'msg'; msg.textContent = '';
+      try {
+        const email = document.getElementById('new-email').value.trim();
+        const password = document.getElementById('new-password').value;
+        const role = document.getElementById('new-role').value;
+        const expiry = document.getElementById('new-expiry').value;
+        await window.api.createUser({
+          email, password, role,
+          accessExpiresAt: expiry ? new Date(expiry + 'T23:59:59').toISOString() : null,
+        });
+        msg.className = 'msg ok'; msg.textContent = 'User created.';
+        e.target.reset();
+        await loadUsers();
+      } catch (err) {
+        msg.className = 'msg err'; msg.textContent = err.message;
+      }
+    });
+
+    document.querySelector('#users-table').addEventListener('click', async (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const action = btn.dataset.action;
+      try {
+        if (action === 'revoke') {
+          if (!confirm('Kick this user out of all active sessions?')) return;
+          await window.api.revokeSessions(id);
+        } else if (action === 'deactivate') {
+          if (!confirm('Deactivate this user? They will be logged out and unable to log in.')) return;
+          await window.api.deactivateUser(id);
+        } else if (action === 'reactivate') {
+          await window.api.updateUser(id, { isActive: true });
+        } else if (action === 'save-expiry') {
+          const input = document.querySelector(`.expiry-input[data-id="${id}"]`);
+          const value = input.value;
+          await window.api.updateUser(id, {
+            accessExpiresAt: value ? new Date(value + 'T23:59:59').toISOString() : null,
+          });
+        }
+        await loadUsers();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    document.getElementById('logout').addEventListener('click', async () => {
+      await window.api.logout().catch(() => {});
+      window.location.href = 'index.html';
+    });
+
+    bootstrap();
+  </script>
+</body>
+</html>

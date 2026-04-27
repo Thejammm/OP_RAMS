@@ -1,0 +1,4238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Easy Travel — Risk Assessment & Method Statement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   EASY TRAVEL — RA & MS APP
+   Visual system inherited from AHS Workplace Inspection System.
+   Branding hooks: every colour is a CSS var on :root, every brand-text
+   slot is a <span data-brand="..."> and the logo is <img id="brandLogo">
+   plus .brand-letterhead-logo. An external branding app can override
+   them by writing to localStorage keys: brand.logo, brand.primary,
+   brand.accent, brand.text, brand.name, brand.tagline, brand.website,
+   brand.phone, brand.email.
+   ════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root{
+  /* Surface / chrome */
+  --bg:#f2f4f7; --surface:#ffffff;
+  /* Brand — overridable */
+  --primary:#1f2a44;
+  --accent:#f5b301;
+  --accent-light:#fff5d6;
+  --accent-dark:#c98e00;
+  --text:#3a3a3a; --text-muted:#787878;
+  /* Form chrome */
+  --border:#d0d5dd;
+  --input-bg:#f8fafb; --muted-bg:#f2f4f7;
+  /* State colours */
+  --success:#1a7a4a; --success-bg:#e8f7ef; --success-brd:#a7e3c0;
+  --warning:#b45309; --warning-bg:#fef3cd; --warning-brd:#fcd88a;
+  --danger:#b91c1c;  --danger-bg:#fee2e2;  --danger-brd:#fca5a5;
+  --info:#1565c0;    --info-bg:#e3f0ff;    --info-brd:#90bef5;
+  --shadow:0 1px 4px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06);
+  /* Risk badge colours */
+  --risk-low-bg:#e8f7ef;  --risk-low-fg:#1a7a4a;  --risk-low-brd:#a7e3c0;
+  --risk-med-bg:#fef3cd;  --risk-med-fg:#b45309;  --risk-med-brd:#fcd88a;
+  --risk-high-bg:#fee2e2; --risk-high-fg:#b91c1c; --risk-high-brd:#fca5a5;
+}
+
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+
+/* ── Sticky app header ────────────────────────────────── */
+.app-header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:3px solid var(--accent);box-shadow:0 1px 8px rgba(0,0,0,.06);}
+.header-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.header-brand{display:flex;align-items:center;gap:12px;flex-shrink:0;min-width:0;}
+.logo-mark{width:38px;height:38px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0;overflow:hidden;}
+.logo-mark img{width:100%;height:100%;object-fit:contain;}
+.header-text{display:flex;flex-direction:column;min-width:0;}
+.header-title{font-size:15px;font-weight:700;color:var(--primary);letter-spacing:-.01em;}
+.header-sub{font-size:11px;color:var(--text-muted);}
+.header-right{display:flex;align-items:center;gap:8px;}
+.save-indicator{font-size:11px;color:var(--text-muted);white-space:nowrap;}
+
+/* Date chip — uses a real native date input styled to match */
+.lh-date-input{
+  display:block;
+  width:100%;
+  margin-top:2px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  color:var(--primary);
+  background:transparent;
+  border:0;
+  padding:0;
+  text-align:center;
+  cursor:pointer;
+  outline:none;
+  /* Hide the input's outer styling but keep the calendar picker indicator */
+  appearance:none;
+  -webkit-appearance:none;
+}
+.lh-date-input:focus{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+.lh-date-input::-webkit-calendar-picker-indicator{
+  cursor:pointer;
+  filter:opacity(.7);
+  margin-left:4px;
+}
+.lh-date-input::-webkit-calendar-picker-indicator:hover{filter:opacity(1);}
+/* When empty, show "Select Date" via placeholder-like styling */
+.lh-date-input:invalid{color:var(--text-muted);font-weight:600;}
+/* Print: just show the date value as plain text */
+@media print {
+  .lh-date-input{
+    border:0;background:transparent;color:var(--primary);font-weight:700;
+    -webkit-appearance:none;appearance:none;
+  }
+  .lh-date-input::-webkit-calendar-picker-indicator{display:none;}
+}
+/* ── Tabs ────────────────────────────────────────────── */
+.tab-bar{position:sticky;top:64px;z-index:199;background:var(--surface);border-bottom:2px solid var(--border);}
+.tab-bar-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tab-bar-inner::-webkit-scrollbar{display:none;}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:14px 16px 11px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;white-space:nowrap;margin-bottom:-2px;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:6px;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--accent-dark);border-bottom-color:var(--accent);}
+
+/* ── Main / panels ───────────────────────────────────── */
+main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;border-radius:6px;padding:9px 16px;border:1.5px solid transparent;cursor:pointer;transition:all .15s;min-height:40px;white-space:nowrap;background:transparent;color:var(--text);}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--primary);}
+.btn-primary:hover{background:var(--accent-dark);border-color:var(--accent-dark);color:#fff;}
+.btn-outline{background:transparent;border-color:var(--border);color:var(--text);}
+.btn-outline:hover{border-color:var(--primary);}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--text-muted);}
+.btn-ghost:hover{color:var(--primary);background:var(--muted-bg);}
+.btn-danger{background:transparent;border-color:var(--danger-brd);color:var(--danger);}
+.btn-danger:hover{background:var(--danger-bg);}
+.btn-sm{padding:6px 12px;font-size:12px;min-height:32px;}
+
+/* ── Toast ───────────────────────────────────────────── */
+#toast{position:fixed;top:78px;left:50%;transform:translateX(-50%) translateY(-14px);background:var(--primary);color:#fff;font-size:13px;font-weight:600;padding:9px 18px;border-radius:7px;z-index:9999;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.18);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.error{background:var(--danger);}
+#toast.info{background:var(--info);}
+
+/* ════════════════════════════════════════════════════════
+   FORM SHEET — used by both RA and MS panels
+   ════════════════════════════════════════════════════════ */
+.sheet{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);padding:24px;margin-bottom:24px;}
+.sheet-landscape{max-width:100%;}
+
+/* Letterhead */
+.letterhead{display:grid;grid-template-columns:1fr 2fr 1fr;gap:20px;align-items:center;padding:14px 0;border-bottom:3px solid var(--accent);margin-bottom:18px;}
+.lh-left{display:flex;align-items:center;gap:14px;}
+.lh-logo{height:60px;width:auto;max-width:120px;object-fit:contain;}
+.lh-produced{display:flex;flex-direction:column;line-height:1.25;}
+.lh-muted{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:600;}
+.lh-strong{font-size:13px;font-weight:700;color:var(--primary);margin-top:2px;}
+.lh-center{text-align:center;}
+.lh-clientline{display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:6px;}
+.lh-client{font-size:14px;font-weight:700;color:var(--primary);}
+.lh-title{font-size:22px;font-weight:700;color:var(--primary);letter-spacing:-.01em;}
+.lh-subtitle{font-size:13px;color:var(--text-muted);margin-top:2px;}
+.lh-right{display:flex;justify-content:flex-end;}
+.lh-chip{background:var(--accent-light);border:1.5px solid var(--accent);border-radius:8px;padding:8px 14px;text-align:center;cursor:pointer;min-width:130px;}
+.lh-chip:hover{filter:brightness(.96);}
+.lh-chip-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-dark);font-weight:700;}
+.lh-chip-value{font-size:14px;font-weight:700;color:var(--primary);margin-top:2px;}
+
+/* Centred client logo strip */
+.client-logo-section{text-align:center;padding:6px 0 14px;}
+.client-logo-section img{height:70px;width:auto;display:block;margin:0 auto;}
+
+/* Meta band — RA */
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:var(--muted-bg);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px;}
+.meta > div{display:flex;flex-direction:column;gap:3px;}
+.meta .label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);font-weight:700;}
+.meta strong{font-size:13px;font-weight:600;color:var(--text);min-height:18px;outline:none;}
+.meta strong:focus{background:#fff;border-radius:4px;box-shadow:0 0 0 2px var(--accent);}
+@media(max-width:760px){.meta{grid-template-columns:1fr 1fr;}}
+@media(max-width:480px){.meta{grid-template-columns:1fr;}}
+
+/* Section banner */
+.band{background:var(--primary);color:#fff;padding:9px 14px;border-radius:6px;font-size:13px;margin:14px 0;}
+.band strong{color:var(--accent);}
+
+/* Likelihood / Severity matrix */
+.matrix-wrap{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin:16px 0;}
+.matrix-head{background:var(--primary);color:#fff;padding:10px 14px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;text-align:center;}
+.matrix-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.matrix-col{padding:14px;}
+.matrix-col + .matrix-col{border-left:1.5px solid var(--border);}
+.matrix-col h3{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em;}
+.matrix-col .level{font-size:12px;line-height:1.5;padding:8px 0;border-top:1px dashed var(--border);display:flex;gap:10px;align-items:flex-start;}
+.matrix-col .level:first-of-type{border-top:none;}
+.key{display:flex;gap:18px;justify-content:center;padding:10px 14px;background:var(--muted-bg);border-top:1.5px solid var(--border);font-size:12px;}
+.key > div{display:flex;align-items:center;gap:6px;}
+.swatch{width:14px;height:14px;border-radius:3px;display:inline-block;}
+.swatch.low{background:var(--risk-low-fg);}
+.swatch.med{background:var(--risk-med-fg);}
+.swatch.high{background:var(--risk-high-fg);}
+
+/* Risk pills */
+.matrix-col .badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;border:1.5px solid;}
+.matrix-col .badge.low{background:var(--risk-low-bg);color:var(--risk-low-fg);border-color:var(--risk-low-brd);}
+.matrix-col .badge.med{background:var(--risk-med-bg);color:var(--risk-med-fg);border-color:var(--risk-med-brd);}
+.matrix-col .badge.high{background:var(--risk-high-bg);color:var(--risk-high-fg);border-color:var(--risk-high-brd);}
+
+/* Generic table styles */
+.table{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0 16px;}
+.table th,.table td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top;}
+.table thead th{background:var(--primary);color:#fff;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+.table .center{text-align:center;}
+.table .muted{color:var(--text-muted);font-weight:400;font-size:11px;}
+.table .w-10{width:10%;} .table .w-12{width:12%;} .table .w-20{width:20%;}
+.table .editable{outline:none;min-height:22px;}
+.table .editable:focus{background:#fff8d9;}
+
+/* Eval intro table */
+.eval-wrap .eval-table tbody td{font-size:12px;}
+.eval-wrap ul{padding-left:18px;}
+.eval-wrap li{margin-bottom:4px;}
+
+/* Snippet toolbar */
+.snippet-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--muted-bg);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:12px 0;}
+.snippet-toolbar label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--text-muted);}
+.snippet-toolbar select{flex:1 1 240px;min-width:180px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface);border:1.5px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);}
+.snippet-toolbar .btn{min-height:34px;padding:6px 12px;font-size:12px;}
+
+/* Hazards table — risk cell */
+.hazardsTable td{vertical-align:top;}
+.hazardsTable .editable{min-height:60px;outline:none;}
+.risk-cell{display:flex;flex-direction:column;gap:6px;align-items:stretch;}
+.risk-cell select.risk-select{font-family:'DM Sans',sans-serif;font-size:12px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);width:100%;}
+.risk-cell .badge{display:inline-flex;justify-content:center;align-items:center;font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;border:1.5px solid var(--border);background:var(--muted-bg);color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;min-height:22px;}
+.risk-cell .badge.low{background:var(--risk-low-bg);color:var(--risk-low-fg);border-color:var(--risk-low-brd);}
+.risk-cell .badge.med{background:var(--risk-med-bg);color:var(--risk-med-fg);border-color:var(--risk-med-brd);}
+.risk-cell .badge.high{background:var(--risk-high-bg);color:var(--risk-high-fg);border-color:var(--risk-high-brd);}
+
+/* Row delete button (hazards) */
+.hazardsTable tr{position:relative;}
+.row-del{position:absolute;right:6px;top:6px;background:var(--danger-bg);border:1.5px solid var(--danger-brd);color:var(--danger);border-radius:50%;width:22px;height:22px;font-size:14px;font-weight:700;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;z-index:5;}
+/* Show on row hover OR when the button itself is hovered/focused — prevents the click-trap when moving cursor toward the button. */
+.hazardsTable tr:hover .row-del,
+.hazardsTable .row-del:hover,
+.hazardsTable .row-del:focus{display:inline-flex;}
+
+/* PPE checks */
+.ppe-wrap .ppe-table{margin-top:12px;}
+.ppe-label{width:120px;background:var(--muted-bg);font-weight:700;}
+.ppe-checks{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 18px;}
+.ppe-checks .check label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;}
+.ppe-checks input[type="checkbox"]{width:16px;height:16px;accent-color:var(--accent-dark);}
+.ppe-checks .check{position:relative;padding-right:24px;}
+.ppe-del{position:absolute;right:0;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;border-radius:4px;}
+.ppe-del:hover{color:var(--danger);background:var(--danger-bg);}
+@media print { .ppe-del { display:none!important; } }
+@media(max-width:700px){.ppe-checks{grid-template-columns:1fr 1fr;}}
+
+/* Method statement table */
+.method-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;table-layout:fixed;}
+.method-table th,.method-table td{border:1px solid var(--border);padding:8px 10px;vertical-align:top;}
+.method-table .section-header{background:var(--primary);color:#fff;text-align:center;font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;padding:9px;}
+.method-table .section-label{background:var(--muted-bg);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--primary);}
+.method-table .editable-section{outline:none;min-height:24px;font-size:13px;line-height:1.55;}
+/* Restore typographic spacing inside contenteditable cells — the global
+   CSS reset zeroes out p/ul/ol/li margins which makes snippet content
+   render flush against the cell border. */
+.method-table .editable-section p,
+.seq-table .editable p,
+.hazardsTable .editable p{margin:0 0 8px 0;}
+.method-table .editable-section p:last-child,
+.seq-table .editable p:last-child,
+.hazardsTable .editable p:last-child{margin-bottom:0;}
+.method-table .editable-section ul,
+.method-table .editable-section ol,
+.seq-table .editable ul,
+.seq-table .editable ol,
+.hazardsTable .editable ul,
+.hazardsTable .editable ol{margin:4px 0 8px 0;padding-left:22px;}
+.method-table .editable-section li,
+.seq-table .editable li,
+.hazardsTable .editable li{margin:2px 0;}
+.method-table .editable-section strong{display:inline-block;margin-bottom:2px;}
+.method-table .editable-section:focus{background:#fff8d9;}
+
+/* MS Sequence-of-Operations toggleable section */
+.seq-section{margin:16px 0;}
+.seq-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;}
+.seq-toggle{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);cursor:pointer;user-select:none;padding:4px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);}
+.seq-toggle:hover{border-color:var(--accent);color:var(--text);}
+.seq-toggle input[type="checkbox"]{width:14px;height:14px;accent-color:var(--accent-dark);cursor:pointer;}
+.seq-section.excluded .seq-section-body{opacity:.35;}
+.seq-section.excluded .seq-section-body::after{content:"Excluded from report";display:block;text-align:center;font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.05em;margin-top:6px;}
+.seq-row-del{background:var(--danger-bg);border:1.5px solid var(--danger-brd);color:var(--danger);border-radius:50%;width:22px;height:22px;font-size:14px;font-weight:700;line-height:1;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center;}
+.seq-row-del:hover{background:var(--danger);color:#fff;}
+@media print {
+  .seq-section.excluded { display:none !important; }
+  .seq-row-del, .seq-section-head { display:none !important; }
+}
+
+/* MS sequence / emergency tables */
+.seq-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+.seq-table th,.seq-table td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top;}
+.seq-table thead th{background:var(--primary);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
+.seq-table td .editable{outline:none;min-height:24px;}
+.seq-table td .editable:focus{background:#fff8d9;}
+
+/* Page break header (between RA forms) */
+.headersplitter{margin:24px 0 12px;border-top:2px solid var(--primary);position:relative;height:0;}
+.headersplitter span{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--surface);padding:0 12px;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--primary);}
+
+/* Sign-off / Revision */
+.sig-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0;}
+.sig{background:var(--muted-bg);border:1.5px solid var(--border);border-radius:8px;padding:10px;}
+.sig .label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--text-muted);}
+.sig-value{font-size:13px;font-weight:600;margin-top:3px;outline:none;min-height:20px;}
+.sig-value:focus{background:#fff8d9;border-radius:3px;}
+@media(max-width:700px){.sig-grid{grid-template-columns:1fr 1fr;}}
+
+/* H1 / H2 in sheet */
+.sheet h1{font-size:20px;font-weight:700;color:var(--primary);margin:14px 0 8px;}
+.sheet h1 [contenteditable]{outline:none;}
+.sheet h1 [contenteditable]:focus{background:#fff8d9;}
+.sheet h2{font-size:14px;font-weight:700;color:var(--primary);margin:18px 0 6px;text-transform:uppercase;letter-spacing:.05em;}
+
+[contenteditable="true"]:focus{outline:none;}
+
+/* Branding panel */
+.brand-panel{position:absolute;top:60px;right:16px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.15);padding:14px;width:280px;z-index:300;display:none;}
+.brand-panel.open{display:block;}
+.brand-panel h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:700;margin-bottom:10px;}
+.brand-panel .row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.brand-panel label{font-size:11px;font-weight:600;color:var(--text-muted);min-width:70px;}
+.brand-panel input[type=text],.brand-panel input[type=color]{flex:1;font-family:inherit;font-size:13px;padding:5px 8px;border:1.5px solid var(--border);border-radius:5px;background:var(--input-bg);color:var(--text);}
+.brand-panel input[type=color]{padding:2px;height:32px;cursor:pointer;}
+.brand-panel input[type=file]{font-size:11px;}
+
+/* ════════════════════════════════════════════════════════
+   PRINT STYLES — landscape A4
+   ════════════════════════════════════════════════════════ */
+@media print{
+  @page{size:A4 landscape;margin:10mm;}
+  .app-header,.tab-bar,.no-print,.snippet-toolbar,.row-del,.brand-panel,#toast{display:none!important;}
+  body{background:#fff;}
+  main{padding:0;max-width:100%;}
+  .tab-panel{display:block!important;}
+  .sheet{box-shadow:none;border:none;border-radius:0;padding:0;margin:0 0 8mm;page-break-after:always;}
+  .sheet:last-child{page-break-after:auto;}
+  .form-page{page-break-after:always;}
+  .form-page:last-child{page-break-after:auto;}
+  .table th,.table td,.method-table th,.method-table td{font-size:10.5px;padding:5px 6px;}
+  .lh-title{font-size:18px;}
+  .matrix-col h3{font-size:11px;}
+  .key{font-size:10px;}
+  .risk-cell select{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     HEADER
+     ════════════════════════════════════════════════════════ -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="logo-mark"><img id="brandLogo" alt="" style="display:none;">ET</div>
+      <div class="header-text">
+        <div class="header-title"><span data-brand="name">EASY TRAVEL</span></div>
+        <div class="header-sub"><span data-brand="tagline">Risk Assessment &amp; Method Statement</span></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="save-indicator" id="saveIndicator">Saved</span>
+      <button class="btn btn-ghost btn-sm" onclick="toggleBrandPanel()" title="Branding">Brand</button>
+      <button class="btn btn-outline btn-sm" onclick="exportJSON()" title="Backup all data to JSON">Backup</button>
+      <button class="btn btn-outline btn-sm" onclick="importJSON()" title="Restore from JSON">Restore</button>
+      <button class="btn btn-outline btn-sm" onclick="resetApp()" title="Clear ALL saved data and reload" style="color:var(--danger);border-color:var(--danger-brd);">Reset</button>
+      <button class="btn btn-outline btn-sm" onclick="window.print()" title="Print preview">Print</button>
+      <button class="btn btn-primary btn-sm" onclick="exportPDF()" title="Export to PDF">PDF</button>
+    </div>
+  </div>
+
+  <!-- Inline branding panel -->
+  <div class="brand-panel" id="brandPanel">
+    <h4>Branding</h4>
+    <div class="row"><label>Logo</label><input type="file" accept="image/*" id="brandLogoFile"></div>
+    <div class="row"><label>Name</label><input type="text" id="brandNameIn" placeholder="EASY TRAVEL"></div>
+    <div class="row"><label>Tagline</label><input type="text" id="brandTaglineIn" placeholder="Tagline"></div>
+    <div class="row"><label>Primary</label><input type="color" id="brandPrimaryIn" value="#1f2a44"></div>
+    <div class="row"><label>Accent</label><input type="color" id="brandAccentIn" value="#f5b301"></div>
+    <div class="row"><label>Text</label><input type="color" id="brandTextIn" value="#3a3a3a"></div>
+    <div class="row" style="justify-content:space-between;">
+      <button class="btn btn-ghost btn-sm" onclick="resetBranding()">Reset</button>
+      <button class="btn btn-primary btn-sm" onclick="toggleBrandPanel()">Done</button>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════
+     TAB BAR
+     ════════════════════════════════════════════════════════ -->
+<nav class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn active" data-tab="ra">Risk Assessment</button>
+    <button class="tab-btn" data-tab="ms">Method Statement</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB: RISK ASSESSMENT
+       ════════════════════════════════════════════════════════ -->
+  <div id="tab-ra" class="tab-panel active">
+
+    <div id="raForms" data-persist-container data-key="ra.forms">
+
+      <!-- ── RA FORM TEMPLATE (page 1) ────────────────── -->
+      <div class="sheet sheet-landscape form-page" data-form-index="1">
+
+        <!-- Letterhead -->
+        <div class="letterhead">
+          <div class="lh-left">
+            <img class="lh-logo brand-letterhead-logo" src="" alt="" style="display:none;">
+            <div class="lh-produced">
+              <span class="lh-muted">Produced by</span>
+              <span class="lh-strong" data-brand="name" contenteditable="true" data-persist data-key="ra.lh.producer">EASY TRAVEL</span>
+            </div>
+          </div>
+          <div class="lh-center">
+            <div class="lh-clientline">
+              <span class="lh-muted">Prepared for</span>
+              <span class="lh-client" contenteditable="true" data-persist data-key="ra.lh.client">Client Name</span>
+            </div>
+            <div class="lh-title" contenteditable="true" data-persist data-key="ra.lh.title">Risk Assessment</div>
+            <div class="lh-subtitle" contenteditable="true" data-persist data-key="ra.lh.subtitle">Risk Assessment</div>
+          </div>
+          <div class="lh-right">
+            <div class="lh-chip date-chip" data-key="ra.lh.date">
+              <div class="lh-chip-label">Date</div>
+              <input type="date" class="lh-date-input" aria-label="Date">
+            </div>
+          </div>
+        </div>
+
+        <!-- Optional client logo strip -->
+        <div class="client-logo-section">
+          <img class="client-logo-img" src="" alt="Client Logo" style="height:70px;display:none;">
+        </div>
+
+        <!-- Meta band -->
+        <section class="meta">
+          <div><div class="label">Task / activity</div>
+            <strong contenteditable="true" data-persist data-key="ra.meta.task">Add Text</strong></div>
+          <div><div class="label">Location</div>
+            <strong contenteditable="true" data-persist data-key="ra.meta.location">Add Text</strong></div>
+          <div><div class="label">Project Name</div>
+            <strong contenteditable="true" data-persist data-key="ra.meta.project">Add Text</strong></div>
+          <div><div class="label">Risk Assessment Reference</div>
+            <strong contenteditable="true" data-persist data-key="ra.meta.reference">Add Text</strong></div>
+        </section>
+
+        <!-- Evaluation banner -->
+        <div class="band"><strong>Evaluation of risk</strong> &mdash; The procedure is outlined below.</div>
+
+        <!-- Likelihood / Severity matrix -->
+        <section class="matrix-wrap">
+          <div class="matrix-head">RISKS &mdash; DEFINED AS THE LIKELIHOOD SOMETHING WILL HAPPEN AND HOW SEVERE THAT EVENT IS</div>
+          <div class="matrix-grid">
+            <div class="matrix-col">
+              <h3>Likelihood &mdash; of undesired events</h3>
+              <div class="level"><span class="badge low">LOW</span> It has not happened for a long time, is known to be infrequent and is not likely to happen.</div>
+              <div class="level"><span class="badge med">MEDIUM</span> It may be less regular but is still recognised as being likely to happen.</div>
+              <div class="level"><span class="badge high">HIGH</span> It may happen regularly or could be a usual or common occurrence.</div>
+            </div>
+            <div class="matrix-col">
+              <h3>Severity &mdash; of undesired events</h3>
+              <div class="level"><span class="badge low">LOW</span> Minor injuries to persons or some slight damage to property. Minimal environmental damage.</div>
+              <div class="level"><span class="badge med">MEDIUM</span> Serious injuries or persons off work for over three days, substantial damage. Damage contained within site boundaries but requiring prompt remedial action.</div>
+              <div class="level"><span class="badge high">HIGH</span> Fatal accident or multiple injuries / major property damage. Significant environmental impact, off-site damage or long-term issue.</div>
+            </div>
+          </div>
+          <div class="key">
+            <div><span class="swatch low"></span><strong>LOW</strong></div>
+            <div><span class="swatch med"></span><strong>MEDIUM</strong></div>
+            <div><span class="swatch high"></span><strong>HIGH</strong></div>
+          </div>
+        </section>
+
+        <!-- Evaluation intro table -->
+        <section class="eval-wrap">
+          <table class="table eval-table">
+            <thead><tr><th colspan="2">Evaluation of the risk</th></tr></thead>
+            <tbody>
+              <tr><td class="w-20"><strong>Aim</strong></td>
+                  <td>To reduce the risk to LOW where possible.</td></tr>
+              <tr><td class="w-20"><strong>List the hazards associated with an activity</strong></td>
+                  <td>Review the task / activity and estimate using LOW (L), MEDIUM (M) or HIGH (H) the likelihood of harm. Then do the same for severity using the same metrics.</td></tr>
+              <tr><td class="w-20"><strong>Results</strong></td>
+                  <td>
+                    <ul>
+                      <li><strong>Combined risk = LOW:</strong> activity does not require further attention beyond standard good-practice controls and site rules.</li>
+                      <li><strong>Combined risk = MEDIUM:</strong> activity is significant, manage through method statements / additional procedures. Extra training or resources may be required.</li>
+                      <li><strong>Combined risk = HIGH:</strong> deemed significant, senior management control is high priority. Consider design changes, adopt best practice, manage through method statements and specialist planning.</li>
+                    </ul>
+                  </td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Snippet toolbar -->
+        <div class="no-print snippet-toolbar">
+          <label>Hazard Snippet:</label>
+          <select class="ra-snip-select"></select>
+          <button type="button" class="btn btn-primary snip-insert-ra">Insert Row</button>
+          <button type="button" class="btn btn-outline add-ra-row" title="Add a blank hazards row">+ Row</button>
+          <button type="button" class="btn btn-outline add-ra-form" title="Add new RA form page">+ Form</button>
+          <button type="button" class="btn btn-danger remove-ra-form" title="Remove this RA form page">&minus; Form</button>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted);">Pick a snippet then Insert · or use + Row to add a blank line</span>
+        </div>
+
+        <!-- Hazards table -->
+        <table class="table hazardsTable" data-role="hazards">
+          <thead>
+            <tr>
+              <th class="w-20">What are the hazards?</th>
+              <th>Who might be harmed?<br><span class="muted">Employees / Contractors / Public / Others / Environment</span></th>
+              <th>How</th>
+              <th class="center w-10">Initial risk<br><span class="muted">(without controls)</span></th>
+              <th class="w-20">What controls are required?</th>
+              <th class="center w-10">Residual risk</th>
+              <th class="w-12">Action by</th>
+            </tr>
+          </thead>
+          <tbody data-persist-container data-key="ra.hazards.tbody.1">
+            <!-- No initial row: rows are added by Insert Row / snippet / + Form -->
+          </tbody>
+        </table>
+
+        <!-- PPE -->
+        <section class="ppe-wrap">
+          <table class="table ppe-table">
+            <colgroup><col style="width:120px;"><col></colgroup>
+            <thead><tr><th colspan="2">Personal Protective Equipment (PPE)</th></tr></thead>
+            <tbody>
+              <tr><td class="ppe-label"><strong>Instruction</strong></td>
+                <td><div contenteditable="true" data-persist data-key="ra.ppe.instruction.1">Identify all necessary PPE.</div></td></tr>
+              <tr><td class="ppe-label"><strong>Checklist</strong></td>
+                <td>
+                  <div class="ppe-controls no-print" style="display:flex;gap:6px;margin-bottom:8px;">
+                    <input type="text" class="ppe-add-input" placeholder="New PPE item…" style="flex:1;padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px;">
+                    <button type="button" class="btn btn-outline btn-sm ppe-add" title="Add PPE item">+ Item</button>
+                  </div>
+                  <div class="ppe-checks" data-persist-container data-key="ra.ppe.checks.1">
+                    <div class="check"><label><input type="checkbox"> <span contenteditable="true">Safety Helmet</span></label></div>
+                    <div class="check"><label><input type="checkbox"> <span contenteditable="true">Hi-Vis Clothing</span></label></div>
+                    <div class="check"><label><input type="checkbox"> <span contenteditable="true">Safety Footwear</span></label></div>
+                    <div class="check"><label><input type="checkbox"> <span contenteditable="true">Gloves</span></label></div>
+                    <div class="check"><label><input type="checkbox"> <span contenteditable="true">Eye Protection</span></label></div>
+                    <div class="check"><label><input type="checkbox"> <span contenteditable="true">Hearing Protection</span></label></div>
+                    <div class="check"><label><input type="checkbox"> <span contenteditable="true">Respiratory Protection (Light)</span></label></div>
+                    <div class="check"><label><input type="checkbox"> <span contenteditable="true">Respiratory Protection (Heavy)</span></label></div>
+                    <div class="check"><label><input type="checkbox"> <span contenteditable="true">Harness</span></label></div>
+                  </div>
+                </td></tr>
+              <tr><td class="ppe-label"><strong>Notes</strong></td>
+                <td><div contenteditable="true" data-persist data-key="ra.ppe.notes.1">The above PPE is task-specific and does NOT replace mandatory site PPE. It is listed where mandatory PPE may not be suitable / sufficient for the task being undertaken.</div></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Sign-off -->
+        <section>
+          <div class="sig-grid">
+            <div class="sig"><div class="label">Assessor</div><div class="sig-value" contenteditable="true" data-persist data-key="ra.sig.assessor.1">Add Name</div></div>
+            <div class="sig"><div class="label">Position</div><div class="sig-value" contenteditable="true" data-persist data-key="ra.sig.position.1">Add Position</div></div>
+            <div class="sig"><div class="label">Signed</div><div class="sig-value" contenteditable="true" data-persist data-key="ra.sig.signed.1">Add Signature</div></div>
+            <div class="sig"><div class="label">Date</div><div class="sig-value" contenteditable="true" data-persist data-key="ra.sig.date.1">Add Date</div></div>
+          </div>
+        </section>
+
+      </div><!-- /.form-page -->
+
+    </div><!-- /#raForms -->
+  </div><!-- /#tab-ra -->
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB: METHOD STATEMENT
+       ════════════════════════════════════════════════════════ -->
+  <div id="tab-ms" class="tab-panel">
+
+    <div class="sheet">
+      <!-- Letterhead -->
+      <div class="letterhead">
+        <div class="lh-left">
+          <img class="lh-logo brand-letterhead-logo" src="" alt="" style="display:none;">
+          <div class="lh-produced">
+            <span class="lh-muted">Produced by</span>
+            <span class="lh-strong" data-brand="name" contenteditable="true" data-persist data-key="ms.lh.producer">EASY TRAVEL</span>
+          </div>
+        </div>
+        <div class="lh-center">
+          <div class="lh-clientline">
+            <span class="lh-muted">Prepared for</span>
+            <span class="lh-client" contenteditable="true" data-persist data-key="ms.lh.client">Client Name</span>
+          </div>
+          <div class="lh-title" contenteditable="true" data-persist data-key="ms.lh.title">Method Statement</div>
+          <div class="lh-subtitle" contenteditable="true" data-persist data-key="ms.lh.subtitle"></div>
+        </div>
+        <div class="lh-right">
+          <div class="lh-chip date-chip" data-key="ms.lh.date">
+            <div class="lh-chip-label">Date</div>
+            <input type="date" class="lh-date-input" aria-label="Date">
+          </div>
+        </div>
+      </div>
+
+      <div class="client-logo-section">
+        <img class="client-logo-img" src="" alt="Client Logo" style="height:70px;display:none;">
+      </div>
+
+      <h1><span contenteditable="true" data-persist data-key="ms.projectname">Project Name</span></h1>
+
+      <!-- MS PAGES container -->
+      <div id="msPages" data-persist-container data-key="ms.pages">
+
+        <!-- PAGE 1 TEMPLATE -->
+        <section class="ms-page" data-page-index="1">
+          <div class="headersplitter"><span>NEW METHOD STATEMENT</span></div>
+
+          <!-- Toolbar -->
+          <div class="no-print snippet-toolbar">
+            <label>MS Snippet:</label>
+            <select class="ms-snip-select"></select>
+            <button type="button" class="btn btn-primary ms-snip-insert">Insert</button>
+            <span style="margin-left:auto;font-size:11px;color:var(--text-muted);">Pick a snippet then Insert — populates all fields</span>
+            <button type="button" class="btn btn-outline add-ms-page" title="Add new page">+ Page</button>
+            <button type="button" class="btn btn-danger remove-ms-page" title="Remove this page">&minus; Page</button>
+          </div>
+
+          <!-- Method table -->
+          <table class="method-table">
+            <colgroup>
+              <col style="width:14%;"><col style="width:30%;"><col style="width:56%;">
+            </colgroup>
+            <tbody>
+              <tr><th colspan="3" class="section-header">METHOD STATEMENT</th></tr>
+              <tr>
+                <td class="section-label">Title</td>
+                <td><div class="editable-section" contenteditable="true" data-persist data-key="ms.page.1.title"><p>Add Title</p></div></td>
+                <td rowspan="6">
+                  <div class="editable-section" contenteditable="true" data-persist data-key="ms.page.1.procedure" style="min-height:240px;"></div>
+                </td>
+              </tr>
+              <tr><td class="section-label">Equipment</td>
+                  <td><div class="editable-section" contenteditable="true" data-persist data-key="ms.page.1.equipment"></div></td></tr>
+              <tr><td class="section-label">PPE</td>
+                  <td><div class="editable-section" contenteditable="true" data-persist data-key="ms.page.1.ppe"></div></td></tr>
+              <tr><th colspan="2" class="section-header">TRAINING &amp; ASSOCIATED RISKS</th></tr>
+              <tr>
+                <td colspan="2">
+                  <div class="editable-section" contenteditable="true" data-persist data-key="ms.page.1.training" style="min-height:140px;"></div>
+                </td>
+              </tr>
+              <tr>
+                <td class="section-label" style="font-size:10px;">RA Ref &amp; Guidance</td>
+                <td><div class="editable-section" contenteditable="true" data-persist data-key="ms.page.1.raRef"><p>Add Ref</p></div></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Sequence of operations (toggleable section) -->
+          <section class="seq-section" data-seq-section data-include-key="ms.page.1.sequence.included">
+            <div class="seq-section-head no-print">
+              <h2 style="margin:0;">Sequence of Operations</h2>
+              <label class="seq-toggle" title="Untick to exclude this section from the PDF report">
+                <input type="checkbox" class="seq-include" checked>
+                <span>Include in report</span>
+              </label>
+            </div>
+            <div class="seq-section-body">
+              <table class="seq-table">
+                <thead><tr>
+                  <th style="width:6%">#</th>
+                  <th style="width:30%">Step / Operation</th>
+                  <th>Detail / Method / Controls</th>
+                  <th class="no-print" style="width:38px;"></th>
+                </tr></thead>
+                <tbody data-persist-container data-key="ms.page.1.sequence">
+                  <tr>
+                    <td class="center">1</td>
+                    <td><div class="editable" contenteditable="true"></div></td>
+                    <td><div class="editable" contenteditable="true"></div></td>
+                    <td class="no-print center"><button type="button" class="seq-row-del" title="Remove this step">&times;</button></td>
+                  </tr>
+                  <tr>
+                    <td class="center">2</td>
+                    <td><div class="editable" contenteditable="true"></div></td>
+                    <td><div class="editable" contenteditable="true"></div></td>
+                    <td class="no-print center"><button type="button" class="seq-row-del" title="Remove this step">&times;</button></td>
+                  </tr>
+                  <tr>
+                    <td class="center">3</td>
+                    <td><div class="editable" contenteditable="true"></div></td>
+                    <td><div class="editable" contenteditable="true"></div></td>
+                    <td class="no-print center"><button type="button" class="seq-row-del" title="Remove this step">&times;</button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <button type="button" class="btn btn-outline btn-sm no-print add-seq-row" data-target="ms.page.1.sequence">+ Add step</button>
+            </div>
+          </section>
+
+          <!-- Emergency arrangements -->
+          <h2>Emergency Arrangements</h2>
+          <table class="seq-table">
+            <tbody>
+              <tr>
+                <td style="width:25%;background:var(--muted-bg);font-weight:700;">First Aid</td>
+                <td><div class="editable" contenteditable="true" data-persist data-key="ms.page.1.emerg.firstaid"></div></td>
+              </tr>
+              <tr>
+                <td style="background:var(--muted-bg);font-weight:700;">Fire / Evacuation</td>
+                <td><div class="editable" contenteditable="true" data-persist data-key="ms.page.1.emerg.fire"></div></td>
+              </tr>
+              <tr>
+                <td style="background:var(--muted-bg);font-weight:700;">Spill / Environmental</td>
+                <td><div class="editable" contenteditable="true" data-persist data-key="ms.page.1.emerg.spill"></div></td>
+              </tr>
+              <tr>
+                <td style="background:var(--muted-bg);font-weight:700;">Emergency Contacts</td>
+                <td><div class="editable" contenteditable="true" data-persist data-key="ms.page.1.emerg.contacts"></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </div><!-- /#msPages -->
+
+      <!-- Sign-off -->
+      <section>
+        <h2>Sign-off</h2>
+        <div class="sig-grid">
+          <div class="sig"><div class="label">Author</div><div class="sig-value" contenteditable="true" data-persist data-key="ms.sig.author">Add Name</div></div>
+          <div class="sig"><div class="label">Position</div><div class="sig-value" contenteditable="true" data-persist data-key="ms.sig.position">Add Position</div></div>
+          <div class="sig"><div class="label">Signed</div><div class="sig-value" contenteditable="true" data-persist data-key="ms.sig.signed">Add Signature</div></div>
+          <div class="sig"><div class="label">Date</div><div class="sig-value" contenteditable="true" data-persist data-key="ms.sig.date">Add Date</div></div>
+        </div>
+      </section>
+
+    </div><!-- /.sheet -->
+  </div><!-- /#tab-ms -->
+
+</main>
+
+<!-- Hidden file input for restore -->
+<input type="file" id="restoreFile" accept="application/json" style="display:none;">
+
+<script>
+/* ════════════════════════════════════════════════════════════════════
+   SNIPPET ARRAYS  ◄── PASTE EASY-TRAVEL CONTENT HERE
+   ────────────────────────────────────────────────────────────────────
+   Each entry must have:
+     - name : label shown in the dropdown
+     - kind : "row"   (RA hazards row HTML — full <td>...</td> sequence)
+              "block" (MS rich HTML inserted into focused method cell)
+     - html : HTML string
+   The single placeholder entry below each header is just for testing.
+   Delete it once you have your real content.
+   ════════════════════════════════════════════════════════════════════ */
+
+// ─── RA hazard snippets — append more entries here ─────────────────
+const SNIPPETS_RA = [
+  {
+    name: "RA — 01 — Vehicle re-fuelling",
+    rows: [
+      {
+        hazard: "Fire / explosion from fuel vapour",
+        who: "Employees / Public / Others",
+        how: "Ignition source near fuel during decanting",
+        initial: "high",
+        controls: "No smoking / naked flames within 6m. Bonded earth strap. Designated fuelling area. Spill kit on hand. Warning signs in place.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Spillage causing slips and contamination",
+        who: "Employees / Others nearby",
+        how: "Fuel splash or overflow during transfer",
+        initial: "medium",
+        controls: "Funnel used. Drip tray under nozzle. Spill kit immediately available. Operative trained.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Manual handling of fuel containers",
+        who: "Employees",
+        how: "Lifting / carrying full jerry cans (up to 20kg)",
+        initial: "medium",
+        controls: "Two-person lift over 20kg. Use trolley. Avoid twisting. Containers stored at waist height.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 02 — Use of oil burner",
+    rows: [
+      {
+        hazard: "Burns from hot surfaces / flame",
+        who: "Employees",
+        how: "Contact with burner casing or flue while operating",
+        initial: "high",
+        controls: "PPE — heat-resistant gloves. Burner sited in safe location with guards. Operative trained, supervised. Allow cool-down before maintenance.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Fire — ignition of nearby combustibles",
+        who: "Employees / Others nearby",
+        how: "Sparks or flame contacting flammable materials in workshop",
+        initial: "high",
+        controls: "3m clearance kept around burner. Combustibles removed. Suitable extinguisher within arm's reach. Burner attended at all times.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Carbon monoxide (CO) build-up",
+        who: "Employees / Others nearby",
+        how: "Use in enclosed area without ventilation",
+        initial: "medium",
+        controls: "Use only with adequate ventilation. CO monitor in use. Workshop doors open during operation. Not used overnight unattended.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 03 — Re-fuelling of oil burner",
+    rows: [
+      {
+        hazard: "Fire — burner not fully cool when re-fuelled",
+        who: "Employees",
+        how: "Fuel vapour ignites on hot burner",
+        initial: "high",
+        controls: "Burner switched off and allowed to cool 15 mins minimum before re-fuelling. Fuel kept away from burner during decanting.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Spillage of fuel onto hot surfaces",
+        who: "Employees",
+        how: "Splash during decant — fire or burns",
+        initial: "high",
+        controls: "Decant slowly using funnel. Drip tray under burner. Spill kit at hand. Quantity decanted matches need.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 04 — Re-filling of the main fuel tanker",
+    rows: [
+      {
+        hazard: "Fire / explosion from fuel vapour",
+        who: "Employees / Public / Others",
+        how: "Ignition during filling of bulk tanker",
+        initial: "high",
+        controls: "No smoking / ignition sources. Earth bond between vehicle and tanker. Excess flow protection. Designated filling area. Spill kit on hand.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Falls from working at height",
+        who: "Employees",
+        how: "Climbing tanker to operate filling cap",
+        initial: "medium",
+        controls: "Permanent access platform / steps with guard rail. Three points of contact maintained. No carrying tools while climbing.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Major fuel spill / environmental harm",
+        who: "Environment",
+        how: "Overfill or hose disconnection",
+        initial: "high",
+        controls: "Tanker capacity confirmed before fill. Operative attends entire fill. Bunding / interceptor in place. Drains protected.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 05 — Replacing a tyre on the tyre changer",
+    rows: [
+      {
+        hazard: "Compressed air — burst tyre during inflation",
+        who: "Employees / Others nearby",
+        how: "Over-inflation, damaged tyre or rim mismatch",
+        initial: "high",
+        controls: "Tyre inspected for damage before mounting. Safety cage used where required. Inflate to manufacturer spec. Stand to the side of the assembly. Hearing protection during seating.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Manual handling — wheel weight",
+        who: "Employees",
+        how: "Lifting heavy commercial wheels onto turntable",
+        initial: "medium",
+        controls: "Wheel-handler / lifting aid for wheels >25kg. Two-person lift if no aid. Avoid twisting. Trained in MH techniques.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trapping / crushing of fingers or hands",
+        who: "Employees",
+        how: "Hand trapped between bead and rim during mount/demount",
+        initial: "medium",
+        controls: "Operative trained. Hands kept clear of bead area while turntable rotates. Tyre lever used; not fingers.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Noise from bead seating and air tools",
+        who: "Employees / Others nearby",
+        how: "Sudden loud bead seat — peak >100 dB",
+        initial: "medium",
+        controls: "Hearing protection (SNR 27+) worn during inflation. Workshop noise zoning observed.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 06 — Replacing a suspension coil spring on static spring compressor",
+    rows: [
+      {
+        hazard: "Release of stored energy — coil spring",
+        who: "Employees / Others nearby",
+        how: "Spring slips or releases under compression",
+        initial: "high",
+        controls: "Only trained personnel. Static rig used (preferred over mobile). Safety link chain installed before full compression. Stand clear of release line. Spring inspected for damage.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trapping / crush of fingers",
+        who: "Employees",
+        how: "Hands trapped while clamping or releasing",
+        initial: "medium",
+        controls: "Hands kept clear of clamp jaws. Use of correct sized cups for spring. Proper sequence followed.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 07 — Replacing a suspension coil on a vice mounted spring compressor",
+    rows: [
+      {
+        hazard: "Release of stored energy — coil spring",
+        who: "Employees / Others nearby",
+        how: "Spring slips off cups during compression — high risk on mobile compressor",
+        initial: "high",
+        controls: "Only trained personnel. **DO NOT USE AN IMPACT DRIVER**. Hand-tool only on winding nut. Safety link chain installed before full compression. Stand clear of release line. Use static rig where possible.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trapping / crush of fingers",
+        who: "Employees",
+        how: "Hands trapped between spring and cups",
+        initial: "medium",
+        controls: "Hands kept clear during compression. Correct sized cups for spring diameter. Steady pressure only.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 08 — DSE",
+    rows: [
+      {
+        hazard: "Musculoskeletal disorder from poor posture",
+        who: "Employees",
+        how: "Prolonged use of workstation without adjustment",
+        initial: "medium",
+        controls: "DSE assessment carried out. Adjustable chair, monitor at eye level, document holder. Regular breaks. Workstation set-up training.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Eye strain",
+        who: "Employees",
+        how: "Long screen time without breaks",
+        initial: "medium",
+        controls: "20-20-20 rule (20s break every 20 mins looking at 20ft). Free eye tests offered. Adequate workstation lighting.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 09 — Manual handling of deliveries",
+    rows: [
+      {
+        hazard: "Back injury from lifting",
+        who: "Employees",
+        how: "Lifting items above 25kg or awkward shapes",
+        initial: "medium",
+        controls: "MH training current. Use of trolley / sack truck. Two-person lift over 25kg. Risk-assess each load.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from falling load",
+        who: "Employees",
+        how: "Stacked items collapse during handling",
+        initial: "medium",
+        controls: "Stable stacking. Heaviest items at base. Pallet integrity checked. Safety footwear worn.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 10 — Oil barrel lifting and storage",
+    rows: [
+      {
+        hazard: "Manual handling — oil barrel weight (~200kg full)",
+        who: "Employees",
+        how: "Attempting to lift / move full barrel manually",
+        initial: "high",
+        controls: "NEVER lift full barrel manually. Use barrel trolley / fork truck attachment. Storage at floor level. Empty barrels only handled in pairs.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Spillage / slips from leaking barrel",
+        who: "Employees / Others nearby",
+        how: "Barrel damaged in storage or transit",
+        initial: "medium",
+        controls: "Barrels stored on bunded pallet. Inspected for damage. Spill kit on site. Floor cleaned promptly.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 11 — Personal for manual handling physical conditions",
+    rows: [
+      {
+        hazard: "Aggravation of pre-existing MSD / health condition",
+        who: "Employees",
+        how: "Operative carries out MH against medical advice",
+        initial: "medium",
+        controls: "Health questionnaire on engagement and annually. Operatives notify line manager of changes. Pregnancy / new mother specific assessment. Reasonable adjustments offered.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 12 — Oil drainer filling and draining",
+    rows: [
+      {
+        hazard: "Oil spill from drainer",
+        who: "Employees / Others nearby",
+        how: "Tap not closed in correct sequence; hose kink during drain",
+        initial: "medium",
+        controls: "Operative trained. Sequence laminated at drainer. Take-5 before opening valves. Drip tray under hose. Spill kit on hand.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Skin contact / chemical exposure to used oil",
+        who: "Employees",
+        how: "Splash during decant; contaminated PPE",
+        initial: "medium",
+        controls: "Nitrile gloves and overalls. Eye protection if splash risk. Wash hands after. SDS available.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Slip on spilled oil",
+        who: "Employees / Others nearby",
+        how: "Wet floor following drain",
+        initial: "medium",
+        controls: "Floor checked before/after. Absorbent granules used immediately. Wet-floor sign deployed.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 13 — General grinding",
+    rows: [
+      {
+        hazard: "Eye injury from particles",
+        who: "Employees",
+        how: "Sparks or fragments striking eyes",
+        initial: "high",
+        controls: "Goggles to BS EN 166 (not just safety glasses). Face shield for heavy work. Screens between work area and other operatives.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Hot particles / burns / fire",
+        who: "Employees / Others nearby",
+        how: "Sparks landing on skin, clothes, or combustibles",
+        initial: "high",
+        controls: "Combustibles cleared 5m radius. Suitable extinguisher within reach. FR clothing / leather apron. Post-work fire watch.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Hearing damage from noise",
+        who: "Employees / Others nearby",
+        how: "Continuous noise >85 dB",
+        initial: "medium",
+        controls: "Hearing protection worn (SNR 27+). Workshop noise zoning. Health surveillance for prolonged users.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Dust inhalation",
+        who: "Employees",
+        how: "Metal / abrasive dust airborne",
+        initial: "medium",
+        controls: "LEV at workstation. RPE (FFP3) where LEV insufficient. COSHH assessment for material being ground.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 14 — General welding and heating",
+    rows: [
+      {
+        hazard: "Arc eye / UV burns",
+        who: "Employees / Others nearby",
+        how: "Direct or reflected exposure to weld arc",
+        initial: "high",
+        controls: "Welding helmet auto-darkening shade 10–13. Welding curtains around work area. Others nearby wear shade glasses.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Burns from hot metal / spatter",
+        who: "Employees",
+        how: "Contact with workpiece or flying weld spatter",
+        initial: "high",
+        controls: "Leather gauntlets, FR overalls, leather apron, welding boots. Spatter mat under work. Allow cool-down.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Fume inhalation (welding fume = Group 1 carcinogen)",
+        who: "Employees",
+        how: "Inhalation of metal fume during welding",
+        initial: "high",
+        controls: "LEV on-torch or fixed extraction. Outdoors wherever possible. RPE (P3) where LEV insufficient. Health surveillance per HSE Manufacturing Sector Guidance.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Fire / explosion",
+        who: "Employees / Others nearby",
+        how: "Ignition of nearby combustibles or flammables",
+        initial: "high",
+        controls: "Hot Works Permit. Combustibles cleared 5m radius. Extinguisher arm's reach. 1-hour post-work fire watch. No welding within 6m of fuel storage.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 15 — Using the pillar drill",
+    rows: [
+      {
+        hazard: "Entanglement of clothing / hair",
+        who: "Employees",
+        how: "Loose clothing or long hair caught in chuck",
+        initial: "high",
+        controls: "Tight-fitting overalls. Long hair tied back. No gloves at chuck. Sleeves rolled up.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Eye injury from swarf",
+        who: "Employees",
+        how: "Hot swarf ejected from drilling",
+        initial: "medium",
+        controls: "Safety goggles to BS EN 166. Chuck guard in place. Drill chip-clearer used (not fingers).",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trapping — workpiece spinning with bit",
+        who: "Employees",
+        how: "Workpiece not clamped, spins on bit binding",
+        initial: "medium",
+        controls: "Workpiece always clamped to table or vice. Two hands on workpiece never used.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 16 — Use of the guillotine for cutting metal",
+    rows: [
+      {
+        hazard: "Severance / cut from blade",
+        who: "Employees",
+        how: "Hands or fingers under blade during cut",
+        initial: "high",
+        controls: "Two-hand control or photo-electric guard. Hands away from cut line. Trained operative only. Material support stand.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trapping by hold-down clamps",
+        who: "Employees",
+        how: "Fingers caught under hold-down before blade strike",
+        initial: "medium",
+        controls: "Hands clear before pressing pedal. Material aligned before hold-down. Audible warning before cycle.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Noise from cut and material drop",
+        who: "Employees / Others nearby",
+        how: "Loud bang at cut and drop",
+        initial: "medium",
+        controls: "Hearing protection worn. Receiving tray cushioned. Workshop noise zoning.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 17 — Using the hydraulic press to press in wheel bearings",
+    rows: [
+      {
+        hazard: "Crush from press platen",
+        who: "Employees",
+        how: "Hands or fingers under platen during stroke",
+        initial: "high",
+        controls: "Trained operative. Two-hand control where fitted. Workpiece supported. Hands clear before pressurising.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Stored energy — bearing ejecting from housing",
+        who: "Employees / Others nearby",
+        how: "Bearing released suddenly under high pressure",
+        initial: "high",
+        controls: "Press cage / shield in place. Stand to side of work axis. Press only to specified pressure.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 18 — Locating a vehicle on the ramp",
+    rows: [
+      {
+        hazard: "Vehicle rolls / falls off ramp arms",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred or arms not engaged correctly",
+        initial: "high",
+        controls: "Trained operative. Wheel chocks. Ramp arm pads positioned per manufacturer. Vehicle weight checked. Lift in stages, check stability.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from vehicle movement",
+        who: "Employees / Others nearby",
+        how: "Vehicle moves while operatives are around it",
+        initial: "high",
+        controls: "Handbrake on, in gear, key removed. Exclusion zone during raise/lower. Audible warning where fitted.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 19 — Removing ball joint pins from hubs",
+    rows: [
+      {
+        hazard: "Stored tension — pin ejects suddenly",
+        who: "Employees",
+        how: "Suspension under load releases",
+        initial: "medium",
+        controls: "Vehicle supported on axle stands. Suspension off-load before pin removal. Operative stands clear of release line.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Eye injury from flying particles",
+        who: "Employees",
+        how: "Hammer / splitter strikes — debris ejected",
+        initial: "medium",
+        controls: "Goggles to BS EN 166. Splitter used in preference to hammer. Bystanders excluded.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 20 — Using the fork truck",
+    rows: [
+      {
+        hazard: "Pedestrian collision",
+        who: "Employees / Public / Others",
+        how: "Operative or visitor in path of truck",
+        initial: "high",
+        controls: "Trained certificated operator only. Pedestrian routes marked. Audible / visual warning. Speed limit posted. No reversing without spotter.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Tipping / load shed",
+        who: "Employees / Others nearby",
+        how: "Overload, uneven ground, or sudden steering",
+        initial: "high",
+        controls: "SWL observed. Pre-use checks. Load secured. Slow turning. No lifting / lowering on the move. Forks at travel height when moving.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 21 — Roadside repairs — General",
+    rows: [
+      {
+        hazard: "Live traffic — struck by vehicle",
+        who: "Employees",
+        how: "Working on roadside with passing traffic",
+        initial: "high",
+        controls: "Hi-vis to EN ISO 20471 Class 3. Vehicle parked to protect work area. Cones / signs deployed per Chapter 8. Recovery flashing beacon on. Avoid working on traffic-side where possible.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Adverse weather",
+        who: "Employees",
+        how: "Cold, wet, or low-light conditions",
+        initial: "medium",
+        controls: "Weather-appropriate PPE. Adequate lighting (head torch / vehicle lights). Task curtailed if conditions unsafe. Lone-working policy followed.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 22 — Roadside recovery (strap on a vehicle)",
+    rows: [
+      {
+        hazard: "Live traffic",
+        who: "Employees / Public / Others",
+        how: "Working in highway environment",
+        initial: "high",
+        controls: "Hi-vis Class 3. Recovery vehicle positioned to protect. Beacons on. Public excluded from work area. Comply with Chapter 8.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Stored energy — strap failure / snap-back",
+        who: "Employees / Others nearby",
+        how: "Strap breaks under load — recoils violently",
+        initial: "high",
+        controls: "Strap inspected before use. SWL not exceeded. Strap-dampener used where required. No-one stands within 1.5x strap length.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Manual handling — strap attachment",
+        who: "Employees",
+        how: "Crouching / stretching to attach under vehicle",
+        initial: "medium",
+        controls: "Pre-task stretching. Use of recovery aids. Trained in attachment points.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 23 — Inspecting vehicles",
+    rows: [
+      {
+        hazard: "Slip / trip — pit or ramp area",
+        who: "Employees",
+        how: "Oil, water or debris on workshop floor",
+        initial: "medium",
+        controls: "Workshop housekeeping standard. Spills cleared immediately. Pit edges marked. Lighting maintained.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush — under vehicle",
+        who: "Employees",
+        how: "Vehicle falls from supports during inspection",
+        initial: "high",
+        controls: "Vehicle on ramp OR axle stands rated for weight. Wheels chocked. Two stands minimum. Never rely on jack alone.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 24 — Replacing leaf springs",
+    rows: [
+      {
+        hazard: "Stored energy — leaf spring under tension",
+        who: "Employees",
+        how: "Spring releases unexpectedly",
+        initial: "high",
+        controls: "Vehicle weight removed via support. Spring clamps used during dismount. Operative stands clear of release line.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Manual handling — spring weight (often >25kg)",
+        who: "Employees",
+        how: "Lifting / positioning heavy spring assembly",
+        initial: "high",
+        controls: "Two-person lift OR mechanical aid. MH training current. Avoid twisting under load.",
+        residual: "medium",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 25 — Lifting out a gear box",
+    rows: [
+      {
+        hazard: "Crush from falling gearbox",
+        who: "Employees",
+        how: "Box drops from jack / lift during removal",
+        initial: "high",
+        controls: "Transmission jack rated for box weight. Box secured to jack. Lower in controlled manner. Exclusion zone under load.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Manual handling — gearbox weight",
+        who: "Employees",
+        how: "Manhandling box off jack onto floor / bench",
+        initial: "high",
+        controls: "Mechanical lift used. Bench at correct height. Two-person assist where needed.",
+        residual: "medium",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 26 — Removing a vehicle wheel",
+    rows: [
+      {
+        hazard: "Wheel falls onto operative",
+        who: "Employees",
+        how: "Wheel released before fully un-bolted, or rolls when removed",
+        initial: "high",
+        controls: "All wheel nuts loosened with vehicle on ground. Body weight not used to lever. Wheel controlled while removing — never let it drop.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Manual handling — wheel weight (commercial >50kg)",
+        who: "Employees",
+        how: "Lifting wheel off hub / onto stand",
+        initial: "high",
+        controls: "Wheel-handler / trolley for heavy wheels. Two-person lift if no aid. Bend at knees, not waist.",
+        residual: "medium",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 27 — Draining oil from a vehicle",
+    rows: [
+      {
+        hazard: "Burns from hot oil",
+        who: "Employees",
+        how: "Oil at operating temperature splashes operator",
+        initial: "high",
+        controls: "Allow vehicle to cool before draining (engine warm not hot). Long sleeves. Heat-resistant gloves. Drain pan correctly positioned.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Slip on spilled oil",
+        who: "Employees / Others nearby",
+        how: "Drip / spill from hose or pan",
+        initial: "medium",
+        controls: "Drain pan large enough for sump capacity. Drip tray under work. Absorbent on hand. Floor cleaned immediately.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 28 — Installing and removing tracking seats",
+    rows: [
+      {
+        hazard: "Manual handling — seat weight",
+        who: "Employees",
+        how: "Lifting / positioning seat assembly",
+        initial: "medium",
+        controls: "Two-person lift recommended. Seat slid not carried where possible. MH training current.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trapping — pinch points on rails",
+        who: "Employees",
+        how: "Fingers caught between rail and floor / seat base",
+        initial: "medium",
+        controls: "Hands clear of rails during slide. Gloves worn.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 29 — Valeting vehicles",
+    rows: [
+      {
+        hazard: "Chemical exposure — cleaning products",
+        who: "Employees",
+        how: "Skin / eye contact with valeting chemicals",
+        initial: "medium",
+        controls: "COSHH assessments held for each product. Nitrile gloves, eye protection where indicated. Ventilation. Skin care regime.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Slips on wet surfaces",
+        who: "Employees / Others nearby",
+        how: "Soap / water on workshop floor",
+        initial: "medium",
+        controls: "Wet floor signs. Squeegee used. Footwear with grip. Drainage routes kept clear.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 30 — Young persons",
+    rows: [
+      {
+        hazard: "Lack of experience / awareness",
+        who: "Young person",
+        how: "Inexperience leading to unsafe acts",
+        initial: "high",
+        controls: "Young Persons Risk Assessment carried out. Direct supervision by trained operative. Restricted from high-risk tasks (welding, presses, ramps unsupervised). Induction tailored.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 31 — Using an impact driver",
+    rows: [
+      {
+        hazard: "Hand-arm vibration (HAVs)",
+        who: "Employees",
+        how: "Prolonged use of impact driver",
+        initial: "medium",
+        controls: "Tool exposure logged. Trigger time limits per HSE HAVs calculator. Regular health surveillance. Anti-vibration gloves.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Noise — impact peaks",
+        who: "Employees / Others nearby",
+        how: "Loud impacting >100 dB peak",
+        initial: "medium",
+        controls: "Hearing protection (SNR 27+) worn. Workshop noise zoning observed.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trapping / strike injury",
+        who: "Employees",
+        how: "Tool slips off fastener",
+        initial: "medium",
+        controls: "Correct socket size. Hands kept clear of recoil path. Operative trained.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32a — Operating Ramp No1",
+    rows: [
+      {
+        hazard: "Vehicle falls from ramp",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred, arms not engaged, or ramp overloaded",
+        initial: "high",
+        controls: "Daily pre-use ramp check (LOLER). Ramp SWL not exceeded. Vehicle centred and arms engaged correctly. Wheels chocked. Trained operator only.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from ramp lowering / mechanical failure",
+        who: "Employees",
+        how: "Operative under ramp during descent or hydraulic failure",
+        initial: "high",
+        controls: "Safety locks engaged before working underneath. Exclusion zone during raise/lower. Annual LOLER inspection current. Ramp tagged and dated.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trip on ramp arms / lift mechanism",
+        who: "Employees / Others nearby",
+        how: "Stored or extended arms in walkway",
+        initial: "medium",
+        controls: "Arms folded when ramp not in use. Walkways marked. Lighting adequate.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32b — Operating Ramp No2",
+    rows: [
+      {
+        hazard: "Vehicle falls from ramp",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred, arms not engaged, or ramp overloaded",
+        initial: "high",
+        controls: "Daily pre-use ramp check (LOLER). Ramp SWL not exceeded. Vehicle centred and arms engaged correctly. Wheels chocked. Trained operator only.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from ramp lowering / mechanical failure",
+        who: "Employees",
+        how: "Operative under ramp during descent or hydraulic failure",
+        initial: "high",
+        controls: "Safety locks engaged before working underneath. Exclusion zone during raise/lower. Annual LOLER inspection current. Ramp tagged and dated.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trip on ramp arms / lift mechanism",
+        who: "Employees / Others nearby",
+        how: "Stored or extended arms in walkway",
+        initial: "medium",
+        controls: "Arms folded when ramp not in use. Walkways marked. Lighting adequate.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32c — Operating Ramp No3",
+    rows: [
+      {
+        hazard: "Vehicle falls from ramp",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred, arms not engaged, or ramp overloaded",
+        initial: "high",
+        controls: "Daily pre-use ramp check (LOLER). Ramp SWL not exceeded. Vehicle centred and arms engaged correctly. Wheels chocked. Trained operator only.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from ramp lowering / mechanical failure",
+        who: "Employees",
+        how: "Operative under ramp during descent or hydraulic failure",
+        initial: "high",
+        controls: "Safety locks engaged before working underneath. Exclusion zone during raise/lower. Annual LOLER inspection current. Ramp tagged and dated.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trip on ramp arms / lift mechanism",
+        who: "Employees / Others nearby",
+        how: "Stored or extended arms in walkway",
+        initial: "medium",
+        controls: "Arms folded when ramp not in use. Walkways marked. Lighting adequate.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32d — Operating Ramp No4",
+    rows: [
+      {
+        hazard: "Vehicle falls from ramp",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred, arms not engaged, or ramp overloaded",
+        initial: "high",
+        controls: "Daily pre-use ramp check (LOLER). Ramp SWL not exceeded. Vehicle centred and arms engaged correctly. Wheels chocked. Trained operator only.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from ramp lowering / mechanical failure",
+        who: "Employees",
+        how: "Operative under ramp during descent or hydraulic failure",
+        initial: "high",
+        controls: "Safety locks engaged before working underneath. Exclusion zone during raise/lower. Annual LOLER inspection current. Ramp tagged and dated.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trip on ramp arms / lift mechanism",
+        who: "Employees / Others nearby",
+        how: "Stored or extended arms in walkway",
+        initial: "medium",
+        controls: "Arms folded when ramp not in use. Walkways marked. Lighting adequate.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32e — Operating Ramp No5",
+    rows: [
+      {
+        hazard: "Vehicle falls from ramp",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred, arms not engaged, or ramp overloaded",
+        initial: "high",
+        controls: "Daily pre-use ramp check (LOLER). Ramp SWL not exceeded. Vehicle centred and arms engaged correctly. Wheels chocked. Trained operator only.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from ramp lowering / mechanical failure",
+        who: "Employees",
+        how: "Operative under ramp during descent or hydraulic failure",
+        initial: "high",
+        controls: "Safety locks engaged before working underneath. Exclusion zone during raise/lower. Annual LOLER inspection current. Ramp tagged and dated.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trip on ramp arms / lift mechanism",
+        who: "Employees / Others nearby",
+        how: "Stored or extended arms in walkway",
+        initial: "medium",
+        controls: "Arms folded when ramp not in use. Walkways marked. Lighting adequate.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32f — Operating Ramp No6",
+    rows: [
+      {
+        hazard: "Vehicle falls from ramp",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred, arms not engaged, or ramp overloaded",
+        initial: "high",
+        controls: "Daily pre-use ramp check (LOLER). Ramp SWL not exceeded. Vehicle centred and arms engaged correctly. Wheels chocked. Trained operator only.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from ramp lowering / mechanical failure",
+        who: "Employees",
+        how: "Operative under ramp during descent or hydraulic failure",
+        initial: "high",
+        controls: "Safety locks engaged before working underneath. Exclusion zone during raise/lower. Annual LOLER inspection current. Ramp tagged and dated.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trip on ramp arms / lift mechanism",
+        who: "Employees / Others nearby",
+        how: "Stored or extended arms in walkway",
+        initial: "medium",
+        controls: "Arms folded when ramp not in use. Walkways marked. Lighting adequate.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32g — Operating Ramp No7",
+    rows: [
+      {
+        hazard: "Vehicle falls from ramp",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred, arms not engaged, or ramp overloaded",
+        initial: "high",
+        controls: "Daily pre-use ramp check (LOLER). Ramp SWL not exceeded. Vehicle centred and arms engaged correctly. Wheels chocked. Trained operator only.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from ramp lowering / mechanical failure",
+        who: "Employees",
+        how: "Operative under ramp during descent or hydraulic failure",
+        initial: "high",
+        controls: "Safety locks engaged before working underneath. Exclusion zone during raise/lower. Annual LOLER inspection current. Ramp tagged and dated.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trip on ramp arms / lift mechanism",
+        who: "Employees / Others nearby",
+        how: "Stored or extended arms in walkway",
+        initial: "medium",
+        controls: "Arms folded when ramp not in use. Walkways marked. Lighting adequate.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32h — Operating Ramp No8",
+    rows: [
+      {
+        hazard: "Vehicle falls from ramp",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred, arms not engaged, or ramp overloaded",
+        initial: "high",
+        controls: "Daily pre-use ramp check (LOLER). Ramp SWL not exceeded. Vehicle centred and arms engaged correctly. Wheels chocked. Trained operator only.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from ramp lowering / mechanical failure",
+        who: "Employees",
+        how: "Operative under ramp during descent or hydraulic failure",
+        initial: "high",
+        controls: "Safety locks engaged before working underneath. Exclusion zone during raise/lower. Annual LOLER inspection current. Ramp tagged and dated.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trip on ramp arms / lift mechanism",
+        who: "Employees / Others nearby",
+        how: "Stored or extended arms in walkway",
+        initial: "medium",
+        controls: "Arms folded when ramp not in use. Walkways marked. Lighting adequate.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32i — Operating Ramp No9",
+    rows: [
+      {
+        hazard: "Vehicle falls from ramp",
+        who: "Employees / Others nearby",
+        how: "Vehicle not centred, arms not engaged, or ramp overloaded",
+        initial: "high",
+        controls: "Daily pre-use ramp check (LOLER). Ramp SWL not exceeded. Vehicle centred and arms engaged correctly. Wheels chocked. Trained operator only.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Crush from ramp lowering / mechanical failure",
+        who: "Employees",
+        how: "Operative under ramp during descent or hydraulic failure",
+        initial: "high",
+        controls: "Safety locks engaged before working underneath. Exclusion zone during raise/lower. Annual LOLER inspection current. Ramp tagged and dated.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Trip on ramp arms / lift mechanism",
+        who: "Employees / Others nearby",
+        how: "Stored or extended arms in walkway",
+        initial: "medium",
+        controls: "Arms folded when ramp not in use. Walkways marked. Lighting adequate.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 32 — Using an air chisel / hammer",
+    rows: [
+      {
+        hazard: "Hand-arm vibration (HAVs)",
+        who: "Employees",
+        how: "Sustained use of air chisel",
+        initial: "high",
+        controls: "Trigger-time logged per HSE HAVs calculator. Job rotation. Anti-vibration gloves. Health surveillance.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Noise damage",
+        who: "Employees / Others nearby",
+        how: "Continuous percussion >100 dB peak",
+        initial: "high",
+        controls: "Hearing protection (SNR 27+) mandatory. Workshop noise zoning.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Eye / skin injury — flying debris",
+        who: "Employees / Others nearby",
+        how: "Particles ejected during chiselling",
+        initial: "medium",
+        controls: "Goggles to BS EN 166. Face shield for heavy work. Bystanders excluded or screened.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "RA — 33 — Using an angle grinder",
+    rows: [
+      {
+        hazard: "Disc disintegration",
+        who: "Employees / Others nearby",
+        how: "Wrong disc, damaged disc, or misuse causing disc to shatter",
+        initial: "high",
+        controls: "Correct disc for material and machine RPM. Disc inspected before fitting. Guard in place. Operative trained in abrasive wheels.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Eye injury from particles",
+        who: "Employees",
+        how: "Sparks or disc fragments striking eyes",
+        initial: "high",
+        controls: "Goggles to BS EN 166 + face shield. Side-shields. Bystanders excluded or screened.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Hot particles / burns / fire",
+        who: "Employees / Others nearby",
+        how: "Sparks landing on skin or combustibles",
+        initial: "high",
+        controls: "Combustibles cleared 5m radius. FR clothing / leather apron. Suitable extinguisher within arm's reach. 1-hour post-work fire watch.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Noise damage",
+        who: "Employees / Others nearby",
+        how: "Disc on metal >100 dB peak",
+        initial: "medium",
+        controls: "Hearing protection (SNR 27+). Workshop noise zoning.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Compressed air (burst tyre / hose)",
+    rows: [
+      {
+        hazard: "Compressed air — sudden release",
+        who: "Employees / Others nearby",
+        how: "Burst tyre, hose failure or stored air release",
+        initial: "high",
+        controls: "Equipment inspected; PRV in place; safety cage where required; stand to side; hearing protection.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Stored energy (spring / hydraulic)",
+    rows: [
+      {
+        hazard: "Stored energy release",
+        who: "Employees / Others nearby",
+        how: "Spring or hydraulic load releases without warning",
+        initial: "high",
+        controls: "Trained personnel only; safety chain/locks; correct rig; stand clear of release line.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Manual handling",
+    rows: [
+      {
+        hazard: "Manual handling — back / MSD",
+        who: "Employees",
+        how: "Lifting / lowering / carrying loads",
+        initial: "medium",
+        controls: "MH training current; mechanical aid for >25kg; two-person lift; risk-assess load.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Noise (>85 dB)",
+    rows: [
+      {
+        hazard: "Hearing damage",
+        who: "Employees / Others nearby",
+        how: "Continuous or peak noise above action levels",
+        initial: "medium",
+        controls: "Hearing protection (SNR 27+) worn; noise zoning; health surveillance for regular users.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Trapping / crushing",
+    rows: [
+      {
+        hazard: "Trapping or crushing of fingers / limbs",
+        who: "Employees",
+        how: "Pinch points on machinery or moving parts",
+        initial: "medium",
+        controls: "Guards in place; hands clear; correct PPE; trained operative.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Electrical shock",
+    rows: [
+      {
+        hazard: "Electric shock from portable equipment",
+        who: "Employees",
+        how: "Damaged lead / faulty appliance / wet conditions",
+        initial: "high",
+        controls: "PAT testing current; visual check before use; RCD on supply; faulty equipment removed and labelled.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Slips, trips and falls",
+    rows: [
+      {
+        hazard: "Slip / trip / fall on the level",
+        who: "Employees / Others nearby",
+        how: "Spills, trailing leads, uneven surfaces",
+        initial: "medium",
+        controls: "Housekeeping; spills cleared immediately; cable management; lighting adequate; signage.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Hot work / sparks",
+    rows: [
+      {
+        hazard: "Fire or burns from hot work",
+        who: "Employees / Others nearby",
+        how: "Sparks ignite combustibles or contact skin",
+        initial: "high",
+        controls: "Hot Works Permit (PC system); combustibles cleared 5m; FR PPE; extinguisher arm's reach; 1-hr fire watch.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — COSHH (chemical exposure)",
+    rows: [
+      {
+        hazard: "Skin / inhalation exposure to substance",
+        who: "Employees",
+        how: "Use of chemical without controls",
+        initial: "medium",
+        controls: "COSHH assessment held; SDS available; PPE per SDS; LEV/ventilation; skin care regime.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Fire / explosion (fuel vapour)",
+    rows: [
+      {
+        hazard: "Fire or explosion",
+        who: "Employees / Public / Others",
+        how: "Ignition source near flammable vapour",
+        initial: "high",
+        controls: "No smoking 6m; bonded earth; ventilation; spill kit; extinguishers; designated area; signs.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Falling object",
+    rows: [
+      {
+        hazard: "Object falls from height onto operative",
+        who: "Employees / Others nearby",
+        how: "Tools / materials fall from work area",
+        initial: "medium",
+        controls: "Toeboards; lanyards on hand tools; exclusion zone below; head protection.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Work at height",
+    rows: [
+      {
+        hazard: "Fall from height",
+        who: "Employees",
+        how: "Working above ground level on platform / steps / vehicle",
+        initial: "high",
+        controls: "Work-at-height hierarchy applied; permanent platform preferred; harness as last resort; rescue plan; competent person.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Vehicle movement / live traffic",
+    rows: [
+      {
+        hazard: "Struck by vehicle",
+        who: "Employees / Public / Others",
+        how: "Working in/near traffic or moving vehicles",
+        initial: "high",
+        controls: "Hi-vis Class 3; segregation; cones/signs per Chapter 8; banksman; flashing beacons.",
+        residual: "medium",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Dust (HSE WEL)",
+    rows: [
+      {
+        hazard: "Inhalation of dust",
+        who: "Employees",
+        how: "Cutting / grinding / sweeping generates dust",
+        initial: "medium",
+        controls: "Dust at source — LEV; water suppression; RPE FFP3; HSE WEL not exceeded.",
+        residual: "low",
+        action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "Hazard — Hand-arm vibration (HAVs)",
+    rows: [
+      {
+        hazard: "Vibration White Finger / HAVs",
+        who: "Employees",
+        how: "Use of vibrating power tools (impact driver, grinder, breaker)",
+        initial: "high",
+        controls: "Trigger-time logged per HSE calculator; rotation; anti-vibration gloves; health surveillance.",
+        residual: "medium",
+        action: "Workshop Manager"
+      }
+    ]
+  }
+];
+
+// ─── MS snippet blocks — append more entries here ──────────────────
+// Two formats are supported (matching the original scriptms.js):
+//   1) {name, kind:"block", html}    → inserts HTML into the focused / procedure cell
+//   2) {name, fields:{title, equipment, ppe, raRef, procedure (or method),
+//        training, risks, sequence:[{step,detail}...], firstaid, fire, spill, contacts}}
+//      → populates ALL fields of the MS table, sequence rows and emergency cells.
+const SNIPPETS_MS = [
+  {
+    name: "MS — 05 — Replacing a tyre on the tyre changer",
+    fields: {
+      title: "Replacing a tyre on the tyre changer",
+      equipment: "Tyre changing machine; tyre levers; tyre inflator; valve core tool; tyre soap",
+      ppe: "Safety footwear; safety gloves; eye protection; hearing protection (SNR 27+) during seating",
+      raRef: "RA-05",
+      procedure: "**Loosening the beads**\nEnsure no air remains in the tyre by removing the valve core.\nWheel the tyre into the bead-breaking arm position.\nUse the bead arm to loosen and break the bead, applying pressure around the whole circumference.\nRepeat for both beads — pay attention not to damage TPMS sensors.\n\n**Mounting the tyre**\nLift the wheel onto the turntable.\nLock the wheel in place with the clamping jaws — ensure it is centred.\n\n**Tyre removal**\nPosition the mounting head under the tyre bead and lift the bead away from the rim while rotating the turntable.\nUse the rotating arm pedal to rotate. A lever may be needed for initial bead positioning.\nRepeat for both beads.\n\n**Installing a tyre**\nPosition the mounting head against the rim to push the tyre bead down as the turntable rotates.\nA lever or assistance arm may be needed to keep the tyre bead in position.\nRemove the mounting head and inflate to the correct PSI per manufacturer technical data.\nEnsure no loose clothing or fingers are between the tyre and the rim.\nWhen the tyre seats with a bang, hearing protection MUST be worn.\nConfirm the tyre is correctly seated on both beads. If not, increase pressure up to the maximum tyre wall labelled pressure.\nRelease the mounting jaws to release the wheel.",
+      training: "Internal training, line manager driven",
+      risks: "Compressed air; machine hazards; manual handling; trapping; noise",
+      sequence: [
+        {
+          step: "Pre-start check",
+          detail: "Inspect tyre for damage; confirm correct rim/tyre match; check tyre changer condition; PPE on."
+        },
+        {
+          step: "Deflate",
+          detail: "Remove valve core to release all air from the tyre."
+        },
+        {
+          step: "Break beads",
+          detail: "Use bead-breaking arm to loosen both beads — do not damage TPMS."
+        },
+        {
+          step: "Mount on turntable",
+          detail: "Lift wheel onto turntable; lock with clamping jaws; ensure centred."
+        },
+        {
+          step: "Remove old tyre",
+          detail: "Position mounting head; rotate turntable; use lever for initial bead position."
+        },
+        {
+          step: "Fit new tyre",
+          detail: "Apply tyre soap; mount head pushes bead down as turntable rotates."
+        },
+        {
+          step: "Inflate to spec",
+          detail: "Inflate to manufacturer PSI; hearing protection on at bead seat."
+        },
+        {
+          step: "Verify seating",
+          detail: "Check both beads fully seated; do not exceed labelled max pressure."
+        },
+        {
+          step: "Release & remove",
+          detail: "Release clamping jaws; remove wheel from turntable."
+        }
+      ],
+      firstaid: "Trained First Aider on site; First Aid kit in workshop; eye-wash for trapped debris.",
+      fire: "Workshop CO2 + foam extinguishers; assembly point at site entrance.",
+      spill: "Tyre soap spill kit on site; absorb and dispose per workshop COSHH procedure.",
+      contacts: "Workshop Manager — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — 06 — Coil spring on STATIC spring compressor",
+    fields: {
+      title: "Replacing / removing a suspension coil spring on the static spring compressor",
+      equipment: "Static spring compressor; appropriate sizing cups; safety link chain; general hand tools",
+      ppe: "Safety footwear; gloves; eye protection",
+      raRef: "RA-06",
+      procedure: "**Only trained personnel are to undertake this task.**\n\nWith the coil spring and strut assembly removed from the vehicle, position the strut into the compressor mount and clamp into position using the appropriate sizing cups.\nOnce secure, align the clamping hooks correctly with the coil spring and rotate the clamping wheel to apply pressure to the spring.\nOnce light pressure is applied, attach the safety link chain.\nContinue to apply pressure until the load has been released from the strut top mount.\nUse the required tools to remove the strut top mount.\nRelease the spring pressure by rotating the clamping wheel in the opposite direction.\nRemove the coil spring.\n\n**Installation**\nPosition the coil spring into the strut seat, realign the spring hooks and apply light pressure.\nInstall the safety link chain.\nContinue to apply pressure until the strut top mount can be installed.\nOnce installed, release the pressure by rotating the clamping wheel.\nRemove the safety link chain and unclamp the strut from the clamping jaws.",
+      training: "Internal training, line manager driven",
+      risks: "Stored energy; trapping; manual handling",
+      sequence: [
+        {
+          step: "Trained personnel only",
+          detail: "Confirm operative is trained; PPE on; rig pre-checked."
+        },
+        {
+          step: "Mount strut",
+          detail: "Position into static rig; clamp with correct cups; secure."
+        },
+        {
+          step: "Align hooks",
+          detail: "Engage clamping hooks with the coil spring."
+        },
+        {
+          step: "Apply light pressure",
+          detail: "Rotate clamping wheel until light pressure applied to spring."
+        },
+        {
+          step: "Attach safety link chain",
+          detail: "Install chain BEFORE applying full pressure — never skip."
+        },
+        {
+          step: "Compress spring",
+          detail: "Continue applying pressure until load released from top mount."
+        },
+        {
+          step: "Remove top mount",
+          detail: "Use correct tools; do not pry."
+        },
+        {
+          step: "Release pressure",
+          detail: "Rotate clamping wheel in opposite direction; controlled release."
+        },
+        {
+          step: "Remove spring",
+          detail: "Remove the coil spring and inspect."
+        },
+        {
+          step: "Reverse for install",
+          detail: "Reverse procedure to refit; safety chain in place until top mount torqued."
+        }
+      ],
+      firstaid: "Trained First Aider on site; First Aid kit in workshop.",
+      fire: "Workshop extinguishers; assembly point at site entrance.",
+      spill: "Not applicable to this task.",
+      contacts: "Workshop Manager — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — 07 — Coil spring on MOBILE / vice-mounted spring compressor",
+    fields: {
+      title: "Replacing / removing a suspension coil spring on the mobile (vice-mounted) spring compressor",
+      equipment: "Mobile spring compressor; correct sizing cups; safety link chain; hand tools",
+      ppe: "Safety footwear; gloves; eye protection",
+      raRef: "RA-07",
+      procedure: "**ONLY trained personnel are to undertake this task. DO NOT USE AN IMPACT DRIVER FOR THIS TASK.**\n\nWith the coil spring and strut assembly removed from the vehicle, position the spring into the spring cups and clamp into position using the appropriate size cups.\nOnce in position, apply steady pressure to the spring by rotating the winding nut by hand only.\nOnce light pressure has been applied, attach the safety link chain.\nContinue to apply pressure until the load has been released from the strut top mount.\nUse the required tools to remove the strut top mount.\nRelease the spring pressure by rotating the winding nut until the pressure is released.\nRemove the coil spring.\n\n**Installation**\nPosition the coil spring into the spring cups and apply light pressure.\nInstall the safety link chain.\nContinue to apply pressure until the strut top mount can be installed.\nOnce installed, release pressure by rotating the winding nut until the spring is loose from the cups.\nRemove the safety link chain and unclamp the strut from the clamping jaws.\n\n**Where the static rig is available it must be used in preference to the mobile compressor.**",
+      training: "Internal training, line manager driven; competence sign-off required",
+      risks: "Stored energy; trapping; manual handling — HIGHER RISK than static rig",
+      sequence: [
+        {
+          step: "NO IMPACT DRIVER",
+          detail: "Hand winding only — never use power tools on the winding nut."
+        },
+        {
+          step: "Trained personnel only",
+          detail: "Confirm competence; PPE on; static rig unavailable / unsuitable."
+        },
+        {
+          step: "Position spring in cups",
+          detail: "Use correct size cups for the spring diameter."
+        },
+        {
+          step: "Apply light pressure",
+          detail: "Wind nut by hand until light pressure on spring."
+        },
+        {
+          step: "Attach safety link chain",
+          detail: "Install BEFORE applying full pressure — never skip."
+        },
+        {
+          step: "Compress spring",
+          detail: "Steady hand-winding until load released from top mount."
+        },
+        {
+          step: "Remove top mount",
+          detail: "Use correct tools."
+        },
+        {
+          step: "Release pressure",
+          detail: "Hand-wind in opposite direction; controlled release."
+        },
+        {
+          step: "Remove spring",
+          detail: "Inspect for damage before refit."
+        },
+        {
+          step: "Reverse for install",
+          detail: "Reverse procedure to refit; safety chain stays until top mount torqued."
+        }
+      ],
+      firstaid: "Trained First Aider on site; First Aid kit in workshop.",
+      fire: "Workshop extinguishers; assembly point at site entrance.",
+      spill: "Not applicable.",
+      contacts: "Workshop Manager — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — 12 — Oil drainer filling and draining",
+    fields: {
+      title: "Oil drainer filling and draining",
+      equipment: "Mobile oil drainer; airline; waste oil container",
+      ppe: "Nitrile gloves; safety footwear; eye protection if splash risk; overalls",
+      raRef: "RA-12",
+      procedure: "Take the oil drainer out to the waste oil storage area.\nPosition the drain hose into the waste oil container.\nOpen the drain hose valve (located directly at the bottom of the barrel).\nEnsure the oil intake tap is in the closed position (located at the top, neck).\nEnsure the airline intake tap is closed (top of the barrel).\nAffix the air line onto the air intake coupling.\nOpen the air intake valve slowly until fully opened.\nConfirm the oil is flowing from the drain hose.\nMonitor the oil draining until no oil remains in the drainer.\nOnce complete, close the air intake valve (top of the barrel).\nRemove the airline coupling.\nOpen the oil intake tap.\nClose the oil drainer tap.\nRemove the drain hose from the waste oil container and re-secure to the drainer.\nClean up any spilled oil immediately.\n\n**Do a Take-5 before opening any valves. Watch for kinks in the hose. Always close taps in the correct sequence.**",
+      training: "Internal training, line manager driven",
+      risks: "Oil spill; chemical hazard (skin/eye); slips on spilled oil",
+      sequence: [
+        {
+          step: "Take 5",
+          detail: "Stop, observe area, plan task, confirm sequence, check kit."
+        },
+        {
+          step: "Move to waste oil area",
+          detail: "Wheel drainer to designated waste oil storage area."
+        },
+        {
+          step: "Position drain hose",
+          detail: "Into the waste oil container; check no kink."
+        },
+        {
+          step: "Open drain valve",
+          detail: "Bottom of barrel — open the drain hose valve."
+        },
+        {
+          step: "Confirm intake taps closed",
+          detail: "Oil intake (top neck) closed; airline intake (top) closed."
+        },
+        {
+          step: "Connect airline",
+          detail: "Affix airline onto the air intake coupling."
+        },
+        {
+          step: "Open air intake slowly",
+          detail: "Slowly open until fully opened — check oil flow."
+        },
+        {
+          step: "Monitor drain",
+          detail: "Watch until no oil remains in the drainer."
+        },
+        {
+          step: "Close air intake",
+          detail: "Close air intake valve at top of barrel."
+        },
+        {
+          step: "Disconnect airline",
+          detail: "Remove the airline coupling."
+        },
+        {
+          step: "Reset taps",
+          detail: "Open oil intake tap; close drain hose valve."
+        },
+        {
+          step: "Stow hose & clean",
+          detail: "Re-secure drain hose to drainer; clean any spilled oil."
+        }
+      ],
+      firstaid: "Trained First Aider on site; First Aid kit in workshop; eye wash for splash.",
+      fire: "Workshop extinguishers — used oil is combustible at temperature; keep ignition sources away.",
+      spill: "Spill kit on site; absorbent granules; dispose of contaminated absorbent as hazardous waste.",
+      contacts: "Workshop Manager — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — 01 — Vehicle re-fuelling",
+    fields: {
+      title: "Vehicle re-fuelling",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-01",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 02 — Use of oil burner",
+    fields: {
+      title: "Use of oil burner",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-02",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 03 — Re-fuelling of oil burner",
+    fields: {
+      title: "Re-fuelling of oil burner",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-03",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 04 — Re-filling of the main fuel tanker",
+    fields: {
+      title: "Re-filling of the main fuel tanker",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-04",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 08 — DSE",
+    fields: {
+      title: "DSE",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-08",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 09 — Manual handling of deliveries",
+    fields: {
+      title: "Manual handling of deliveries",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-09",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 10 — Oil barrel lifting and storage",
+    fields: {
+      title: "Oil barrel lifting and storage",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-10",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 11 — Personal for manual handling physical conditions",
+    fields: {
+      title: "Personal for manual handling physical conditions",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-11",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 13 — General grinding",
+    fields: {
+      title: "General grinding",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-13",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 14 — General welding and heating",
+    fields: {
+      title: "General welding and heating",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-14",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 15 — Using the pillar drill",
+    fields: {
+      title: "Using the pillar drill",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-15",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 16 — Use of the guillotine for cutting metal",
+    fields: {
+      title: "Use of the guillotine for cutting metal",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-16",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 17 — Using the hydraulic press to press in wheel bearings",
+    fields: {
+      title: "Using the hydraulic press to press in wheel bearings",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-17",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 18 — Locating a vehicle on the ramp",
+    fields: {
+      title: "Locating a vehicle on the ramp",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-18",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 19 — Removing ball joint pins from hubs",
+    fields: {
+      title: "Removing ball joint pins from hubs",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-19",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 20 — Using the fork truck",
+    fields: {
+      title: "Using the fork truck",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-20",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 21 — Roadside repairs — General",
+    fields: {
+      title: "Roadside repairs — General",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-21",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 22 — Roadside recovery (strap on a vehicle)",
+    fields: {
+      title: "Roadside recovery (strap on a vehicle)",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-22",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 23 — Inspecting vehicles",
+    fields: {
+      title: "Inspecting vehicles",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-23",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 24 — Replacing leaf springs",
+    fields: {
+      title: "Replacing leaf springs",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-24",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 25 — Lifting out a gear box",
+    fields: {
+      title: "Lifting out a gear box",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-25",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 26 — Removing a vehicle wheel",
+    fields: {
+      title: "Removing a vehicle wheel",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-26",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 27 — Draining oil from a vehicle",
+    fields: {
+      title: "Draining oil from a vehicle",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-27",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 28 — Installing and removing tracking seats",
+    fields: {
+      title: "Installing and removing tracking seats",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-28",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 29 — Valeting vehicles",
+    fields: {
+      title: "Valeting vehicles",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-29",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 30 — Young persons",
+    fields: {
+      title: "Young persons",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-30",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 31 — Using an impact driver",
+    fields: {
+      title: "Using an impact driver",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-31",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32a — Operating Ramp No1",
+    fields: {
+      title: "Operating Ramp No1",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32a",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32b — Operating Ramp No2",
+    fields: {
+      title: "Operating Ramp No2",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32b",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32c — Operating Ramp No3",
+    fields: {
+      title: "Operating Ramp No3",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32c",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32d — Operating Ramp No4",
+    fields: {
+      title: "Operating Ramp No4",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32d",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32e — Operating Ramp No5",
+    fields: {
+      title: "Operating Ramp No5",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32e",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32f — Operating Ramp No6",
+    fields: {
+      title: "Operating Ramp No6",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32f",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32g — Operating Ramp No7",
+    fields: {
+      title: "Operating Ramp No7",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32g",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32h — Operating Ramp No8",
+    fields: {
+      title: "Operating Ramp No8",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32h",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32i — Operating Ramp No9",
+    fields: {
+      title: "Operating Ramp No9",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32i",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 32 — Using an air chisel / hammer",
+    fields: {
+      title: "Using an air chisel / hammer",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-32",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  },
+  {
+    name: "MS — 33 — Using an angle grinder",
+    fields: {
+      title: "Using an angle grinder",
+      equipment: "",
+      ppe: "",
+      raRef: "RA-33",
+      procedure: "",
+      training: "",
+      risks: "",
+      sequence: [],
+      firstaid: "",
+      fire: "",
+      spill: "",
+      contacts: ""
+    }
+  }
+];
+
+/* ════════════════════════════════════════════════════════════════════
+   STATE & UTILITIES
+   ════════════════════════════════════════════════════════════════════ */
+const LS_PREFIX = "easytravel.ramsv1.";
+
+// Canonical PPE checklist template — used to re-seed empty PPE areas.
+const PPE_TEMPLATE_HTML = ''
+  + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Safety Helmet</span></label></div>'
+  + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Hi-Vis Clothing</span></label></div>'
+  + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Safety Footwear</span></label></div>'
+  + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Gloves</span></label></div>'
+  + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Eye Protection</span></label></div>'
+  + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Hearing Protection</span></label></div>'
+  + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Respiratory Protection (Light)</span></label></div>'
+  + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Respiratory Protection (Heavy)</span></label></div>'
+  + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Harness</span></label></div>';
+const $ = (sel, root) => (root || document).querySelector(sel);
+const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+function lsGet(k){ try{ return localStorage.getItem(LS_PREFIX+k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(LS_PREFIX+k, v); }catch(e){} }
+function lsDel(k){ try{ localStorage.removeItem(LS_PREFIX+k); }catch(e){} }
+
+let saveTimer=null;
+function flagSaving(){
+  const ind = $("#saveIndicator"); if(!ind) return;
+  ind.textContent = "Saving…";
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ ind.textContent = "Saved"; }, 600);
+}
+
+function toast(msg, kind){
+  const t = $("#toast"); if(!t) return;
+  t.textContent = msg;
+  t.className = ""; if(kind) t.classList.add(kind);
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=> t.classList.remove("show"), 2200);
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+
+/* ════════════════════════════════════════════════════════════════════
+   PERSISTENCE
+   ════════════════════════════════════════════════════════════════════ */
+function persistField(el){
+  const k = el.getAttribute("data-key"); if(!k) return;
+  const rich = el.isContentEditable;
+  const value = rich ? el.innerHTML : (el.value !== undefined ? el.value : el.innerHTML);
+  lsSet(k, value || "");
+  flagSaving();
+}
+function persistContainer(el){
+  const k = el.getAttribute("data-key"); if(!k) return;
+  lsSet(k, el.innerHTML);
+  flagSaving();
+}
+function restoreField(el){
+  const k = el.getAttribute("data-key"); if(!k) return;
+  const v = lsGet(k); if(v === null) return;
+  if(el.isContentEditable){ el.innerHTML = v; }
+  else if("value" in el){ el.value = v; }
+  else { el.innerHTML = v; }
+}
+function restoreContainer(el){
+  const k = el.getAttribute("data-key"); if(!k) return;
+  const v = lsGet(k); if(v === null) return;
+  // Don't restore an empty/whitespace value over existing default content —
+  // this prevents stale empty entries in localStorage from wiping the PPE
+  // checklist, hazard rows, sequence rows, etc.
+  const stripped = v.replace(/<!--[\s\S]*?-->/g,'').replace(/\s+/g,'');
+  if(stripped === '') return;
+  el.innerHTML = v;
+}
+
+function attachPersistHandlers(scope){
+  scope = scope || document;
+
+  $$("[data-persist]", scope).forEach(el=>{
+    if(el.dataset.persistWired) return; el.dataset.persistWired="1";
+    el.addEventListener("input", ()=> persistField(el));
+    el.addEventListener("blur",  ()=> persistField(el));
+    el.addEventListener("change",()=> persistField(el));
+  });
+
+  $$("[data-persist-container]", scope).forEach(el=>{
+    if(el.dataset.persistWired) return; el.dataset.persistWired="1";
+    el.addEventListener("input",  ()=> persistContainer(el));
+    el.addEventListener("change", ()=> persistContainer(el));
+  });
+
+  $$(".risk-select", scope).forEach(sel=>{
+    if(sel.dataset.riskWired) return; sel.dataset.riskWired="1";
+    sel.addEventListener("change", ()=>{
+      paintRiskBadge(sel);
+      const c = sel.closest("[data-persist-container]");
+      if(c) persistContainer(c);
+    });
+    paintRiskBadge(sel);
+  });
+
+  $$(".ppe-checks input[type=checkbox]", scope).forEach(cb=>{
+    if(cb.dataset.ppeWired) return; cb.dataset.ppeWired="1";
+    cb.addEventListener("change", ()=>{
+      const c = cb.closest("[data-persist-container]");
+      if(c) persistContainer(c);
+    });
+  });
+
+  // Decorate every .check item with a delete button
+  $$(".ppe-checks .check", scope).forEach(check=>{
+    if(check.dataset.ppeItemWired) return; check.dataset.ppeItemWired="1";
+    if(!check.querySelector(".ppe-del")){
+      const del = document.createElement("button");
+      del.type = "button";
+      del.className = "ppe-del no-print";
+      del.title = "Remove this item";
+      del.innerHTML = "&times;";
+      del.addEventListener("click", ()=>{
+        const c = check.closest(".ppe-checks");
+        check.remove();
+        if(c) persistContainer(c);
+      });
+      check.appendChild(del);
+    }
+  });
+
+  // Wire the + Item button(s) and the input
+  $$(".ppe-add", scope).forEach(btn=>{
+    if(btn.dataset.ppeAddWired) return; btn.dataset.ppeAddWired="1";
+    const tr = btn.closest("tr") || btn.closest("td");
+    const input = tr ? tr.querySelector(".ppe-add-input") : null;
+    const checks = tr ? tr.querySelector(".ppe-checks") : null;
+    if(!input || !checks) return;
+    const addItem = ()=>{
+      const text = (input.value || "").trim();
+      if(!text){ input.focus(); return; }
+      const div = document.createElement("div");
+      div.className = "check";
+      div.innerHTML = '<label><input type="checkbox"> <span contenteditable="true">' + escapeHtml(text) + '</span></label>';
+      checks.appendChild(div);
+      input.value = "";
+      attachPersistHandlers(checks);
+      persistContainer(checks);
+      input.focus();
+    };
+    btn.addEventListener("click", addItem);
+    input.addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); addItem(); }});
+  });
+
+  $$(".date-chip", scope).forEach(chip=>{ if(!chip.dataset.dateWired){ chip.dataset.dateWired="1"; wireDateChip(chip); }});
+
+  $$(".ra-snip-select", scope).forEach(populateRaSnippets);
+  $$(".ms-snip-select", scope).forEach(populateMsSnippets);
+
+  $$(".snip-insert-ra", scope).forEach(btn=>{ if(!btn.dataset.snipWired){ btn.dataset.snipWired="1"; btn.addEventListener("click", ()=> insertRaSnippet(btn)); }});
+  $$(".ms-snip-insert", scope).forEach(btn=>{ if(!btn.dataset.snipWired){ btn.dataset.snipWired="1"; btn.addEventListener("click", ()=> insertMsSnippet(btn)); }});
+
+  $$(".add-ra-row", scope).forEach(btn=>{
+    if(btn.dataset.addRowWired) return; btn.dataset.addRowWired="1";
+    btn.addEventListener("click", ()=>{
+      const formPage = btn.closest(".form-page") || btn.closest(".sheet");
+      const tbody = formPage && formPage.querySelector(".hazardsTable tbody");
+      if(!tbody) return;
+      const tr = document.createElement("tr");
+      tr.innerHTML = ''
+        + '<td><div class="editable" contenteditable="true"></div></td>'
+        + '<td><div class="editable" contenteditable="true"></div></td>'
+        + '<td><div class="editable" contenteditable="true"></div></td>'
+        + '<td><div class="risk-cell">'
+        +   '<select class="risk-select"><option value="">-- Select --</option>'
+        +   '<option value="low">LOW</option><option value="medium">MEDIUM</option>'
+        +   '<option value="high">HIGH</option></select><span class="badge"></span>'
+        + '</div></td>'
+        + '<td><div class="editable" contenteditable="true"></div></td>'
+        + '<td><div class="risk-cell">'
+        +   '<select class="risk-select"><option value="">-- Select --</option>'
+        +   '<option value="low">LOW</option><option value="medium">MEDIUM</option>'
+        +   '<option value="high">HIGH</option></select><span class="badge"></span>'
+        + '</div></td>'
+        + '<td style="position:relative;"><div class="editable" contenteditable="true"></div>'
+        +   '<button type="button" class="row-del no-print" title="Remove row">&times;</button>'
+        + '</td>';
+      tbody.appendChild(tr);
+      attachPersistHandlers(tr);
+      persistContainer(tbody);
+    });
+  });
+  $$(".add-ra-form", scope).forEach(btn=>{ if(!btn.dataset.formWired){ btn.dataset.formWired="1"; btn.addEventListener("click", addRaForm); }});
+  $$(".remove-ra-form", scope).forEach(btn=>{ if(!btn.dataset.formWired){ btn.dataset.formWired="1"; btn.addEventListener("click", e=> removeRaForm(e.target)); }});
+  $$(".add-ms-page", scope).forEach(btn=>{ if(!btn.dataset.formWired){ btn.dataset.formWired="1"; btn.addEventListener("click", addMsPage); }});
+  $$(".remove-ms-page", scope).forEach(btn=>{ if(!btn.dataset.formWired){ btn.dataset.formWired="1"; btn.addEventListener("click", e=> removeMsPage(e.target)); }});
+
+  $$(".row-del", scope).forEach(btn=>{
+    if(btn.dataset.rowDelWired) return; btn.dataset.rowDelWired="1";
+    btn.addEventListener("click", ()=>{
+      const tr = btn.closest("tr"); if(!tr) return;
+      const c = tr.closest("[data-persist-container]");
+      tr.remove();
+      if(c) persistContainer(c);
+    });
+  });
+
+  $$(".add-seq-row", scope).forEach(btn=>{
+    if(btn.dataset.seqWired) return; btn.dataset.seqWired="1";
+    btn.addEventListener("click", ()=>{
+      const tbody = $("[data-key='" + btn.dataset.target + "']");
+      if(!tbody) return;
+      const tr = document.createElement("tr");
+      tr.innerHTML = _buildSeqRow("");
+      tbody.appendChild(tr);
+      attachPersistHandlers(tr);
+      _renumberSeq(tbody);
+      persistContainer(tbody);
+    });
+  });
+
+  // Delete-row buttons in the sequence table (event-delegated; works for
+  // pre-existing rows AND any added later).
+  $$(".seq-row-del", scope).forEach(btn=>{
+    if(btn.dataset.seqDelWired) return; btn.dataset.seqDelWired="1";
+    btn.addEventListener("click", ()=>{
+      const tr = btn.closest("tr"); if(!tr) return;
+      const tbody = tr.parentElement;
+      tr.remove();
+      _renumberSeq(tbody);
+      if(tbody) persistContainer(tbody);
+    });
+  });
+
+  // Toggle switch — show/hide whole sequence section, persist state.
+  $$(".seq-include", scope).forEach(cb=>{
+    if(cb.dataset.seqIncWired) return; cb.dataset.seqIncWired="1";
+    const section = cb.closest(".seq-section");
+    const key = section && section.getAttribute("data-include-key");
+    if(key){
+      const saved = lsGet(key);
+      // Default included unless explicitly saved as "false"
+      const included = saved === null ? true : saved !== "false";
+      cb.checked = included;
+      section.classList.toggle("excluded", !included);
+    }
+    cb.addEventListener("change", ()=>{
+      section.classList.toggle("excluded", !cb.checked);
+      if(key){ lsSet(key, cb.checked ? "true" : "false"); flagSaving(); }
+    });
+  });
+}
+
+/* Build one sequence row HTML (used by + Add step and snippet populator). */
+function _buildSeqRow(step, detail){
+  return '<td class="center"></td>'
+    + '<td><div class="editable" contenteditable="true">' + (step||"") + '</div></td>'
+    + '<td><div class="editable" contenteditable="true">' + (detail||"") + '</div></td>'
+    + '<td class="no-print center"><button type="button" class="seq-row-del" title="Remove this step">&times;</button></td>';
+}
+
+/* Re-number the # column after insert / delete. */
+function _renumberSeq(tbody){
+  if(!tbody) return;
+  Array.from(tbody.children).forEach((tr, i) => {
+    const numCell = tr.querySelector("td.center");
+    if(numCell) numCell.textContent = String(i+1);
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   RISK BADGE PAINTER
+   ════════════════════════════════════════════════════════════════════ */
+function paintRiskBadge(sel){
+  const cell = sel.parentElement;
+  const badge = cell.querySelector(".badge");
+  if(!badge) return;
+  badge.classList.remove("low","med","high");
+  badge.textContent = "";
+  const v = sel.value;
+  if(v==="low"){ badge.classList.add("low"); badge.textContent="LOW"; }
+  else if(v==="medium"){ badge.classList.add("med"); badge.textContent="MEDIUM"; }
+  else if(v==="high"){ badge.classList.add("high"); badge.textContent="HIGH"; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   DATE CHIP — opens a hidden native date input on click
+   ════════════════════════════════════════════════════════════════════ */
+function wireDateChip(chip){
+  // The chip now contains a real <input type="date">. Restore saved value,
+  // wire change/blur to persist. No overlay tricks — just a native input.
+  const inp = chip.querySelector(".lh-date-input");
+  if(!inp) return;
+  const key = chip.getAttribute("data-key");
+  const saved = key ? lsGet(key) : null;
+  if(saved){
+    inp.value = saved;
+    chip.dataset.iso = saved;
+  }
+  inp.addEventListener("change", ()=>{
+    if(inp.value){
+      chip.dataset.iso = inp.value;
+      if(key){ lsSet(key, inp.value); flagSaving(); }
+    } else {
+      delete chip.dataset.iso;
+      if(key){ lsDel(key); flagSaving(); }
+    }
+  });
+  // Convenience: clicking the chip label or anywhere on the chip focuses
+  // the input and pops the calendar (native showPicker on supporting browsers).
+  chip.addEventListener("click", (e)=>{
+    if(e.target === inp) return;
+    inp.focus();
+    try { if(typeof inp.showPicker === "function") inp.showPicker(); }
+    catch(err){ /* ignore non-gesture errors */ }
+  });
+}
+function formatDate(iso){
+  const d = new Date(iso); if(isNaN(d)) return iso;
+  return d.toLocaleDateString(undefined,{day:"2-digit",month:"short",year:"numeric"});
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   SNIPPETS — RA & MS
+   ════════════════════════════════════════════════════════════════════ */
+function populateRaSnippets(sel){
+  if(sel.dataset.populated) return;
+  sel.dataset.populated = "1";
+  sel.innerHTML = '<option value="">— pick a hazard snippet —</option>' +
+    SNIPPETS_RA.map((s,i)=>'<option value="'+i+'">'+escapeHtml(s.name)+'</option>').join("");
+}
+function populateMsSnippets(sel){
+  if(sel.dataset.populated) return;
+  sel.dataset.populated = "1";
+  sel.innerHTML = '<option value="">— pick a method snippet —</option>' +
+    SNIPPETS_MS.map((s,i)=>'<option value="'+i+'">'+escapeHtml(s.name)+'</option>').join("");
+}
+
+/* ─── Build a single hazards table row from a structured object ─── */
+function _buildHazardRow(row){
+  // row = { hazard, who, how, initial, controls, residual, action }
+  const initial  = (row.initial  || "").toLowerCase();
+  const residual = (row.residual || "").toLowerCase();
+  const riskCell = (val) => {
+    const labels = {low:"LOW", medium:"MEDIUM", high:"HIGH"};
+    const cls    = {low:"low", medium:"med", high:"high"}[val] || "";
+    const txt    = labels[val] || "";
+    return '<td><div class="risk-cell">'
+      + '<select class="risk-select">'
+      +   '<option value="">-- Select --</option>'
+      +   '<option value="low"'    + (val==="low"?    " selected":"") + '>LOW</option>'
+      +   '<option value="medium"' + (val==="medium"? " selected":"") + '>MEDIUM</option>'
+      +   '<option value="high"'   + (val==="high"?   " selected":"") + '>HIGH</option>'
+      + '</select>'
+      + '<span class="badge ' + cls + '">' + txt + '</span>'
+      + '</div></td>';
+  };
+  const cell = (txt) => '<td><div class="editable" contenteditable="true">' + (txt || "") + '</div></td>';
+  return cell(row.hazard) + cell(row.who) + cell(row.how)
+    + riskCell(initial)
+    + cell(row.controls)
+    + riskCell(residual)
+    + '<td style="position:relative;">'
+    +   '<div class="editable" contenteditable="true">' + (row.action || "") + '</div>'
+    +   '<button type="button" class="row-del no-print" title="Remove row">&times;</button>'
+    + '</td>';
+}
+
+function insertRaSnippet(btn){
+  const toolbar = btn.closest(".snippet-toolbar");
+  const sel = toolbar.querySelector(".ra-snip-select");
+  const idx = sel.value;
+  if(idx === ""){ toast("Pick a snippet first", "error"); return; }
+  const s = SNIPPETS_RA[+idx]; if(!s){ return; }
+  const formPage = btn.closest(".form-page") || btn.closest(".sheet");
+  const tbody = formPage.querySelector(".hazardsTable tbody");
+  if(!tbody){ toast("Could not find hazards table", "error"); return; }
+
+  // Three accepted snippet formats:
+  //   1) { rows: [ { hazard, who, how, initial, controls, residual, action }, ... ] }
+  //      → builds N rows from structured objects (per-task bundles, hazard library)
+  //   2) { html: "<td>...</td><td>...</td>..." }
+  //      → inserts ONE row from raw HTML (legacy / advanced)
+  //   3) { kind: "row", html: "..." }  (treated identically to #2)
+  let inserted = 0;
+
+  if(Array.isArray(s.rows) && s.rows.length){
+    s.rows.forEach(rowObj => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = _buildHazardRow(rowObj);
+      tbody.appendChild(tr);
+      attachPersistHandlers(tr);
+      inserted++;
+    });
+  } else if(typeof s.html === "string" && s.html.trim()){
+    const tr = document.createElement("tr");
+    tr.innerHTML = s.html;
+    if(!tr.querySelector(".row-del")){
+      const lastTd = tr.querySelector("td:last-of-type");
+      if(lastTd){
+        lastTd.style.position = "relative";
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "row-del no-print";
+        del.title = "Remove row";
+        del.innerHTML = "&times;";
+        lastTd.appendChild(del);
+      }
+    }
+    tbody.appendChild(tr);
+    attachPersistHandlers(tr);
+    inserted = 1;
+  } else {
+    toast("Snippet has no rows or html", "error");
+    return;
+  }
+
+  persistContainer(tbody);
+
+  // Auto-populate the form's RA reference field if it is empty / placeholder.
+  // Snippet names follow the pattern "RA — XX — Description"; extract XX.
+  const refMatch = (s.name || "").match(/^RA\s*[\-\u2013\u2014]\s*([\w]+)\s*[\-\u2013\u2014]/i);
+  if(refMatch){
+    const ref = "RA-" + refMatch[1];
+    // Find the "Risk Assessment Reference" field on THIS form page.
+    const refField = formPage.querySelector('[data-key^="ra.meta.reference"]');
+    if(refField){
+      const currentText = (refField.innerText || refField.textContent || "").trim();
+      // Treat blank, placeholder "Add Text", or just whitespace as empty.
+      if(currentText === "" || currentText.toLowerCase() === "add text"){
+        refField.textContent = ref;
+        persistField(refField);
+      }
+    }
+  }
+
+  toast(inserted === 1 ? "Hazard row inserted" : (inserted + " hazard rows inserted"));
+}
+
+let lastFocusedMsCell = null;
+document.addEventListener("focusin", e=>{
+  const cell = e.target.closest(".method-table .editable-section, .seq-table .editable");
+  if(cell) lastFocusedMsCell = cell;
+});
+
+/* ─── MS HTML helpers (ported verbatim from scriptms.js) ───────── */
+function _msEscapeHtml(s){
+  return String(s).replace(/[&<>"']/g, (m)=> ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+function _msFormatInline(s){
+  return String(s)
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/__(.+?)__/g, "<u>$1</u>")
+    .replace(/\n/g, "<br>");
+}
+function _msToHTML(text){
+  if(!text) return "";
+  const s = String(text).trim();
+  if(/<(ul|ol|li|p|h[1-6]|table|thead|tbody|tr|td|div|br)\b/i.test(s)) return s;
+  const parts = s.split(/\n+|;\s+/).map(x=>x.trim()).filter(Boolean);
+  if(parts.length > 1){
+    return "<ul>" + parts.map(p => "<li>" + _msFormatInline(_msEscapeHtml(p)) + "</li>").join("") + "</ul>";
+  }
+  return "<p>" + _msFormatInline(_msEscapeHtml(s)) + "</p>";
+}
+
+/* ─── Multi-field MS table populator (ported from scriptms.js
+   populateMethodStatementTable, adapted to this app's data-key layout) ─── */
+function populateMethodStatementTable(fields, page){
+  // Each MS page has a method-table with rows labelled Title/Equipment/PPE/RA Ref/Procedure/Training
+  // We use data-key suffixes to target the editable cells deterministically.
+  const setHTML = (suffix, content) => {
+    if(!content) return;
+    const el = page.querySelector('[data-key$=".' + suffix + '"]');
+    if(el){ el.innerHTML = _msToHTML(content); persistField(el); }
+  };
+  setHTML("title",     fields.title);
+  setHTML("equipment", fields.equipment);
+  setHTML("ppe",       fields.ppe);
+  setHTML("raRef",     fields.raRef || fields.associated);
+  setHTML("procedure", fields.method || fields.procedure);
+
+  // Training cell can hold combined training + risks block
+  if(fields.training || fields.risks){
+    const combined = [
+      fields.training ? "<strong>Training:</strong><br>" + fields.training : "",
+      fields.risks    ? "<strong>Risks:</strong><br>" + fields.risks       : ""
+    ].filter(Boolean).join("<br><br>");
+    setHTML("training", combined);
+  }
+
+  // Sequence of operations: array of {step, detail} (or strings)
+  if(Array.isArray(fields.sequence) && fields.sequence.length){
+    const tbody = page.querySelector('[data-key$=".sequence"]');
+    if(tbody){
+      tbody.innerHTML = "";
+      fields.sequence.forEach((row) => {
+        let step = "", detail = "";
+        if(typeof row === "string"){ step = row; }
+        else { step = row.step || row.operation || ""; detail = row.detail || row.method || row.controls || ""; }
+        const tr = document.createElement("tr");
+        tr.innerHTML = _buildSeqRow(_msToHTML(step), _msToHTML(detail));
+        tbody.appendChild(tr);
+      });
+      _renumberSeq(tbody);
+      attachPersistHandlers(tbody);
+      persistContainer(tbody);
+    }
+  }
+
+  // Emergency arrangements
+  ["firstaid","fire","spill","contacts"].forEach(k=>{
+    if(fields[k] || (fields.emergency && fields.emergency[k])){
+      const el = page.querySelector('[data-key$=".emerg.' + k + '"]');
+      if(el){
+        el.innerHTML = _msToHTML(fields[k] || fields.emergency[k]);
+        persistField(el);
+      }
+    }
+  });
+}
+
+function insertMsSnippet(btn){
+  const toolbar = btn.closest(".snippet-toolbar");
+  const sel = toolbar.querySelector(".ms-snip-select");
+  const idx = sel.value;
+  if(idx === ""){ toast("Pick a snippet first", "error"); return; }
+  const s = SNIPPETS_MS[+idx]; if(!s){ return; }
+  const page = btn.closest(".ms-page");
+
+  // PORTED FROM scriptms.js: prefer multi-field, else fall back to block insert
+  if(s.fields && typeof s.fields === "object"){
+    populateMethodStatementTable(s.fields, page);
+    toast("MS snippet inserted into all fields");
+    return;
+  }
+
+  // Fallback (legacy): insert HTML block into focused / procedure cell
+  let target = lastFocusedMsCell;
+  if(!target || !page.contains(target)){
+    target = page.querySelector('[data-key$=".procedure"]');
+  }
+  if(!target){ toast("Click into a Method cell first", "error"); return; }
+  target.innerHTML = (target.innerHTML.trim() ? target.innerHTML + "<br>" : "") + (s.html || "");
+  persistField(target);
+  toast("MS snippet inserted");
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ADD / REMOVE FORM PAGES (RA) AND METHOD PAGES (MS)
+   ════════════════════════════════════════════════════════════════════ */
+function nextRaIndex(){
+  const pages = $$("#raForms .form-page");
+  return pages.reduce((m,p)=> Math.max(m, +p.dataset.formIndex||1), 0) + 1;
+}
+function addRaForm(){
+  const pages = $$("#raForms .form-page");
+  // Use the FIRST (template) page as the source so PPE labels are pristine
+  const src = pages[0];
+  const idx = nextRaIndex();
+  const clone = src.cloneNode(true);
+  clone.dataset.formIndex = idx;
+  // Re-key page-scoped data-keys (those ending in .N for ppe / sig / hazards)
+  $$("[data-key]", clone).forEach(el=>{
+    const k = el.getAttribute("data-key");
+    if(/\.(ppe|sig|hazards)\./.test(k) || /\.hazards\.tbody\.\d+$/.test(k)){
+      const newK = k.replace(/\.\d+$/, "") + "." + idx;
+      el.setAttribute("data-key", newK);
+    }
+  });
+  // Clear cloned user-data fields ONLY — preserve brand/letterhead AND PPE checklist labels
+  $$("[contenteditable='true']", clone).forEach(el=>{
+    // Preserve letterhead text
+    if(el.classList.contains("lh-strong")||el.classList.contains("lh-client")
+      ||el.classList.contains("lh-title")||el.classList.contains("lh-subtitle")) return;
+    // Preserve PPE checklist item labels (structural, not user data)
+    if(el.closest(".ppe-checks")) return;
+    // Preserve PPE instruction / notes default text by re-restoring from defaults below
+    el.innerHTML = "";
+  });
+  // Re-seed PPE instruction / notes defaults so the new page isn't blank in those rows
+  const ppeInstr = clone.querySelector('[data-key^="ra.ppe.instruction."]');
+  if(ppeInstr) ppeInstr.innerHTML = "Identify all necessary PPE.";
+  const ppeNotes = clone.querySelector('[data-key^="ra.ppe.notes."]');
+  if(ppeNotes) ppeNotes.innerHTML = "The above PPE is task-specific and does NOT replace mandatory site PPE. It is listed where mandatory PPE may not be suitable / sufficient for the task being undertaken.";
+  // PPE checklist: re-seed from the canonical template so a wiped first page
+  // doesn't propagate emptiness to the new page.
+  $$(".ppe-checks", clone).forEach(checks=>{
+    if(checks.children.length === 0){
+      checks.innerHTML = PPE_TEMPLATE_HTML;
+    }
+  });
+  // Hazards tbody: leave EMPTY on a new page (matches no-blank-row policy)
+  $$(".hazardsTable tbody", clone).forEach(tb=>{
+    while(tb.firstChild) tb.removeChild(tb.firstChild);
+  });
+  // Uncheck PPE checkboxes (do not affect their label spans)
+  $$("input[type=checkbox]", clone).forEach(cb=> cb.checked = false);
+  // Reset wire flags so handlers re-attach
+  // Reset ALL wire-flag dataset attributes so handlers re-attach on the clone.
+  $$("[data-persist-wired],[data-risk-wired],[data-ppe-wired],[data-snip-wired],[data-form-wired],[data-row-del-wired],[data-seq-wired],[data-date-wired],[data-add-row-wired],[data-ppe-add-wired],[data-ppe-item-wired],[data-seq-del-wired],[data-seq-inc-wired]", clone).forEach(el=>{
+    delete el.dataset.persistWired; delete el.dataset.riskWired; delete el.dataset.ppeWired;
+    delete el.dataset.snipWired; delete el.dataset.formWired; delete el.dataset.rowDelWired;
+    delete el.dataset.seqWired; delete el.dataset.dateWired;
+    delete el.dataset.addRowWired; delete el.dataset.ppeAddWired; delete el.dataset.ppeItemWired;
+    delete el.dataset.seqDelWired; delete el.dataset.seqIncWired;
+  });
+  // Snippet selects need re-population
+  $$("select.ra-snip-select,select.ms-snip-select", clone).forEach(s=>{ delete s.dataset.populated; s.innerHTML=""; });
+
+  $("#raForms").appendChild(clone);
+  attachPersistHandlers(clone);
+  persistContainer($("#raForms"));
+  toast("Form page added");
+  try { if(typeof clone.scrollIntoView === "function") clone.scrollIntoView({behavior:"smooth", block:"start"}); } catch(e) {}
+}
+function removeRaForm(target){
+  const pages = $$("#raForms .form-page");
+  if(pages.length <= 1){ toast("At least one form page is required", "error"); return; }
+  const page = target.closest(".form-page");
+  page.remove();
+  persistContainer($("#raForms"));
+  toast("Form page removed");
+}
+
+function nextMsIndex(){
+  const pages = $$("#msPages .ms-page");
+  return pages.reduce((m,p)=> Math.max(m, +p.dataset.pageIndex||1), 0) + 1;
+}
+function addMsPage(){
+  const pages = $$("#msPages .ms-page");
+  const src = pages[pages.length-1] || pages[0];
+  const idx = nextMsIndex();
+  const clone = src.cloneNode(true);
+  clone.dataset.pageIndex = idx;
+  $$("[data-key^='ms.page.']", clone).forEach(el=>{
+    const k = el.getAttribute("data-key");
+    el.setAttribute("data-key", k.replace(/^ms\.page\.\d+/, "ms.page."+idx));
+  });
+  // Re-key the seq-section's data-include-key so each MS page has its OWN
+  // sequence-toggle storage entry (otherwise toggling page 2 affects page 1).
+  $$("[data-include-key^='ms.page.']", clone).forEach(el=>{
+    const k = el.getAttribute("data-include-key");
+    el.setAttribute("data-include-key", k.replace(/^ms\.page\.\d+/, "ms.page."+idx));
+  });
+  // Reset the new page's seq-include checkbox to checked (default included)
+  // so it doesn't inherit the source page's toggled-off state visually.
+  $$(".seq-include", clone).forEach(cb => { cb.checked = true; });
+  $$(".seq-section", clone).forEach(s => { s.classList.remove("excluded"); });
+  $$(".add-seq-row", clone).forEach(b=>{
+    b.dataset.target = b.dataset.target.replace(/^ms\.page\.\d+/, "ms.page."+idx);
+  });
+  $$("[contenteditable='true']", clone).forEach(el=> el.innerHTML="");
+  // Reset ALL wire-flag dataset attributes so handlers re-attach on the clone.
+  $$("[data-persist-wired],[data-risk-wired],[data-ppe-wired],[data-snip-wired],[data-form-wired],[data-row-del-wired],[data-seq-wired],[data-date-wired],[data-add-row-wired],[data-ppe-add-wired],[data-ppe-item-wired],[data-seq-del-wired],[data-seq-inc-wired]", clone).forEach(el=>{
+    delete el.dataset.persistWired; delete el.dataset.riskWired; delete el.dataset.ppeWired;
+    delete el.dataset.snipWired; delete el.dataset.formWired; delete el.dataset.rowDelWired;
+    delete el.dataset.seqWired; delete el.dataset.dateWired;
+    delete el.dataset.addRowWired; delete el.dataset.ppeAddWired; delete el.dataset.ppeItemWired;
+    delete el.dataset.seqDelWired; delete el.dataset.seqIncWired;
+  });
+  $$("select.ms-snip-select", clone).forEach(s=>{ delete s.dataset.populated; s.innerHTML=""; });
+  $("#msPages").appendChild(clone);
+  attachPersistHandlers(clone);
+  persistContainer($("#msPages"));
+  toast("MS page added");
+  try { if(typeof clone.scrollIntoView === "function") clone.scrollIntoView({behavior:"smooth", block:"start"}); } catch(e) {}
+}
+function removeMsPage(target){
+  const pages = $$("#msPages .ms-page");
+  if(pages.length <= 1){ toast("At least one method page is required", "error"); return; }
+  const page = target.closest(".ms-page");
+  page.remove();
+  persistContainer($("#msPages"));
+  toast("MS page removed");
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   TAB SWITCHING
+   ════════════════════════════════════════════════════════════════════ */
+function activateTab(name){
+  $$(".tab-btn").forEach(b=> b.classList.toggle("active", b.dataset.tab===name));
+  $$(".tab-panel").forEach(p=> p.classList.toggle("active", p.id==="tab-"+name));
+  lsSet("ui.activeTab", name);
+}
+$$(".tab-btn").forEach(b=> b.addEventListener("click", ()=> activateTab(b.dataset.tab)));
+
+/* ════════════════════════════════════════════════════════════════════
+   BRANDING — CSS variable + logo + text overrides
+   External app writes to localStorage keys (un-prefixed): brand.logo,
+   brand.primary, brand.accent, brand.text, brand.name, brand.tagline,
+   brand.website, brand.phone, brand.email.
+   ════════════════════════════════════════════════════════════════════ */
+const BRAND_KEYS = ["logo","primary","accent","text","name","tagline","website","phone","email"];
+
+function applyBrandingFromStorage(){
+  const primary = localStorage.getItem("brand.primary");
+  const accent  = localStorage.getItem("brand.accent");
+  const text    = localStorage.getItem("brand.text");
+  if(primary){ document.documentElement.style.setProperty("--primary", primary); }
+  if(accent){
+    document.documentElement.style.setProperty("--accent", accent);
+    // Derive an accent-light by adding alpha
+    document.documentElement.style.setProperty("--accent-light", accent + "33");
+    document.documentElement.style.setProperty("--accent-dark", accent);
+  }
+  if(text){ document.documentElement.style.setProperty("--text", text); }
+
+  const logo = localStorage.getItem("brand.logo");
+  if(logo){
+    const main = $("#brandLogo");
+    if(main){
+      main.src = logo; main.style.display="block";
+      // Clear any "ET" placeholder text in the logo-mark
+      const parent = main.parentElement;
+      Array.from(parent.childNodes).forEach(n=>{ if(n.nodeType===3) n.textContent=""; });
+    }
+    $$(".brand-letterhead-logo").forEach(img=>{ img.src = logo; img.style.display="inline-block"; });
+  }
+
+  ["name","tagline","website","phone","email"].forEach(field=>{
+    const v = localStorage.getItem("brand." + field);
+    if(v){ $$('[data-brand="'+field+'"]').forEach(el=> el.textContent = v); }
+  });
+
+  if($("#brandPrimaryIn") && primary) $("#brandPrimaryIn").value = primary;
+  if($("#brandAccentIn") && accent) $("#brandAccentIn").value = accent;
+  if($("#brandTextIn") && text) $("#brandTextIn").value = text;
+  if($("#brandNameIn")) $("#brandNameIn").value = localStorage.getItem("brand.name") || "";
+  if($("#brandTaglineIn")) $("#brandTaglineIn").value = localStorage.getItem("brand.tagline") || "";
+}
+
+function toggleBrandPanel(){ $("#brandPanel").classList.toggle("open"); }
+
+function resetBranding(){
+  BRAND_KEYS.forEach(k=> localStorage.removeItem("brand."+k));
+  location.reload();
+}
+
+function wireBrandPanel(){
+  const set = (k,v)=>{
+    if(v===""||v==null) localStorage.removeItem("brand."+k);
+    else localStorage.setItem("brand."+k, v);
+    applyBrandingFromStorage();
+  };
+  $("#brandPrimaryIn").addEventListener("input", e=> set("primary", e.target.value));
+  $("#brandAccentIn").addEventListener("input", e=> set("accent", e.target.value));
+  $("#brandTextIn").addEventListener("input", e=> set("text", e.target.value));
+  $("#brandNameIn").addEventListener("input", e=> set("name", e.target.value));
+  $("#brandTaglineIn").addEventListener("input", e=> set("tagline", e.target.value));
+  $("#brandLogoFile").addEventListener("change", e=>{
+    const f = e.target.files[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = ()=> set("logo", r.result);
+    r.readAsDataURL(f);
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   BACKUP / RESTORE
+   ════════════════════════════════════════════════════════════════════ */
+window.resetApp = function(){
+  if(!confirm("Reset will clear ALL saved data for this app and reload the page. Continue?")) return;
+  try {
+    Object.keys(localStorage).filter(k => k.startsWith(LS_PREFIX)).forEach(k => localStorage.removeItem(k));
+  } catch(e) {}
+  location.reload();
+};
+
+function exportJSON(){
+  const out = {};
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k.startsWith(LS_PREFIX) || k.startsWith("brand.")){
+      out[k] = localStorage.getItem(k);
+    }
+  }
+  const blob = new Blob([JSON.stringify(out, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "easy-travel-rams-backup-" + new Date().toISOString().slice(0,10) + ".json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast("Backup downloaded");
+}
+function importJSON(){ $("#restoreFile").click(); }
+$("#restoreFile").addEventListener("change", e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const data = JSON.parse(r.result);
+      Object.entries(data).forEach(([k,v])=> localStorage.setItem(k, v));
+      toast("Restored — reloading…");
+      setTimeout(()=> location.reload(), 600);
+    }catch(err){ toast("Bad backup file", "error"); }
+  };
+  r.readAsText(f);
+});
+
+/* ════════════════════════════════════════════════════════════════════
+   PDF EXPORT — renders the visible tab via html2canvas, then jsPDF.
+   The page applies the print stylesheet (@media print) by injecting a
+   temporary <body class="pdf-render"> mirror of @media print rules so
+   the PDF visually matches the browser's print preview.
+   ════════════════════════════════════════════════════════════════════ */
+window.exportPDF = async function(){
+  if(typeof window.jspdf === "undefined" && typeof window.jsPDF === "undefined"){
+    toast("PDF library not loaded", "error"); return;
+  }
+  if(typeof window.html2canvas !== "function"){
+    toast("html2canvas not loaded", "error"); return;
+  }
+  toast("Generating PDF…", "info");
+
+  // Determine the active tab — that is what we render
+  const activeTab = document.querySelector(".tab-panel.active");
+  if(!activeTab){ toast("No active tab", "error"); return; }
+
+  // Inject a CSS rule that mirrors @media print onto a marker class so
+  // html2canvas (which ignores @media print) sees the same layout
+  const styleId = "__pdfPrintMirror";
+  let styleEl = document.getElementById(styleId);
+  if(!styleEl){
+    styleEl = document.createElement("style");
+    styleEl.id = styleId;
+    styleEl.textContent = `
+      body.pdf-render .app-header,
+      body.pdf-render .tab-bar,
+      body.pdf-render .no-print,
+      body.pdf-render .snippet-toolbar,
+      body.pdf-render .row-del,
+      body.pdf-render .seq-row-del,
+      body.pdf-render .seq-section-head,
+      body.pdf-render .brand-panel,
+      body.pdf-render #toast { display:none !important; }
+      /* Sequence toggle: completely remove from PDF if user unticked it */
+      body.pdf-render .seq-section.excluded { display:none !important; }
+      /* Excluded indicator (visible "Excluded from report" caption) is in-app only */
+      body.pdf-render .seq-section.excluded::after { display:none !important; }
+      body.pdf-render { background:#fff !important; }
+      body.pdf-render main { padding:0 !important; max-width:100% !important; }
+      body.pdf-render .tab-panel { display:block !important; }
+      body.pdf-render .sheet { box-shadow:none !important; border:none !important;
+        border-radius:0 !important; padding:0 !important; margin:0 0 8mm !important; }
+      body.pdf-render .table th, body.pdf-render .table td,
+      body.pdf-render .method-table th, body.pdf-render .method-table td { font-size:10.5px; padding:5px 6px; }
+      body.pdf-render .lh-title { font-size:18px; }
+      body.pdf-render .risk-cell select { display:none; }
+    `;
+    document.head.appendChild(styleEl);
+  }
+  document.body.classList.add("pdf-render");
+
+  try {
+    const { jsPDF } = window.jspdf || window;
+    // MS = portrait (one MS per page), RA = landscape (multi-row hazard table fits better wide)
+    const pdfOrientation = activeTab.id === "tab-ms" ? "portrait" : "landscape";
+    const pdf = new jsPDF({ orientation: pdfOrientation, unit: "mm", format: "a4" });
+    const pageWmm = pdf.internal.pageSize.getWidth();
+    const pageHmm = pdf.internal.pageSize.getHeight();
+    const marginMm = 10;
+    const usableWmm = pageWmm - marginMm*2;
+    const usableHmm = pageHmm - marginMm*2;
+
+    // Helper: render one DOM node to PNG and add it as a single PDF page,
+    // scaling DOWN to fit within usable area. One DOM node = one PDF page.
+    async function addNodeAsSinglePage(node, isFirst){
+      const canvas = await html2canvas(node, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        windowWidth: node.scrollWidth
+      });
+      const imgData = canvas.toDataURL("image/png");
+      // Scale to fit BOTH width and height of the page (preserve aspect)
+      const widthScale  = usableWmm / (canvas.width  / 2);  // canvas was 2x scale
+      const heightScale = usableHmm / (canvas.height / 2);
+      // Use the smaller scale so it fits both dimensions
+      const scale = Math.min(widthScale, heightScale, 1);
+      // ↑ cap at 1: never enlarge, only shrink to fit
+      // Compute final dimensions in mm
+      const finalWmm = (canvas.width  / 2) * scale;
+      const finalHmm = (canvas.height / 2) * scale;
+      // Centre the image on the page
+      const xMm = (pageWmm - finalWmm) / 2;
+      const yMm = (pageHmm - finalHmm) / 2;
+      if(!isFirst) pdf.addPage("a4", pdfOrientation);
+      pdf.addImage(imgData, "PNG", xMm, yMm, finalWmm, finalHmm);
+    }
+
+    // Helper: render a tall DOM node, slicing across multiple pages and
+    // snapping cut points to safe breaks (between tr/section/heading) so no
+    // row is split mid-row.
+    async function addNodeWithSlicing(node, isFirst){
+      const nodeRect = node.getBoundingClientRect();
+      const majorBreaks = new Set([0]);
+      const minorBreaks = new Set([0]);
+      node.querySelectorAll(
+        "h1, h2, h3, .letterhead, .headersplitter, .method-table, .seq-section, table, section, .seq-section-body"
+      ).forEach(el => {
+        const r = el.getBoundingClientRect();
+        const top = Math.round((r.top - nodeRect.top) * 2);
+        const bot = Math.round((r.bottom - nodeRect.top) * 2);
+        if(top >= 0) majorBreaks.add(top);
+        if(bot >= 0) majorBreaks.add(bot);
+      });
+      node.querySelectorAll("tr").forEach(el => {
+        const r = el.getBoundingClientRect();
+        const top = Math.round((r.top - nodeRect.top) * 2);
+        if(top >= 0) minorBreaks.add(top);
+      });
+      const canvas = await html2canvas(node, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        windowWidth: node.scrollWidth
+      });
+      majorBreaks.add(canvas.height);
+      minorBreaks.add(canvas.height);
+      const sortedMajor = Array.from(majorBreaks).sort((a, b) => a - b);
+      const sortedMinor = Array.from(minorBreaks).sort((a, b) => a - b);
+      const imgData = canvas.toDataURL("image/png");
+      const imgWmm = usableWmm;
+      const imgHmm = canvas.height * (imgWmm / canvas.width);
+      if(!isFirst) pdf.addPage("a4", pdfOrientation);
+      if(imgHmm <= usableHmm){
+        pdf.addImage(imgData, "PNG", marginMm, marginMm, imgWmm, imgHmm);
+      } else {
+        const pxPerMm = canvas.width / imgWmm;
+        const sliceHpx = Math.floor(usableHmm * pxPerMm);
+        function pickBreak(sortedSet, proposed, currentTop){
+          let best = -1;
+          for(let i = 0; i < sortedSet.length; i++){
+            const b = sortedSet[i];
+            if(b > currentTop && b <= proposed) best = b;
+            if(b > proposed) break;
+          }
+          return best > currentTop ? best : -1;
+        }
+        function findSafeBreak(proposed, currentTop){
+          const major = pickBreak(sortedMajor, proposed, currentTop);
+          if(major > 0) return major;
+          const minor = pickBreak(sortedMinor, proposed, currentTop);
+          if(minor > 0) return minor;
+          return proposed;
+        }
+        const continuationExtraMm = 6; // extra breathing room on continuation pages
+        let yPx = 0, pageIdx = 0;
+        while(yPx < canvas.height){
+          const proposed = Math.min(yPx + sliceHpx, canvas.height);
+          const sliceEnd = (proposed >= canvas.height) ? canvas.height : findSafeBreak(proposed, yPx);
+          const sliceHeight = sliceEnd - yPx;
+          if(sliceHeight <= 0) break;
+          const slice = document.createElement("canvas");
+          slice.width = canvas.width;
+          slice.height = sliceHeight;
+          slice.getContext("2d").drawImage(canvas, 0, yPx, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+          if(pageIdx > 0) pdf.addPage("a4", pdfOrientation);
+          const sliceHmm = sliceHeight / pxPerMm;
+          const yMm = pageIdx > 0 ? marginMm + continuationExtraMm : marginMm;
+          pdf.addImage(slice.toDataURL("image/png"), "PNG", marginMm, yMm, imgWmm, sliceHmm);
+          yPx = sliceEnd;
+          pageIdx++;
+        }
+      }
+    }
+
+    let isFirst = true;
+
+    if(activeTab.id === "tab-ms"){
+      // MS: render letterhead + each .ms-page at a CONSISTENT natural size.
+      // Each MS starts on a new PDF page. If the content fits on one page
+      // we get image-1-style layout. If it overflows (e.g. SoO included),
+      // it continues to a second page rather than shrinking everything.
+      const sheet = activeTab.querySelector(".sheet");
+      const letterhead = sheet ? sheet.querySelector(".letterhead") : null;
+      const projectTitle = sheet ? sheet.querySelector("h1") : null;
+      const msPages = activeTab.querySelectorAll(".ms-page");
+      if(!msPages.length){
+        document.body.classList.remove("pdf-render");
+        toast("No method statement pages to export", "error"); return;
+      }
+      // A4 portrait at 96 DPI = 794 x 1123 px (210mm x 297mm)
+      const A4_PORTRAIT_PX_W = 794;
+      // Build a hidden container for compositing.
+      const composite = document.createElement("div");
+      composite.style.cssText =
+        "position:absolute;left:-99999px;top:0;" +
+        "width:" + A4_PORTRAIT_PX_W + "px;" +
+        "background:#fff;padding:24px 28px;box-sizing:border-box;" +
+        "font-family:'DM Sans',sans-serif;";
+      document.body.appendChild(composite);
+      const compStyleId = "__pdfMsComposite";
+      let compStyle = document.getElementById(compStyleId);
+      if(!compStyle){
+        compStyle = document.createElement("style");
+        compStyle.id = compStyleId;
+        compStyle.textContent =
+          ".__ms-composite, .__ms-composite *{box-sizing:border-box;}" +
+          ".__ms-composite .letterhead{margin-bottom:14px;}" +
+          ".__ms-composite h1{font-size:18px;margin:0 0 12px 0;color:var(--primary);}" +
+          ".__ms-composite .method-table th,.__ms-composite .method-table td{font-size:11px;padding:6px 8px;}" +
+          ".__ms-composite .seq-table th,.__ms-composite .seq-table td{font-size:11px;padding:5px 7px;}" +
+          ".__ms-composite .method-table .editable-section,.__ms-composite .seq-table .editable{font-size:11px;line-height:1.45;}" +
+          ".__ms-composite .lh-title{font-size:16px;}" +
+          ".__ms-composite .headersplitter{font-size:11px;padding:6px 8px;}" +
+          ".__ms-composite .snippet-toolbar,.__ms-composite .seq-section-head,.__ms-composite .seq-row-del,.__ms-composite .row-del{display:none !important;}" +
+          ".__ms-composite .seq-section.excluded{display:none !important;}";
+        document.head.appendChild(compStyle);
+      }
+      composite.classList.add("__ms-composite");
+      try {
+        for(const msPage of msPages){
+          composite.innerHTML = "";
+          if(letterhead) composite.appendChild(letterhead.cloneNode(true));
+          if(projectTitle) composite.appendChild(projectTitle.cloneNode(true));
+          composite.appendChild(msPage.cloneNode(true));
+          // Compute TWO tiers of safe break Y positions BEFORE rendering:
+          //   MAJOR — gaps BETWEEN whole tables/sections/headings (preferred)
+          //   MINOR — gaps between table rows (fallback when a single section
+          //          is taller than a page and we have no choice but to split it)
+          const compositeRect = composite.getBoundingClientRect();
+          const majorBreaks = new Set([0]);
+          const minorBreaks = new Set([0]);
+          // MAJOR: top + bottom of every section-level block. These are the
+          // ONLY places we want to break under normal circumstances.
+          composite.querySelectorAll(
+            "h1, h2, h3, .letterhead, .headersplitter, .method-table, .seq-section, table, section, .seq-section-body"
+          ).forEach(el => {
+            const r = el.getBoundingClientRect();
+            const top = Math.round((r.top - compositeRect.top) * 2);
+            const bot = Math.round((r.bottom - compositeRect.top) * 2);
+            if(top >= 0) majorBreaks.add(top);
+            if(bot >= 0) majorBreaks.add(bot);
+          });
+          // MINOR: top of every tr — fallback only.
+          composite.querySelectorAll("tr").forEach(el => {
+            const r = el.getBoundingClientRect();
+            const top = Math.round((r.top - compositeRect.top) * 2);
+            if(top >= 0) minorBreaks.add(top);
+          });
+
+          const canvas = await html2canvas(composite, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff",
+            windowWidth: A4_PORTRAIT_PX_W,
+            width: A4_PORTRAIT_PX_W
+          });
+          majorBreaks.add(canvas.height);
+          minorBreaks.add(canvas.height);
+          const sortedMajor = Array.from(majorBreaks).sort((a, b) => a - b);
+          const sortedMinor = Array.from(minorBreaks).sort((a, b) => a - b);
+
+          const imgWmm = pageWmm;
+          const imgHmm = canvas.height * (imgWmm / canvas.width);
+
+          if(!isFirst) pdf.addPage("a4", pdfOrientation);
+          isFirst = false;
+
+          if(imgHmm <= pageHmm){
+            pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, imgWmm, imgHmm);
+          } else {
+            const pxPerMm = canvas.width / imgWmm;
+            const sliceHpx = Math.floor(pageHmm * pxPerMm);
+
+            // Try MAJOR break first. If none fits (section taller than a page),
+            // fall back to MINOR (tr boundary). If still none, use proposed.
+            function pickBreak(sortedSet, proposed, currentTop){
+              let best = -1;
+              for(let i = 0; i < sortedSet.length; i++){
+                const b = sortedSet[i];
+                if(b > currentTop && b <= proposed) best = b;
+                if(b > proposed) break;
+              }
+              return best > currentTop ? best : -1;
+            }
+            function findSafeBreak(proposed, currentTop){
+              const major = pickBreak(sortedMajor, proposed, currentTop);
+              if(major > 0) return major;
+              const minor = pickBreak(sortedMinor, proposed, currentTop);
+              if(minor > 0) return minor;
+              return proposed;
+            }
+
+            const continuationTopMm = 8; // breathing room above continuation tables
+            let yPx = 0, sliceIdx = 0;
+            while(yPx < canvas.height){
+              const proposed = Math.min(yPx + sliceHpx, canvas.height);
+              const sliceEnd = (proposed >= canvas.height)
+                ? canvas.height
+                : findSafeBreak(proposed, yPx);
+              const sliceHeight = sliceEnd - yPx;
+              if(sliceHeight <= 0) break;
+              const slice = document.createElement("canvas");
+              slice.width = canvas.width;
+              slice.height = sliceHeight;
+              slice.getContext("2d").drawImage(canvas, 0, yPx, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+              if(sliceIdx > 0) pdf.addPage("a4", pdfOrientation);
+              const sliceHmm = sliceHeight / pxPerMm;
+              const yOffsetMm = sliceIdx > 0 ? continuationTopMm : 0;
+              pdf.addImage(slice.toDataURL("image/png"), "PNG", 0, yOffsetMm, imgWmm, sliceHmm);
+              yPx = sliceEnd;
+              sliceIdx++;
+            }
+          }
+        }
+      } finally {
+        composite.remove();
+      }
+    } else {
+      // RA (or any other tab): existing slicing behaviour per .sheet
+      const sheets = activeTab.querySelectorAll(".sheet");
+      if(!sheets.length){ document.body.classList.remove("pdf-render"); toast("Nothing to export", "error"); return; }
+      for(const sheet of sheets){
+        await addNodeWithSlicing(sheet, isFirst);
+        isFirst = false;
+      }
+    }
+
+    const tabName = activeTab.id === "tab-ra" ? "RA" : (activeTab.id === "tab-ms" ? "MS" : activeTab.id);
+    pdf.save("EasyTravel-" + tabName + "-" + new Date().toISOString().slice(0,10) + ".pdf");
+    toast("PDF saved");
+  } catch (err){
+    console.error(err);
+    toast("PDF generation failed: " + err.message, "error");
+  } finally {
+    document.body.classList.remove("pdf-render");
+  }
+};
+
+/* ════════════════════════════════════════════════════════════════════
+   RESTORE PASS
+   ════════════════════════════════════════════════════════════════════ */
+function restoreAll(){
+  $$("[data-persist-container]").forEach(restoreContainer);
+  $$("[data-persist]").forEach(restoreField);
+  $$(".risk-select").forEach(paintRiskBadge);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════════════════════════ */
+/* Bump this when you change the structural HTML of any persist-container
+   (e.g. add a new column, new section, new input). Stale saved blobs get
+   auto-purged on first load after the bump so users see the new structure. */
+const SCHEMA_VERSION = "2026-04-27-v4-pdf-portrait-fill";
+const SV_KEY = "schema.version";
+
+function purgeStaleStructureIfNeeded(){
+  const saved = lsGet(SV_KEY);
+  if(saved === SCHEMA_VERSION) return;
+  // Schema changed (or first run after this code shipped) — clear the
+  // big structural blobs AND the per-page sequence-toggle entries that
+  // could be stuck in a bad state from before the per-page key fix.
+  // We DO NOT clear user content (titles, equipment, hazard rows, etc.).
+  ["ra.forms", "ms.pages"].forEach(k => lsDel(k));
+  // Clear all per-page sequence-toggle entries so new behaviour starts fresh.
+  try {
+    Object.keys(localStorage).forEach(k => {
+      if(/easytravel\.ramsv1\.(ms|ra)\.page\.\d+\.sequence\.included/.test(k)){
+        localStorage.removeItem(k);
+      }
+    });
+  } catch(e){}
+  lsSet(SV_KEY, SCHEMA_VERSION);
+  console.log("[Easy Travel] Schema upgraded to " + SCHEMA_VERSION + " — structural state refreshed.");
+}
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  applyBrandingFromStorage();
+  wireBrandPanel();
+  purgeStaleStructureIfNeeded();
+  restoreAll();
+  // Self-heal: if any PPE checklist ended up empty after restore, re-seed it.
+  $$(".ppe-checks").forEach(checks=>{
+    if(checks.children.length === 0){
+      checks.innerHTML = PPE_TEMPLATE_HTML;
+      persistContainer(checks);
+    }
+  });
+  attachPersistHandlers(document);
+  const lastTab = lsGet("ui.activeTab");
+  if(lastTab) activateTab(lastTab);
+  window.addEventListener("storage", e=>{
+    if(e.key && e.key.startsWith("brand.")){ applyBrandingFromStorage(); }
+  });
+});
+</script>
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script src="oprams-adapter.js"></script>
+</body>
+</html>

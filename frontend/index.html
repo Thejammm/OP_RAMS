@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — Operational RAMS</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f5f6fa;color:#2c3e50;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{background:#fff;border-radius:10px;padding:32px;box-shadow:0 4px 20px rgba(0,0,0,.08);width:100%;max-width:400px}
+  h1{font-size:20px;color:#1a5276;margin-bottom:4px}
+  .sub{font-size:13px;color:#7f8c8d;margin-bottom:20px}
+  label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#7f8c8d;margin:12px 0 6px}
+  input{width:100%;padding:10px 12px;border:1.5px solid #dce1e8;border-radius:6px;font-family:inherit;font-size:14px}
+  input:focus{outline:none;border-color:#1a5276;box-shadow:0 0 0 3px rgba(26,82,118,.1)}
+  button{width:100%;padding:11px;background:#1a5276;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;margin-top:20px}
+  button:hover{background:#2980b9}
+  button:disabled{opacity:.6;cursor:not-allowed}
+  .err{background:#fdf2f1;color:#c0392b;padding:10px;border-radius:6px;font-size:13px;margin-top:12px;display:none}
+  .foot{margin-top:18px;font-size:12px;color:#95a5a6;text-align:center}
+  .foot a{color:#1a5276;text-decoration:none}
+  .foot a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+  <form class="card" id="login-form">
+    <h1>Operational RAMS</h1>
+    <p class="sub">Risk Assessment &amp; Method Statement — Sign in to continue.</p>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" autocomplete="username" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" autocomplete="current-password" required>
+
+    <button type="submit" id="submit">Sign in</button>
+    <div class="err" id="err"></div>
+
+    <p class="foot">Need an account? Contact your administrator.</p>
+  </form>
+
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script>
+    const form = document.getElementById('login-form');
+    const errEl = document.getElementById('err');
+    const btn = document.getElementById('submit');
+
+    // If already logged in, skip straight to the right page.
+    (async () => {
+      try {
+        const { user } = await window.api.me();
+        window.location.href = user.role === 'admin' ? 'admin.html' : 'oprams.html';
+      } catch { /* not logged in; stay */ }
+    })();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errEl.style.display = 'none';
+      btn.disabled = true;
+      try {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const { user } = await window.api.login(email, password);
+        window.location.href = user.role === 'admin' ? 'admin.html' : 'oprams.html';
+      } catch (err) {
+        errEl.textContent = err.message || 'Sign in failed.';
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
