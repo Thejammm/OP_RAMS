@@ -46,6 +46,10 @@
     createUser:      (data) => request('POST', '/admin/users', data),
     updateUser:      (id, patch) => request('PATCH', `/admin/users/${encodeURIComponent(id)}`, patch),
     revokeSessions:  (id) => request('POST', `/admin/users/${encodeURIComponent(id)}/revoke-sessions`),
+    // Hard delete — also removes the user's saved RAMS records via DB cascade.
+    deleteUser:      (id) => request('DELETE', `/admin/users/${encodeURIComponent(id)}`),
+    // Legacy alias kept so the old admin.html keeps working between commits
+    // during multi-file upload via the GitHub web UI. Safe to remove later.
     deactivateUser:  (id) => request('DELETE', `/admin/users/${encodeURIComponent(id)}`),
   };
 })();
