@@ -339,6 +339,27 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
   .key{font-size:10px;}
   .risk-cell select{display:none;}
 }
+
+/* ── Operatives Briefing & Sign-off ─────────────────────────────────
+   New section added so workers can sign to confirm they've been
+   briefed on each RA/MS. Uses the existing .seq-table styling so it
+   inherits header colour, borders, etc. Each cell is a .editable
+   contenteditable bound to localStorage via [data-persist data-key]
+   exactly like every other field, so it round-trips through Cloud Save.
+   ───────────────────────────────────────────────────────────────── */
+.signoff-section{margin-top:18px;}
+.signoff-section h2{margin:8px 0 4px;}
+.signoff-intro{font-size:12.5px;color:#444;font-style:italic;margin:0 0 10px;}
+.signoff-table{width:100%;}
+.signoff-table th{font-size:10.5px;}
+.signoff-table .editable{min-height:32px;line-height:1.4;}
+.signoff-table .signoff-sig{min-height:38px;}
+.signoff-table tbody td{padding:4px 8px;}
+@media print{
+  .signoff-section{page-break-before:always;}
+  .signoff-table .editable{min-height:34px;}
+  .signoff-table .signoff-sig{min-height:38px;}
+}
 </style>
 </head>
 <body>
@@ -567,6 +588,42 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
           </div>
         </section>
 
+        <!-- ── Operatives Briefing & Sign-off (RA) ── -->
+        <section class="signoff-section signoff-ra">
+          <h2>Operatives Briefing &amp; Sign-off</h2>
+          <p class="signoff-intro">I confirm I have been briefed on, read and understood this Risk Assessment, am aware of the hazards and the control measures, and will work in accordance with it.</p>
+          <table class="seq-table signoff-table">
+            <colgroup>
+              <col style="width:28%"><col style="width:22%"><col style="width:30%"><col style="width:20%">
+            </colgroup>
+            <thead>
+              <tr><th>Name (printed)</th><th>Trade / Company</th><th>Signature</th><th>Date / Time</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r1.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r1.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r1.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r1.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r2.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r2.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r2.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r2.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r3.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r3.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r3.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r3.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r4.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r4.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r4.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r4.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r5.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r5.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r5.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r5.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r6.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r6.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r6.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r6.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r7.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r7.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r7.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r7.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r8.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r8.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r8.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r8.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r9.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r9.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r9.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r9.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r10.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r10.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r10.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r10.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r11.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r11.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r11.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r11.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r12.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r12.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r12.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r12.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r13.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r13.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r13.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r13.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r14.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r14.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r14.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r14.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r15.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r15.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r15.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r15.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r16.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r16.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r16.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r16.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r17.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r17.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r17.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r17.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r18.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r18.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r18.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r18.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r19.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r19.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r19.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r19.dt"></div></td></tr>
+              <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r20.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r20.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r20.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r20.dt"></div></td></tr>
+            </tbody>
+          </table>
+        </section>
+
       </div><!-- /.form-page -->
 
     </div><!-- /#raForms -->
@@ -734,6 +791,42 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
           <div class="sig"><div class="label">Signed</div><div class="sig-value" contenteditable="true" data-persist data-key="ms.sig.signed">Add Signature</div></div>
           <div class="sig"><div class="label">Date</div><div class="sig-value" contenteditable="true" data-persist data-key="ms.sig.date">Add Date</div></div>
         </div>
+      </section>
+
+      <!-- ── Operatives Briefing & Sign-off (MS) ── -->
+      <section class="signoff-section signoff-ms">
+        <h2>Operatives Briefing &amp; Sign-off</h2>
+        <p class="signoff-intro">I confirm I have been briefed on, read and understood this Method Statement, am aware of the sequence of operations and emergency arrangements, and will work in accordance with it.</p>
+        <table class="seq-table signoff-table">
+          <colgroup>
+            <col style="width:28%"><col style="width:22%"><col style="width:30%"><col style="width:20%">
+          </colgroup>
+          <thead>
+            <tr><th>Name (printed)</th><th>Trade / Company</th><th>Signature</th><th>Date / Time</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r1.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r1.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r1.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r1.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r2.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r2.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r2.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r2.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r3.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r3.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r3.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r3.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r4.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r4.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r4.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r4.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r5.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r5.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r5.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r5.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r6.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r6.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r6.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r6.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r7.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r7.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r7.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r7.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r8.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r8.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r8.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r8.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r9.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r9.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r9.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r9.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r10.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r10.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r10.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r10.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r11.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r11.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r11.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r11.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r12.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r12.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r12.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r12.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r13.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r13.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r13.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r13.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r14.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r14.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r14.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r14.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r15.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r15.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r15.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r15.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r16.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r16.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r16.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r16.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r17.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r17.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r17.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r17.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r18.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r18.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r18.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r18.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r19.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r19.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r19.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r19.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r20.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r20.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r20.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r20.dt"></div></td></tr>
+          </tbody>
+        </table>
       </section>
 
     </div><!-- /.sheet -->
@@ -4236,3 +4329,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
 <script src="oprams-adapter.js"></script>
 </body>
 </html>
+
+     
