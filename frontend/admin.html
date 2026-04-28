@@ -113,7 +113,8 @@
           </td>
           <td>
             <button class="small amber" data-action="revoke" data-id="${u.id}">Revoke sessions</button>
-            ${u.is_active ? `<button class="small red" data-action="deactivate" data-id="${u.id}" ${u.id === currentUser.id ? 'disabled' : ''}>Deactivate</button>` : `<button class="small" data-action="reactivate" data-id="${u.id}">Reactivate</button>`}
+            ${u.is_active ? '' : `<button class="small" data-action="reactivate" data-id="${u.id}">Reactivate</button>`}
+            <button class="small red" data-action="delete" data-id="${u.id}" data-email="${escapeHtml(u.email)}" ${u.id === currentUser.id ? 'disabled' : ''}>Delete</button>
           </td>`;
         tbody.appendChild(tr);
       });
@@ -153,9 +154,15 @@
         if (action === 'revoke') {
           if (!confirm('Kick this user out of all active sessions?')) return;
           await window.api.revokeSessions(id);
-        } else if (action === 'deactivate') {
-          if (!confirm('Deactivate this user? They will be logged out and unable to log in.')) return;
-          await window.api.deactivateUser(id);
+        } else if (action === 'delete') {
+          const email = btn.dataset.email || 'this user';
+          const warning =
+            'Permanently delete ' + email + '?\n\n' +
+            'This CANNOT be undone. The user will be logged out, their account will be removed, ' +
+            'and ALL of their saved RAMS records will be deleted.\n\n' +
+            'Their email address will become free for re-use.';
+          if (!confirm(warning)) return;
+          await window.api.deleteUser(id);
         } else if (action === 'reactivate') {
           await window.api.updateUser(id, { isActive: true });
         } else if (action === 'save-expiry') {
@@ -180,3 +187,4 @@
   </script>
 </body>
 </html>
+
