@@ -82,18 +82,24 @@ router.post('/users/:id/revoke-sessions', asyncRoute(async (req, res) => {
 }));
 
 router.delete('/users/:id', asyncRoute(async (req, res) => {
-  // Soft-delete: deactivate + revoke. Never hard-delete (would orphan assessments).
+  // Hard delete. The assessments table FK has ON DELETE CASCADE (migration 003),
+  // so the user's saved RAMS records are removed atomically. This is intentional —
+  // soft-delete blocked re-creating an account with the same email (UNIQUE
+  // constraint on users.email kept the row around), and admins were getting
+  // stuck when a user needed to be re-onboarded with the same address.
   if (req.params.id === req.user.id) {
-    return res.status(400).json({ error: { code: 'BAD_REQUEST', message: "You can't deactivate yourself." } });
+    return res.status(400).json({ error: { code: 'BAD_REQUEST', message: "You can't delete yourself." } });
   }
+  // Revoke first so any in-flight requests from this user fail cleanly before
+  // their row disappears (avoids transient FK errors in session lookups).
+  await revokeAllSessionsForUser(req.params.id);
   const user = await one(
-    `UPDATE users SET is_active = false, updated_at = now() WHERE id = $1
-     RETURNING id, email, role, is_active, access_expires_at`,
+    `DELETE FROM users WHERE id = $1
+     RETURNING id, email, role`,
     [req.params.id]
   );
   if (!user) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'User not found.' } });
-  await revokeAllSessionsForUser(req.params.id);
-  res.json({ user });
+  res.json({ user, deleted: true });
 }));
 
 export default router;
