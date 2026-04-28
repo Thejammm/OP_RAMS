@@ -3222,6 +3222,24 @@ function restoreContainer(el){
   const stripped = v.replace(/<!--[\s\S]*?-->/g,'').replace(/\s+/g,'');
   if(stripped === '') return;
   el.innerHTML = v;
+  // ── CRITICAL: strip stale wired-flags before re-attaching handlers ──
+  // The saved HTML carries [data-*-wired] attributes from when the original
+  // elements were wired up — but innerHTML replacement DESTROYS the actual
+  // JS event handlers. If we don't strip these flags, attachPersistHandlers
+  // sees them, thinks "already wired", and skips re-attaching. Result:
+  // buttons in restored containers (especially the first RA form's
+  // Insert / + Row / + Form buttons) look fine but do nothing.
+  const wiredAttrs = [
+    "data-persist-wired","data-risk-wired","data-ppe-wired","data-snip-wired",
+    "data-form-wired","data-row-del-wired","data-seq-wired","data-date-wired",
+    "data-add-row-wired","data-ppe-add-wired","data-ppe-item-wired",
+    "data-seq-del-wired","data-seq-inc-wired"
+  ];
+  el.querySelectorAll("[" + wiredAttrs.join("],[") + "]").forEach(node => {
+    wiredAttrs.forEach(a => node.removeAttribute(a));
+  });
+  // Re-attach all handlers within the restored container.
+  if (typeof attachPersistHandlers === "function") attachPersistHandlers(el);
 }
 
 function attachPersistHandlers(scope){
@@ -4293,7 +4311,7 @@ function restoreAll(){
 /* Bump this when you change the structural HTML of any persist-container
    (e.g. add a new column, new section, new input). Stale saved blobs get
    auto-purged on first load after the bump so users see the new structure. */
-const SCHEMA_VERSION = "2026-04-28-v5-operatives-signoff";
+const SCHEMA_VERSION = "2026-04-28-v6-restore-rewire";
 const SV_KEY = "schema.version";
 
 function purgeStaleStructureIfNeeded(){
