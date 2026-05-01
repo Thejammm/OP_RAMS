@@ -2,4 +2,4 @@
 // Dev:  http://localhost:3000
 // Prod: https://oprams-api.onrender.com   (Render assigns this from the
 //       service name in render.yaml; if you renamed the service, update here)
-window.API_BASE = 'https://oprams-api.onrender.com';
+window.API_BASE = 'https://oprams-api.archerhs.co.uk';
