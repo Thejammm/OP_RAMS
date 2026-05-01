@@ -360,6 +360,60 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
   .signoff-table .editable{min-height:34px;}
   .signoff-table .signoff-sig{min-height:38px;}
 }
+   /* ════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE (added 2026-05-01) — applies below 768px.
+   Desktop / tablet view above this breakpoint is unchanged.
+   Goal: header toolbar wraps onto multiple rows on iPhone-sized
+   screens instead of forcing the whole page wider than the viewport.
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Header allows content to wrap onto multiple rows */
+  .header-inner {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .header-brand { flex: 1 1 auto; }
+
+  /* Toolbar takes its own full-width row beneath the brand */
+  .header-right {
+    flex: 1 1 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .header-right .btn-sm {
+    padding: 6px 10px;
+    font-size: 11.5px;
+    min-height: 32px;
+  }
+  .header-right .save-indicator { font-size: 10.5px; }
+
+  /* Header is no longer fixed 64px tall so don't offset tab-bar by 64 */
+  .tab-bar { position: relative; top: auto; }
+
+  /* Letterhead: collapse the 1fr / 2fr / 1fr desktop grid into one column */
+  .letterhead {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    text-align: center;
+  }
+  .lh-left, .lh-right { justify-content: center; }
+
+  /* Brand panel: was 280px pinned top-right; on mobile fills near full width */
+  .brand-panel {
+    width: calc(100vw - 24px);
+    right: 12px;
+    left: auto;
+  }
+
+  /* Tighter sheet padding so content uses more of the narrow viewport */
+  .sheet { padding: 14px; }
+}
 </style>
 </head>
 <body>
