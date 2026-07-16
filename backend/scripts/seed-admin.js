@@ -15,14 +15,25 @@ async function run() {
     process.exit(1);
   }
 
+  const hash = await hashPassword(password);
   const existing = await one('SELECT id FROM users WHERE email = $1', [email]);
   if (existing) {
-    console.log(`admin already exists: ${email}`);
+    // Idempotently make the admin's login match ADMIN_EMAIL / ADMIN_PASSWORD.
+    // This is the recovery path: set a fresh ADMIN_PASSWORD in the host env and
+    // redeploy to get back in if the admin password is ever lost. It also
+    // re-activates the account and clears any access expiry.
+    await pool.query(
+      `UPDATE users
+          SET password_hash = $2, role = 'admin', is_active = true,
+              access_expires_at = NULL, updated_at = now()
+        WHERE email = $1`,
+      [email, hash]
+    );
+    console.log(`admin password reset to match ADMIN_PASSWORD: ${email}`);
     await pool.end();
     return;
   }
 
-  const hash = await hashPassword(password);
   await pool.query(
     `INSERT INTO users (email, password_hash, role) VALUES ($1, $2, 'admin')`,
     [email, hash]
