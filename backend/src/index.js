@@ -5,6 +5,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
@@ -20,10 +22,16 @@ if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET === 'change-me-to-
   logger.warn('SESSION_SECRET is weak or unset — fine for local dev only.');
 }
 
-const app = express();
-app.set('trust proxy', 1); // correct client IPs behind Render/most PaaS
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const publicDir = path.join(__dirname, '..', 'public');
 
-app.use(helmet());
+const app = express();
+app.set('trust proxy', 1); // correct client IPs behind Coolify/Traefik
+
+// This one service serves BOTH the RAMS frontend and the API, so the strict
+// default CSP/COEP would block the frontend's inline scripts, Google Fonts and
+// the jsPDF CDN. Relax those two; keep the rest of helmet's hardening.
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
 app.use(pinoHttp({
@@ -46,6 +54,10 @@ app.use(cors({
 }));
 
 app.get('/healthz', (_req, res) => res.json({ ok: true }));
+
+// Serve the RAMS frontend (index.html login shell, oprams.html app, assets).
+// `extensions:['html']` lets /oprams resolve to oprams.html.
+app.use(express.static(publicDir, { extensions: ['html'] }));
 
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
