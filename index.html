@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Easy Travel — Risk Assessment & Method Statement</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -24,35 +24,35 @@
 
 :root{
   /* Surface / chrome */
-  --bg:#f2f4f7; --surface:#ffffff;
+  --bg:#F8FAFC; --surface:#ffffff;
   /* Brand — overridable */
-  --primary:#1f2a44;
-  --accent:#f5b301;
-  --accent-light:#fff5d6;
-  --accent-dark:#c98e00;
-  --text:#3a3a3a; --text-muted:#787878;
+  --primary:#1E3A5F;
+  --accent:#2563EB;
+  --accent-light:#DBEAFE;
+  --accent-dark:#1D4ED8;
+  --text:#111827; --text-muted:#6B7280;
   /* Form chrome */
-  --border:#d0d5dd;
-  --input-bg:#f8fafb; --muted-bg:#f2f4f7;
+  --border:#E5E7EB;
+  --input-bg:#F8FAFC; --muted-bg:#F1F5F9;
   /* State colours */
   --success:#1a7a4a; --success-bg:#e8f7ef; --success-brd:#a7e3c0;
   --warning:#b45309; --warning-bg:#fef3cd; --warning-brd:#fcd88a;
   --danger:#b91c1c;  --danger-bg:#fee2e2;  --danger-brd:#fca5a5;
   --info:#1565c0;    --info-bg:#e3f0ff;    --info-brd:#90bef5;
-  --shadow:0 1px 4px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06);
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.10); --radius:12px;
   /* Risk badge colours */
   --risk-low-bg:#e8f7ef;  --risk-low-fg:#1a7a4a;  --risk-low-brd:#a7e3c0;
   --risk-med-bg:#fef3cd;  --risk-med-fg:#b45309;  --risk-med-brd:#fcd88a;
   --risk-high-bg:#fee2e2; --risk-high-fg:#b91c1c; --risk-high-brd:#fca5a5;
 }
 
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
 
 /* ── Sticky app header ────────────────────────────────── */
 .app-header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:3px solid var(--accent);box-shadow:0 1px 8px rgba(0,0,0,.06);}
 .header-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .header-brand{display:flex;align-items:center;gap:12px;flex-shrink:0;min-width:0;}
-.logo-mark{width:38px;height:38px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0;overflow:hidden;}
+.logo-mark{width:38px;height:38px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Inter',ui-monospace,monospace;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0;overflow:hidden;}
 .logo-mark img{width:100%;height:100%;object-fit:contain;}
 .header-text{display:flex;flex-direction:column;min-width:0;}
 .header-title{font-size:15px;font-weight:700;color:var(--primary);letter-spacing:-.01em;}
@@ -65,7 +65,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
   display:block;
   width:100%;
   margin-top:2px;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Inter',sans-serif;
   font-size:14px;
   font-weight:700;
   color:var(--primary);
@@ -100,7 +100,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .tab-bar{position:sticky;top:64px;z-index:199;background:var(--surface);border-bottom:2px solid var(--border);}
 .tab-bar-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none;}
 .tab-bar-inner::-webkit-scrollbar{display:none;}
-.tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:14px 16px 11px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;white-space:nowrap;margin-bottom:-2px;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:6px;}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:14px 16px 11px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;white-space:nowrap;margin-bottom:-2px;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:6px;}
 .tab-btn:hover{color:var(--text);}
 .tab-btn.active{color:var(--accent-dark);border-bottom-color:var(--accent);}
 
@@ -110,7 +110,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .tab-panel.active{display:block;}
 
 /* ── Buttons ─────────────────────────────────────────── */
-.btn{display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;border-radius:6px;padding:9px 16px;border:1.5px solid transparent;cursor:pointer;transition:all .15s;min-height:40px;white-space:nowrap;background:transparent;color:var(--text);}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:8px;padding:9px 16px;border:1.5px solid transparent;cursor:pointer;transition:all .15s;min-height:40px;white-space:nowrap;background:transparent;color:var(--text);}
 .btn-primary{background:var(--accent);border-color:var(--accent);color:var(--primary);}
 .btn-primary:hover{background:var(--accent-dark);border-color:var(--accent-dark);color:#fff;}
 .btn-outline{background:transparent;border-color:var(--border);color:var(--text);}
@@ -198,7 +198,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .table .muted{color:var(--text-muted);font-weight:400;font-size:11px;}
 .table .w-10{width:10%;} .table .w-12{width:12%;} .table .w-20{width:20%;}
 .table .editable{outline:none;min-height:22px;}
-.table .editable:focus{background:#fff8d9;}
+.table .editable:focus{background:var(--accent-light);}
 
 /* Eval intro table */
 .eval-wrap .eval-table tbody td{font-size:12px;}
@@ -208,14 +208,14 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 /* Snippet toolbar */
 .snippet-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--muted-bg);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin:12px 0;}
 .snippet-toolbar label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--text-muted);}
-.snippet-toolbar select{flex:1 1 240px;min-width:180px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface);border:1.5px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);}
+.snippet-toolbar select{flex:1 1 240px;min-width:180px;font-family:'Inter',sans-serif;font-size:13px;background:var(--surface);border:1.5px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);}
 .snippet-toolbar .btn{min-height:34px;padding:6px 12px;font-size:12px;}
 
 /* Hazards table — risk cell */
 .hazardsTable td{vertical-align:top;}
 .hazardsTable .editable{min-height:60px;outline:none;}
 .risk-cell{display:flex;flex-direction:column;gap:6px;align-items:stretch;}
-.risk-cell select.risk-select{font-family:'DM Sans',sans-serif;font-size:12px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);width:100%;}
+.risk-cell select.risk-select{font-family:'Inter',sans-serif;font-size:12px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);width:100%;}
 .risk-cell .badge{display:inline-flex;justify-content:center;align-items:center;font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;border:1.5px solid var(--border);background:var(--muted-bg);color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;min-height:22px;}
 .risk-cell .badge.low{background:var(--risk-low-bg);color:var(--risk-low-fg);border-color:var(--risk-low-brd);}
 .risk-cell .badge.med{background:var(--risk-med-bg);color:var(--risk-med-fg);border-color:var(--risk-med-brd);}
@@ -266,7 +266,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .seq-table .editable li,
 .hazardsTable .editable li{margin:2px 0;}
 .method-table .editable-section strong{display:inline-block;margin-bottom:2px;}
-.method-table .editable-section:focus{background:#fff8d9;}
+.method-table .editable-section:focus{background:var(--accent-light);}
 
 /* MS Sequence-of-Operations toggleable section */
 .seq-section{margin:16px 0;}
@@ -288,7 +288,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .seq-table th,.seq-table td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top;}
 .seq-table thead th{background:var(--primary);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
 .seq-table td .editable{outline:none;min-height:24px;}
-.seq-table td .editable:focus{background:#fff8d9;}
+.seq-table td .editable:focus{background:var(--accent-light);}
 
 /* Page break header (between RA forms) */
 .headersplitter{margin:24px 0 12px;border-top:2px solid var(--primary);position:relative;height:0;}
@@ -299,13 +299,13 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .sig{background:var(--muted-bg);border:1.5px solid var(--border);border-radius:8px;padding:10px;}
 .sig .label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--text-muted);}
 .sig-value{font-size:13px;font-weight:600;margin-top:3px;outline:none;min-height:20px;}
-.sig-value:focus{background:#fff8d9;border-radius:3px;}
+.sig-value:focus{background:var(--accent-light);border-radius:3px;}
 @media(max-width:700px){.sig-grid{grid-template-columns:1fr 1fr;}}
 
 /* H1 / H2 in sheet */
 .sheet h1{font-size:20px;font-weight:700;color:var(--primary);margin:14px 0 8px;}
 .sheet h1 [contenteditable]{outline:none;}
-.sheet h1 [contenteditable]:focus{background:#fff8d9;}
+.sheet h1 [contenteditable]:focus{background:var(--accent-light);}
 .sheet h2{font-size:14px;font-weight:700;color:var(--primary);margin:18px 0 6px;text-transform:uppercase;letter-spacing:.05em;}
 
 [contenteditable="true"]:focus{outline:none;}
@@ -338,6 +338,81 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
   .matrix-col h3{font-size:11px;}
   .key{font-size:10px;}
   .risk-cell select{display:none;}
+}
+
+/* ── Operatives Briefing & Sign-off ─────────────────────────────────
+   New section added so workers can sign to confirm they've been
+   briefed on each RA/MS. Uses the existing .seq-table styling so it
+   inherits header colour, borders, etc. Each cell is a .editable
+   contenteditable bound to localStorage via [data-persist data-key]
+   exactly like every other field, so it round-trips through Cloud Save.
+   ───────────────────────────────────────────────────────────────── */
+.signoff-section{margin-top:18px;}
+.signoff-section h2{margin:8px 0 4px;}
+.signoff-intro{font-size:12.5px;color:#444;font-style:italic;margin:0 0 10px;}
+.signoff-table{width:100%;}
+.signoff-table th{font-size:10.5px;}
+.signoff-table .editable{min-height:32px;line-height:1.4;}
+.signoff-table .signoff-sig{min-height:38px;}
+.signoff-table tbody td{padding:4px 8px;}
+@media print{
+  .signoff-section{page-break-before:always;}
+  .signoff-table .editable{min-height:34px;}
+  .signoff-table .signoff-sig{min-height:38px;}
+}
+   /* ════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE (added 2026-05-01) — applies below 768px.
+   Desktop / tablet view above this breakpoint is unchanged.
+   Goal: header toolbar wraps onto multiple rows on iPhone-sized
+   screens instead of forcing the whole page wider than the viewport.
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Header allows content to wrap onto multiple rows */
+  .header-inner {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .header-brand { flex: 1 1 auto; }
+
+  /* Toolbar takes its own full-width row beneath the brand */
+  .header-right {
+    flex: 1 1 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .header-right .btn-sm {
+    padding: 6px 10px;
+    font-size: 11.5px;
+    min-height: 32px;
+  }
+  .header-right .save-indicator { font-size: 10.5px; }
+
+  /* Header is no longer fixed 64px tall so don't offset tab-bar by 64 */
+  .tab-bar { position: relative; top: auto; }
+
+  /* Letterhead: collapse the 1fr / 2fr / 1fr desktop grid into one column */
+  .letterhead {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    text-align: center;
+  }
+  .lh-left, .lh-right { justify-content: center; }
+
+  /* Brand panel: was 280px pinned top-right; on mobile fills near full width */
+  .brand-panel {
+    width: calc(100vw - 24px);
+    right: 12px;
+    left: auto;
+  }
+
+  /* Tighter sheet padding so content uses more of the narrow viewport */
+  .sheet { padding: 14px; }
 }
 </style>
 </head>
@@ -374,8 +449,8 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
     <div class="row"><label>Logo</label><input type="file" accept="image/*" id="brandLogoFile"></div>
     <div class="row"><label>Name</label><input type="text" id="brandNameIn" placeholder="EASY TRAVEL"></div>
     <div class="row"><label>Tagline</label><input type="text" id="brandTaglineIn" placeholder="Tagline"></div>
-    <div class="row"><label>Primary</label><input type="color" id="brandPrimaryIn" value="#1f2a44"></div>
-    <div class="row"><label>Accent</label><input type="color" id="brandAccentIn" value="#f5b301"></div>
+    <div class="row"><label>Primary</label><input type="color" id="brandPrimaryIn" value="#1E3A5F"></div>
+    <div class="row"><label>Accent</label><input type="color" id="brandAccentIn" value="#2563EB"></div>
     <div class="row"><label>Text</label><input type="color" id="brandTextIn" value="#3a3a3a"></div>
     <div class="row" style="justify-content:space-between;">
       <button class="btn btn-ghost btn-sm" onclick="resetBranding()">Reset</button>
@@ -570,6 +645,51 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
       </div><!-- /.form-page -->
 
     </div><!-- /#raForms -->
+
+    <!-- ── Operatives Briefing & Sign-off (RA) — its own .sheet, OUTSIDE
+         #raForms because that container has data-persist-container which
+         serialises its entire innerHTML into localStorage and overwrites
+         it on page load — that wiped out a previous version of this
+         section that lived inside .form-page. As its own .sheet it's
+         also picked up by the RA PDF export loop (which iterates
+         activeTab.querySelectorAll('.sheet')). ── -->
+    <div class="sheet sheet-landscape">
+      <section class="signoff-section signoff-ra">
+        <h2>Operatives Briefing &amp; Sign-off</h2>
+        <p class="signoff-intro">I confirm I have been briefed on, read and understood this Risk Assessment, am aware of the hazards and the control measures, and will work in accordance with it.</p>
+        <table class="seq-table signoff-table">
+          <colgroup>
+            <col style="width:28%"><col style="width:22%"><col style="width:30%"><col style="width:20%">
+          </colgroup>
+          <thead>
+            <tr><th>Name (printed)</th><th>Trade / Company</th><th>Signature</th><th>Date / Time</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r1.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r1.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r1.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r1.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r2.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r2.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r2.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r2.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r3.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r3.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r3.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r3.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r4.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r4.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r4.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r4.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r5.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r5.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r5.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r5.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r6.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r6.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r6.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r6.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r7.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r7.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r7.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r7.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r8.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r8.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r8.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r8.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r9.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r9.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r9.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r9.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r10.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r10.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r10.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r10.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r11.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r11.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r11.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r11.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r12.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r12.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r12.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r12.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r13.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r13.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r13.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r13.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r14.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r14.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r14.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r14.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r15.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r15.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r15.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r15.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r16.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r16.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r16.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r16.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r17.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r17.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r17.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r17.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r18.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r18.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r18.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r18.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r19.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r19.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r19.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r19.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r20.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r20.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ra.signoff.r20.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ra.signoff.r20.dt"></div></td></tr>
+          </tbody>
+        </table>
+      </section>
+    </div><!-- /.sheet (RA sign-off) -->
+
   </div><!-- /#tab-ra -->
 
   <!-- ════════════════════════════════════════════════════════
@@ -734,6 +854,45 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
           <div class="sig"><div class="label">Signed</div><div class="sig-value" contenteditable="true" data-persist data-key="ms.sig.signed">Add Signature</div></div>
           <div class="sig"><div class="label">Date</div><div class="sig-value" contenteditable="true" data-persist data-key="ms.sig.date">Add Date</div></div>
         </div>
+      </section>
+
+      <!-- ── Operatives Briefing & Sign-off (MS) — has the .ms-page class
+           so the MS PDF export loop (which iterates activeTab.querySelectorAll('.ms-page'))
+           includes it as another page in the generated PDF, complete with
+           letterhead + project title prepended like every other MS page. ── -->
+      <section class="signoff-section signoff-ms ms-page" data-page-index="signoff">
+        <h2>Operatives Briefing &amp; Sign-off</h2>
+        <p class="signoff-intro">I confirm I have been briefed on, read and understood this Method Statement, am aware of the sequence of operations and emergency arrangements, and will work in accordance with it.</p>
+        <table class="seq-table signoff-table">
+          <colgroup>
+            <col style="width:28%"><col style="width:22%"><col style="width:30%"><col style="width:20%">
+          </colgroup>
+          <thead>
+            <tr><th>Name (printed)</th><th>Trade / Company</th><th>Signature</th><th>Date / Time</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r1.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r1.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r1.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r1.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r2.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r2.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r2.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r2.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r3.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r3.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r3.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r3.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r4.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r4.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r4.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r4.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r5.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r5.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r5.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r5.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r6.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r6.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r6.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r6.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r7.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r7.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r7.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r7.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r8.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r8.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r8.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r8.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r9.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r9.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r9.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r9.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r10.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r10.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r10.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r10.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r11.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r11.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r11.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r11.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r12.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r12.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r12.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r12.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r13.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r13.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r13.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r13.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r14.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r14.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r14.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r14.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r15.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r15.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r15.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r15.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r16.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r16.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r16.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r16.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r17.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r17.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r17.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r17.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r18.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r18.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r18.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r18.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r19.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r19.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r19.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r19.dt"></div></td></tr>
+            <tr><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r20.name"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r20.trade"></div></td><td><div class="editable signoff-sig" contenteditable="true" data-persist data-key="ms.signoff.r20.sig"></div></td><td><div class="editable" contenteditable="true" data-persist data-key="ms.signoff.r20.dt"></div></td></tr>
+          </tbody>
+        </table>
       </section>
 
     </div><!-- /.sheet -->
@@ -3117,6 +3276,24 @@ function restoreContainer(el){
   const stripped = v.replace(/<!--[\s\S]*?-->/g,'').replace(/\s+/g,'');
   if(stripped === '') return;
   el.innerHTML = v;
+  // ── CRITICAL: strip stale wired-flags before re-attaching handlers ──
+  // The saved HTML carries [data-*-wired] attributes from when the original
+  // elements were wired up — but innerHTML replacement DESTROYS the actual
+  // JS event handlers. If we don't strip these flags, attachPersistHandlers
+  // sees them, thinks "already wired", and skips re-attaching. Result:
+  // buttons in restored containers (especially the first RA form's
+  // Insert / + Row / + Form buttons) look fine but do nothing.
+  const wiredAttrs = [
+    "data-persist-wired","data-risk-wired","data-ppe-wired","data-snip-wired",
+    "data-form-wired","data-row-del-wired","data-seq-wired","data-date-wired",
+    "data-add-row-wired","data-ppe-add-wired","data-ppe-item-wired",
+    "data-seq-del-wired","data-seq-inc-wired"
+  ];
+  el.querySelectorAll("[" + wiredAttrs.join("],[") + "]").forEach(node => {
+    wiredAttrs.forEach(a => node.removeAttribute(a));
+  });
+  // Re-attach all handlers within the restored container.
+  if (typeof attachPersistHandlers === "function") attachPersistHandlers(el);
 }
 
 function attachPersistHandlers(scope){
@@ -4032,7 +4209,7 @@ window.exportPDF = async function(){
         "position:absolute;left:-99999px;top:0;" +
         "width:" + A4_PORTRAIT_PX_W + "px;" +
         "background:#fff;padding:24px 28px;box-sizing:border-box;" +
-        "font-family:'DM Sans',sans-serif;";
+        "font-family:'Inter',sans-serif;";
       document.body.appendChild(composite);
       const compStyleId = "__pdfMsComposite";
       let compStyle = document.getElementById(compStyleId);
@@ -4188,7 +4365,7 @@ function restoreAll(){
 /* Bump this when you change the structural HTML of any persist-container
    (e.g. add a new column, new section, new input). Stale saved blobs get
    auto-purged on first load after the bump so users see the new structure. */
-const SCHEMA_VERSION = "2026-04-27-v4-pdf-portrait-fill";
+const SCHEMA_VERSION = "2026-04-28-v6-restore-rewire";
 const SV_KEY = "schema.version";
 
 function purgeStaleStructureIfNeeded(){
