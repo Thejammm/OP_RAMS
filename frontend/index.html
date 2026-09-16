@@ -3,29 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign in — Operational RAMS</title>
+<title>Sign in — AHS RAMS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2048%2048%27%20fill%3D%27none%27%3E%3Ccircle%20cx%3D%2721%27%20cy%3D%2720%27%20r%3D%2716.5%27%20stroke%3D%27%234bbfd6%27%20stroke-width%3D%272.3%27%2F%3E%3Ccircle%20cx%3D%2721%27%20cy%3D%2720%27%20r%3D%279.5%27%20stroke%3D%27%234bbfd6%27%20stroke-width%3D%272.3%27%2F%3E%3Cline%20x1%3D%2721%27%20y1%3D%2720%27%20x2%3D%2740%27%20y2%3D%278%27%20stroke%3D%27%238b9096%27%20stroke-width%3D%272.3%27%20stroke-linecap%3D%27round%27%2F%3E%3C%2Fsvg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  :root{
+    --accent:#4bbfd6; --accent-dark:#3E9DAF; --accent-light:#E4F5F9;
+    --primary:#757575;
+    --bg:#F8FAFC; --surface:#ffffff;
+    --text:#111827; --text-muted:#6B7280; --border:#E5E7EB;
+    --danger:#b91c1c; --danger-bg:#fee2e2; --danger-brd:#fca5a5;
+  }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f5f6fa;color:#2c3e50;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-  .card{background:#fff;border-radius:10px;padding:32px;box-shadow:0 4px 20px rgba(0,0,0,.08);width:100%;max-width:400px}
-  h1{font-size:20px;color:#1a5276;margin-bottom:4px}
-  .sub{font-size:13px;color:#7f8c8d;margin-bottom:20px}
-  label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#7f8c8d;margin:12px 0 6px}
-  input{width:100%;padding:10px 12px;border:1.5px solid #dce1e8;border-radius:6px;font-family:inherit;font-size:14px}
-  input:focus{outline:none;border-color:#1a5276;box-shadow:0 0 0 3px rgba(26,82,118,.1)}
-  button{width:100%;padding:11px;background:#1a5276;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;margin-top:20px}
-  button:hover{background:#2980b9}
+  body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--accent);padding:32px;width:100%;max-width:400px}
+  .mark{width:48px;height:48px;margin-bottom:14px}
+  .mark svg{width:100%;height:100%}
+  h1{font-size:20px;font-weight:600;color:var(--text);letter-spacing:-.01em;margin-bottom:4px}
+  h1 em{font-style:italic;font-weight:600}
+  .sub{font-size:13px;color:var(--text-muted);margin-bottom:22px}
+  label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin:14px 0 6px}
+  input{width:100%;padding:10px 12px;border:1px solid var(--border);background:var(--bg);font-family:inherit;font-size:14px;color:var(--text)}
+  input:focus{outline:none;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px var(--accent-light)}
+  button{width:100%;padding:11px;background:var(--accent);color:var(--primary);border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-top:22px}
+  button:hover{background:var(--accent-dark);color:#fff}
   button:disabled{opacity:.6;cursor:not-allowed}
-  .err{background:#fdf2f1;color:#c0392b;padding:10px;border-radius:6px;font-size:13px;margin-top:12px;display:none}
-  .foot{margin-top:18px;font-size:12px;color:#95a5a6;text-align:center}
-  .foot a{color:#1a5276;text-decoration:none}
-  .foot a:hover{text-decoration:underline}
+  .err{background:var(--danger-bg);border:1px solid var(--danger-brd);color:var(--danger);padding:10px;font-size:13px;margin-top:12px;display:none}
+  .foot{margin-top:20px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted);text-align:center}
 </style>
 </head>
 <body>
   <form class="card" id="login-form">
-    <h1>Operational RAMS</h1>
-    <p class="sub">Risk Assessment &amp; Method Statement — Sign in to continue.</p>
+    <div class="mark"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="21" cy="20" r="16.5" stroke="var(--accent)" stroke-width="2.3"/><circle cx="21" cy="20" r="9.5" stroke="var(--accent)" stroke-width="2.3"/><line x1="21" y1="20" x2="40" y2="8" stroke="#8b9096" stroke-width="2.3" stroke-linecap="round"/></svg></div>
+    <h1><strong>AHS</strong> <em>RAMS</em></h1>
+    <p class="sub">Risk Assessment &amp; Method Statement — sign in to continue.</p>
 
     <label for="email">Email</label>
     <input type="email" id="email" autocomplete="username" required>

@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Easy Travel — Risk Assessment & Method Statement</title>
+<title>AHS RAMS — Risk Assessment & Method Statement</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2048%2048'%20fill%3D'none'%3E%3Ccircle%20cx%3D'21'%20cy%3D'20'%20r%3D'16.5'%20stroke%3D'%234bbfd6'%20stroke-width%3D'2.3'%2F%3E%3Ccircle%20cx%3D'21'%20cy%3D'20'%20r%3D'9.5'%20stroke%3D'%234bbfd6'%20stroke-width%3D'2.3'%2F%3E%3Cline%20x1%3D'21'%20y1%3D'20'%20x2%3D'40'%20y2%3D'8'%20stroke%3D'%238b9096'%20stroke-width%3D'2.3'%20stroke-linecap%3D'round'%2F%3E%3C%2Fsvg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 /* ════════════════════════════════════════════════════════════════════
-   EASY TRAVEL — RA & MS APP
+   AHS RAMS — RA & MS APP
    Visual system inherited from AHS Workplace Inspection System.
    Branding hooks: every colour is a CSS var on :root, every brand-text
    slot is a <span data-brand="..."> and the logo is <img id="brandLogo">
@@ -26,10 +27,10 @@
   /* Surface / chrome */
   --bg:#F8FAFC; --surface:#ffffff;
   /* Brand — overridable */
-  --primary:#1E3A5F;
-  --accent:#2563EB;
-  --accent-light:#DBEAFE;
-  --accent-dark:#1D4ED8;
+  --primary:#757575;
+  --accent:#4bbfd6;
+  --accent-light:#E4F5F9;
+  --accent-dark:#3E9DAF;
   --text:#111827; --text-muted:#6B7280;
   /* Form chrome */
   --border:#E5E7EB;
@@ -52,10 +53,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .app-header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:3px solid var(--accent);box-shadow:0 1px 8px rgba(0,0,0,.06);}
 .header-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .header-brand{display:flex;align-items:center;gap:12px;flex-shrink:0;min-width:0;}
-.logo-mark{width:38px;height:38px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Inter',ui-monospace,monospace;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0;overflow:hidden;}
+.logo-mark{width:40px;height:40px;background:none;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
 .logo-mark img{width:100%;height:100%;object-fit:contain;}
+.logo-mark svg{width:100%;height:100%;}
 .header-text{display:flex;flex-direction:column;min-width:0;}
-.header-title{font-size:15px;font-weight:700;color:var(--primary);letter-spacing:-.01em;}
+.header-title{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.01em;}
 .header-sub{font-size:11px;color:var(--text-muted);}
 .header-right{display:flex;align-items:center;gap:8px;}
 .save-indicator{font-size:11px;color:var(--text-muted);white-space:nowrap;}
@@ -426,9 +428,9 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 <header class="app-header">
   <div class="header-inner">
     <div class="header-brand">
-      <div class="logo-mark"><img id="brandLogo" alt="" style="display:none;">ET</div>
+      <div class="logo-mark"><img id="brandLogo" alt="" style="display:none;"><svg id="brandMark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="21" cy="20" r="16.5" stroke="var(--accent)" stroke-width="2.3"/><circle cx="21" cy="20" r="9.5" stroke="var(--accent)" stroke-width="2.3"/><line x1="21" y1="20" x2="40" y2="8" stroke="#8b9096" stroke-width="2.3" stroke-linecap="round"/></svg></div>
       <div class="header-text">
-        <div class="header-title"><span data-brand="name">EASY TRAVEL</span></div>
+        <div class="header-title"><span data-brand="name"><strong>AHS</strong> <em style="font-style:italic;font-weight:600;">RAMS</em></span></div>
         <div class="header-sub"><span data-brand="tagline">Risk Assessment &amp; Method Statement</span></div>
       </div>
     </div>
@@ -447,11 +449,11 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
   <div class="brand-panel" id="brandPanel">
     <h4>Branding</h4>
     <div class="row"><label>Logo</label><input type="file" accept="image/*" id="brandLogoFile"></div>
-    <div class="row"><label>Name</label><input type="text" id="brandNameIn" placeholder="EASY TRAVEL"></div>
+    <div class="row"><label>Name</label><input type="text" id="brandNameIn" placeholder="Your company name"></div>
     <div class="row"><label>Tagline</label><input type="text" id="brandTaglineIn" placeholder="Tagline"></div>
-    <div class="row"><label>Primary</label><input type="color" id="brandPrimaryIn" value="#1E3A5F"></div>
-    <div class="row"><label>Accent</label><input type="color" id="brandAccentIn" value="#2563EB"></div>
-    <div class="row"><label>Text</label><input type="color" id="brandTextIn" value="#3a3a3a"></div>
+    <div class="row"><label>Primary</label><input type="color" id="brandPrimaryIn" value="#757575"></div>
+    <div class="row"><label>Accent</label><input type="color" id="brandAccentIn" value="#4bbfd6"></div>
+    <div class="row"><label>Text</label><input type="color" id="brandTextIn" value="#111827"></div>
     <div class="row" style="justify-content:space-between;">
       <button class="btn btn-ghost btn-sm" onclick="resetBranding()">Reset</button>
       <button class="btn btn-primary btn-sm" onclick="toggleBrandPanel()">Done</button>
@@ -487,7 +489,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
             <img class="lh-logo brand-letterhead-logo" src="" alt="" style="display:none;">
             <div class="lh-produced">
               <span class="lh-muted">Produced by</span>
-              <span class="lh-strong" data-brand="name" contenteditable="true" data-persist data-key="ra.lh.producer">EASY TRAVEL</span>
+              <span class="lh-strong" data-brand="name" contenteditable="true" data-persist data-key="ra.lh.producer">ARCHER HEALTH AND SAFETY</span>
             </div>
           </div>
           <div class="lh-center">
@@ -704,7 +706,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
           <img class="lh-logo brand-letterhead-logo" src="" alt="" style="display:none;">
           <div class="lh-produced">
             <span class="lh-muted">Produced by</span>
-            <span class="lh-strong" data-brand="name" contenteditable="true" data-persist data-key="ms.lh.producer">EASY TRAVEL</span>
+            <span class="lh-strong" data-brand="name" contenteditable="true" data-persist data-key="ms.lh.producer">ARCHER HEALTH AND SAFETY</span>
           </div>
         </div>
         <div class="lh-center">
@@ -3931,9 +3933,9 @@ function applyBrandingFromStorage(){
     const main = $("#brandLogo");
     if(main){
       main.src = logo; main.style.display="block";
-      // Clear any "ET" placeholder text in the logo-mark
-      const parent = main.parentElement;
-      Array.from(parent.childNodes).forEach(n=>{ if(n.nodeType===3) n.textContent=""; });
+      // A client logo takes the place of the AHS compass mark
+      const mark = $("#brandMark");
+      if(mark) mark.style.display = "none";
     }
     $$(".brand-letterhead-logo").forEach(img=>{ img.src = logo; img.style.display="inline-block"; });
   }
@@ -4340,7 +4342,8 @@ window.exportPDF = async function(){
     }
 
     const tabName = activeTab.id === "tab-ra" ? "RA" : (activeTab.id === "tab-ms" ? "MS" : activeTab.id);
-    pdf.save("EasyTravel-" + tabName + "-" + new Date().toISOString().slice(0,10) + ".pdf");
+    const brandSlug = (localStorage.getItem("brand.name") || "AHS").replace(/[^A-Za-z0-9]+/g,"").slice(0,24) || "AHS";
+    pdf.save(brandSlug + "-" + tabName + "-" + new Date().toISOString().slice(0,10) + ".pdf");
     toast("PDF saved");
   } catch (err){
     console.error(err);
@@ -4385,7 +4388,7 @@ function purgeStaleStructureIfNeeded(){
     });
   } catch(e){}
   lsSet(SV_KEY, SCHEMA_VERSION);
-  console.log("[Easy Travel] Schema upgraded to " + SCHEMA_VERSION + " — structural state refreshed.");
+  console.log("[AHS RAMS] Schema upgraded to " + SCHEMA_VERSION + " — structural state refreshed.");
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{

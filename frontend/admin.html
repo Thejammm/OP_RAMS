@@ -3,38 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Operational RAMS</title>
+<title>Admin — AHS RAMS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2048%2048'%20fill%3D'none'%3E%3Ccircle%20cx%3D'21'%20cy%3D'20'%20r%3D'16.5'%20stroke%3D'%234bbfd6'%20stroke-width%3D'2.3'%2F%3E%3Ccircle%20cx%3D'21'%20cy%3D'20'%20r%3D'9.5'%20stroke%3D'%234bbfd6'%20stroke-width%3D'2.3'%2F%3E%3Cline%20x1%3D'21'%20y1%3D'20'%20x2%3D'40'%20y2%3D'8'%20stroke%3D'%238b9096'%20stroke-width%3D'2.3'%20stroke-linecap%3D'round'%2F%3E%3C%2Fsvg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f5f6fa;color:#2c3e50;line-height:1.5}
-  .header{background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;padding:20px 30px;display:flex;justify-content:space-between;align-items:center}
-  .header h1{font-size:20px}
-  .header .actions a,.header .actions button{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:13px;cursor:pointer;text-decoration:none;margin-left:8px}
+  :root{--accent:#4bbfd6;--accent-dark:#3E9DAF;--accent-light:#E4F5F9;--primary:#757575;
+    --bg:#F8FAFC;--surface:#ffffff;--text:#111827;--text-muted:#6B7280;--border:#E5E7EB;}
+  body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  .header{background:var(--surface);border-bottom:3px solid var(--accent);color:var(--text);padding:14px 30px;display:flex;justify-content:space-between;align-items:center}
+  .header-brand{display:flex;align-items:center;gap:12px}
+  .header-brand .mark{width:40px;height:40px;flex-shrink:0}
+  .header-brand .mark svg{width:100%;height:100%}
+  .header h1{font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .header h1 em{font-style:italic;font-weight:600}
+  .header .sub{font-size:12px;color:var(--text-muted)}
+  .header .actions a,.header .actions button{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:0;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;margin-left:8px}
+  .header .actions a:hover,.header .actions button:hover{border-color:var(--accent);color:var(--text)}
   .container{max-width:1100px;margin:0 auto;padding:24px 30px}
-  .card{background:#fff;border-radius:10px;padding:24px;margin-bottom:18px;border:1px solid #dce1e8;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-  .card h2{font-size:15px;color:#1a5276;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #dce1e8}
+  .card{background:var(--surface);padding:24px;margin-bottom:18px;border:1px solid var(--border)}
+  .card h2{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
   .form-row{display:grid;grid-template-columns:2fr 2fr 1fr 1fr auto;gap:10px;align-items:end}
-  label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#7f8c8d;margin-bottom:4px;display:block}
-  input,select{width:100%;padding:8px 10px;border:1.5px solid #dce1e8;border-radius:6px;font-family:inherit;font-size:13px}
-  button{padding:9px 16px;background:#1a5276;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer}
-  button.red{background:#e74c3c}
-  button.amber{background:#f39c12}
+  label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:4px;display:block}
+  input,select{width:100%;padding:8px 10px;border:1px solid var(--border);background:var(--bg);font-family:inherit;font-size:13px;color:var(--text)}
+  input:focus,select:focus{outline:none;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px var(--accent-light)}
+  button{padding:9px 16px;background:var(--accent);color:var(--primary);border:none;border-radius:0;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  button:hover{background:var(--accent-dark);color:#fff}
+  button.red{background:#b91c1c;color:#fff}
+  button.red:hover{background:#991b1b}
+  button.amber{background:#b45309;color:#fff}
+  button.amber:hover{background:#92400e}
   button.small{padding:5px 10px;font-size:11px}
   table{width:100%;border-collapse:collapse;margin-top:6px}
-  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #eef0f4;font-size:13px}
-  th{font-size:11px;text-transform:uppercase;color:#7f8c8d;letter-spacing:.4px}
-  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
-  .badge.ok{background:#eafaf1;color:#27ae60}
-  .badge.off{background:#fdf2f1;color:#c0392b}
-  .badge.admin{background:#eaf2f8;color:#1a5276}
-  .msg{padding:10px;border-radius:6px;font-size:13px;margin-top:10px;display:none}
-  .msg.ok{background:#eafaf1;color:#27ae60;display:block}
-  .msg.err{background:#fdf2f1;color:#c0392b;display:block}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);font-size:13px}
+  th{font-size:11px;text-transform:uppercase;color:var(--text-muted);letter-spacing:.6px}
+  .badge{display:inline-block;padding:2px 8px;border-radius:0;font-size:11px;font-weight:600}
+  .badge.ok{background:#e8f7ef;color:#1a7a4a}
+  .badge.off{background:#fee2e2;color:#b91c1c}
+  .badge.admin{background:var(--accent-light);color:#2b7a8c}
+  .msg{padding:10px;border:1px solid transparent;font-size:13px;margin-top:10px;display:none}
+  .msg.ok{background:#e8f7ef;border-color:#a7e3c0;color:#1a7a4a;display:block}
+  .msg.err{background:#fee2e2;border-color:#fca5a5;color:#b91c1c;display:block}
 </style>
 </head>
 <body>
   <div class="header">
-    <h1>User Administration</h1>
+    <div class="header-brand">
+      <div class="mark"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="21" cy="20" r="16.5" stroke="var(--accent)" stroke-width="2.3"/><circle cx="21" cy="20" r="9.5" stroke="var(--accent)" stroke-width="2.3"/><line x1="21" y1="20" x2="40" y2="8" stroke="#8b9096" stroke-width="2.3" stroke-linecap="round"/></svg></div>
+      <div>
+        <h1><strong>AHS</strong> <em>RAMS</em></h1>
+        <div class="sub">User administration</div>
+      </div>
+    </div>
     <div class="actions">
       <a href="oprams.html">App</a>
       <button id="logout">Log out</button>
