@@ -923,6 +923,13 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
    Delete it once you have your real content.
    ════════════════════════════════════════════════════════════════════ */
 
+// Snippet set labels. Entries without a `group` fall back to ET_GROUP, so the
+// existing Easy Travel content needed no edit. Add a new client by giving its
+// entries a new group constant.
+const ET_GROUP = "Vehicle workshop (Easy Travel)";
+const FL_GROUP = "Office & survey (Fineline Architects)";
+const LIB_GROUP = "General hazard library (any sector)";
+
 // ─── RA hazard snippets — append more entries here ─────────────────
 const SNIPPETS_RA = [
   {
@@ -2109,6 +2116,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Compressed air (burst tyre / hose)",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Compressed air — sudden release",
@@ -2123,6 +2131,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Stored energy (spring / hydraulic)",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Stored energy release",
@@ -2137,6 +2146,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Manual handling",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Manual handling — back / MSD",
@@ -2151,6 +2161,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Noise (>85 dB)",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Hearing damage",
@@ -2165,6 +2176,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Trapping / crushing",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Trapping or crushing of fingers / limbs",
@@ -2179,6 +2191,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Electrical shock",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Electric shock from portable equipment",
@@ -2193,6 +2206,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Slips, trips and falls",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Slip / trip / fall on the level",
@@ -2207,6 +2221,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Hot work / sparks",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Fire or burns from hot work",
@@ -2221,6 +2236,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — COSHH (chemical exposure)",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Skin / inhalation exposure to substance",
@@ -2235,6 +2251,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Fire / explosion (fuel vapour)",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Fire or explosion",
@@ -2249,6 +2266,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Falling object",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Object falls from height onto operative",
@@ -2263,6 +2281,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Work at height",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Fall from height",
@@ -2277,6 +2296,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Vehicle movement / live traffic",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Struck by vehicle",
@@ -2291,6 +2311,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Dust (HSE WEL)",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Inhalation of dust",
@@ -2305,6 +2326,7 @@ const SNIPPETS_RA = [
   },
   {
     name: "Hazard — Hand-arm vibration (HAVs)",
+    group: LIB_GROUP,
     rows: [
       {
         hazard: "Vibration White Finger / HAVs",
@@ -2314,6 +2336,666 @@ const SNIPPETS_RA = [
         controls: "Trigger-time logged per HSE calculator; rotation; anti-vibration gloves; health surveillance.",
         residual: "medium",
         action: "Workshop Manager"
+      }
+    ]
+  },
+  {
+    name: "FL — 01 — Office: display screen equipment (DSE)",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Upper limb, neck and back disorders",
+        who: "Employees",
+        how: "Long periods of CAD and document work at a workstation that is not set up for the user",
+        initial: "medium",
+        controls: "DSE assessment completed for every user and repeated after any change of desk, chair or equipment. Adjustable chair with lumbar support provided. Screen at arm's length with the top of the screen at eye level. Separate keyboard and mouse provided wherever a laptop is the main machine. Dual screens set at matching height for CAD work. Short break away from the screen each hour.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Eye strain and headaches",
+        who: "Employees",
+        how: "Extended screen sessions with glare from windows or overhead lighting",
+        initial: "medium",
+        controls: "Blinds fitted and used to control glare. Screens positioned side on to windows rather than facing or backing them. Eye test offered to DSE users on request and at regular intervals. Users reminded to refocus on something distant at regular intervals.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Poor posture when working away from the office",
+        who: "Employees",
+        how: "Laptop used at a kitchen table, on a sofa or in a hotel room with no riser or separate keyboard",
+        initial: "medium",
+        controls: "Home working DSE self assessment completed and returned before regular home working starts. Laptop riser, separate keyboard and mouse issued to regular home workers. Guidance issued on temporary set ups. Working away from a proper desk kept to short periods.",
+        residual: "low",
+        action: "Practice Manager"
+      }
+    ]
+  },
+  {
+    name: "FL — 02 — Office: slips, trips and housekeeping",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Slips on wet or contaminated floors",
+        who: "Employees / Visitors",
+        how: "Rain walked in at the entrance, spills in the kitchen area, floors left wet after cleaning",
+        initial: "medium",
+        controls: "Matting at the entrance, long enough to dry footwear. Spills cleaned up straight away and the area dried. Wet floor signs used during and after cleaning. Cleaning scheduled outside main working hours where possible.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Trips over trailing cables and stored material",
+        who: "Employees / Visitors",
+        how: "Extension leads across walkways, plotter paper, sample boxes and drawings left on the floor",
+        initial: "medium",
+        controls: "Cables routed against walls or under desks, never across a walkway. Floor boxes used where desks sit away from walls. Samples, rolls and boxes returned to the store rather than left in circulation routes. Walkways kept clear and checked as part of the regular workplace inspection.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Falls on stairs",
+        who: "Employees / Visitors",
+        how: "Carrying drawings or boxes that obscure the view of the treads, or hurrying",
+        initial: "medium",
+        controls: "Handrail used. Loads carried in one hand only, or taken in two trips, so the handrail stays available. Stair lighting checked and faulty lamps replaced promptly. Nosings kept in good condition.",
+        residual: "low",
+        action: "Practice Manager"
+      }
+    ]
+  },
+  {
+    name: "FL — 03 — Office: electrical equipment",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Electric shock or burns",
+        who: "Employees",
+        how: "Damaged leads, cracked plugs or faulty equipment brought into use",
+        initial: "medium",
+        controls: "User checks the lead, plug and casing before use and reports anything damaged. Damaged equipment taken out of use and labelled. Portable appliances inspected and tested at intervals based on equipment type and use. Fixed installation inspected and tested periodically by a competent electrician. No repairs attempted by staff.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Fire from overloaded sockets",
+        who: "Employees / Others in the building",
+        how: "Daisy chained extension leads feeding printers, plotters and desk equipment",
+        initial: "medium",
+        controls: "Extension leads not plugged into other extension leads. Loads kept within the rating of the lead. Additional sockets installed where demand is permanent rather than relying on adaptors. High load equipment such as plotters and heaters plugged directly into a wall socket.",
+        residual: "low",
+        action: "Practice Manager"
+      }
+    ]
+  },
+  {
+    name: "FL — 04 — Office: fire safety and evacuation",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Delayed or failed evacuation",
+        who: "Employees / Visitors",
+        how: "Staff unfamiliar with the route, or the alarm not heard in parts of the office",
+        initial: "high",
+        controls: "Fire risk assessment in place and reviewed. Routes and exits kept clear and unlocked while the office is occupied. Alarm tested weekly and evacuation drill carried out at least annually. Fire action notices displayed. New starters and visitors told the route and assembly point. Nominated fire marshals sweep and confirm the floor is clear.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Fire load from stored materials",
+        who: "Employees / Others in the building",
+        how: "Paper, drawings, sample boards and packaging accumulating in circulation areas or near sources of heat",
+        initial: "medium",
+        controls: "Storage kept in the designated store, not in corridors, lobbies or stairwells. Waste and packaging removed regularly rather than allowed to build up. Nothing stored against heaters, distribution boards or electrical intake. Samples kept clear of escape routes.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Persons needing assistance to evacuate",
+        who: "Employees / Visitors",
+        how: "A person with reduced mobility, or a temporary injury, unable to use the stairs unaided",
+        initial: "high",
+        controls: "Personal emergency evacuation plan prepared with anyone who cannot evacuate unaided, including temporary needs such as a broken leg or late pregnancy. Refuge point identified and its communication tested. Visitors asked at sign in whether they need assistance to evacuate.",
+        residual: "low",
+        action: "Practice Manager"
+      }
+    ]
+  },
+  {
+    name: "FL — 05 — Office: manual handling",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Back and upper limb injury",
+        who: "Employees",
+        how: "Moving deliveries, boxes of samples, plotter paper rolls and archive boxes",
+        initial: "medium",
+        controls: "Deliveries broken down into manageable loads before moving. Trolley available and used for anything heavy or awkward. Two person lift for bulky items such as sample boards and plan chests. Manual handling briefing given to all staff. Route checked and cleared before carrying.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Injury reaching or stooping in the store",
+        who: "Employees",
+        how: "Retrieving material from high shelves or from floor level",
+        initial: "medium",
+        controls: "Heaviest and most used items stored between knee and shoulder height. Step stool or kick step provided rather than climbing on chairs or boxes. Nothing heavy stored above shoulder height. Store racking kept tidy so items can be reached without stretching across.",
+        residual: "low",
+        action: "Practice Manager"
+      }
+    ]
+  },
+  {
+    name: "FL — 06 — Work related stress, workload and fatigue",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Ill health from sustained excessive workload",
+        who: "Employees",
+        how: "Competing project deadlines, long hours and unclear priorities over an extended period",
+        initial: "medium",
+        controls: "Workload reviewed at regular one to one meetings and priorities set by the project lead. Resource checked before new commissions are accepted. Staff able to raise workload concerns without prejudice. Leave taken and not carried indefinitely. Access to confidential support arranged where needed.",
+        residual: "low",
+        action: "Director"
+      },
+      {
+        hazard: "Fatigue from travel combined with a full working day",
+        who: "Employees / Other road users",
+        how: "Driving a long distance to a survey, working on site, then driving back the same day",
+        initial: "high",
+        controls: "Journey and survey planned as a realistic day, with an overnight stay where the round trip and the work will not reasonably fit. Early starts not combined with late returns. Breaks built into long journeys. Staff expected to stop and rest, or stay over, rather than drive tired, and this is supported without question.",
+        residual: "low",
+        action: "Director"
+      }
+    ]
+  },
+  {
+    name: "FL — 07 — First aid, accident reporting and welfare",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Injury or illness made worse by lack of first aid",
+        who: "Employees / Visitors",
+        how: "No trained person or no kit available, in the office or out on a survey",
+        initial: "medium",
+        controls: "First aid needs assessment completed for the office and for lone survey work. Trained first aider or appointed person available during working hours. Office kit stocked and checked, contents in date. Personal kit carried in each survey vehicle. Emergency contact details held for every member of staff.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Accidents not reported, so hazards repeat",
+        who: "Employees",
+        how: "Incidents and near misses dealt with informally and never recorded",
+        initial: "medium",
+        controls: "Accident book available and its location known. All accidents, near misses and cases of aggression reported to the Practice Manager on the same day. Reportable injuries and dangerous occurrences notified to the enforcing authority within the required timescale. Findings reviewed and control measures changed where the cause points to a gap.",
+        residual: "low",
+        action: "Practice Manager"
+      }
+    ]
+  },
+  {
+    name: "FL — 08 — Working alone in the office or out of hours",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Help delayed for a lone worker taken ill or injured",
+        who: "Employees",
+        how: "Working early, late or at a weekend with nobody else in the building",
+        initial: "medium",
+        controls: "Out of hours working notified to a colleague or the Practice Manager with an expected finish time. Check in on leaving. Mobile phone kept charged and on the person. Higher risk tasks such as work at height, moving heavy items or using equipment not carried out alone.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Security risk at the office out of hours",
+        who: "Employees",
+        how: "Unauthorised entry while a lone member of staff is working with the building otherwise empty",
+        initial: "medium",
+        controls: "External doors kept locked when working alone. Visitors not admitted out of hours unless expected. Lighting left on at the entrance. Staff told to leave the building and call for help rather than challenge anyone.",
+        residual: "low",
+        action: "Practice Manager"
+      }
+    ]
+  },
+  {
+    name: "FL — 09 — Retrofit survey: property visit (general)",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Injury from unknown property condition",
+        who: "Employees",
+        how: "Arriving at a property with no prior knowledge of its structural or service condition",
+        initial: "high",
+        controls: "Client asked for the property history, asbestos register, any structural reports and the condition of services before the visit. Void properties confirmed as isolated or live before arrival. External walk round completed before entry and the visit abandoned if the property looks unsafe. Nothing entered that cannot be left quickly.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Slips, trips and falls inside the property",
+        who: "Employees",
+        how: "Damaged floors, missing boards, rubbish, debris and uneven surfaces",
+        initial: "high",
+        controls: "Route checked ahead one room at a time rather than walking and looking up. Torch used in every unlit room. Footwear with ankle support and a protective sole worn. Floors tested before weight is committed, particularly on landings and near bathrooms. Debris not climbed over.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Working in darkness",
+        who: "Employees",
+        how: "Power disconnected in a void property, boarded windows, survey running into dusk",
+        initial: "medium",
+        controls: "Head torch and a hand torch carried, with spare batteries. Surveys planned for daylight hours. Survey stopped and rearranged if lighting is not adequate to see the floor and the route out. Lighting never assumed to be working.",
+        residual: "low",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 10 — Lone working and personal safety on survey visits",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Violence, aggression or intimidation",
+        who: "Employees",
+        how: "Hostile occupant, neighbour or third party during a visit, including in areas with a known crime problem",
+        initial: "high",
+        controls: "Area and property checked with the client beforehand and any known history of aggression passed on. Visit arranged in daylight. Vehicle parked for an easy exit and not blocked in. Identification carried and shown. Surveyor withdraws immediately if anyone becomes hostile, and does not argue or defend property. Two person visit arranged wherever there is any doubt.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Lone worker injured or taken ill with nobody aware",
+        who: "Employees",
+        how: "Working alone in an empty property with no communication and no fixed return time",
+        initial: "high",
+        controls: "Itinerary left with the office including address, expected duration and finish time. Check in on arrival and on leaving each property. Agreed procedure if a check in is missed, ending in a call to the emergency services. Phone kept charged, on the person and with a signal checked on arrival. No entry to any area where a fall or entrapment would leave the surveyor unable to call for help.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Encountering unauthorised occupants",
+        who: "Employees",
+        how: "Squatters, drug use or stored property found in a void dwelling",
+        initial: "high",
+        controls: "Property approached expecting it may be occupied. Noise made on entry rather than arriving silently. Surveyor withdraws from the property immediately and does not attempt to challenge or remove anyone. Client and police informed. Property not revisited until the client confirms it is clear.",
+        residual: "medium",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 11 — Asbestos during intrusive retrofit survey",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Exposure to asbestos fibres from disturbing materials",
+        who: "Employees / Occupants / Others",
+        how: "Lifting hatches, opening up fabric, drilling for a borescope or taking samples in a property built or altered before 2000",
+        initial: "high",
+        controls: "Every property built or altered before 2000 is presumed to contain asbestos unless a survey proves otherwise. The asbestos register and a refurbishment and demolition survey covering the areas to be opened up are obtained from the client duty holder and read before the visit. No drilling, cutting, lifting, opening up or sampling takes place until that survey is in hand. Where no survey is available the visit is limited to non intrusive inspection only and the client is told why. Asbestos awareness training held and in date by anyone attending.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Disturbing material that the survey did not identify",
+        who: "Employees / Occupants / Others",
+        how: "Unexpected material found behind a panel, in a void or under a floor during opening up",
+        initial: "high",
+        controls: "Work stops the moment suspect material is found or damaged. The area is left, the door closed and access prevented. No attempt is made to clean up, sweep or remove anything. The client duty holder and the practice are informed the same day. Outer clothing bagged and hands washed where contact is suspected. Work does not resume in that area until a licensed contractor or analyst confirms it is safe.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Carrying fibres away from the property",
+        who: "Employees / Family members / Office staff",
+        how: "Dust on clothing, footwear, survey equipment or in the vehicle after working in a dusty void property",
+        initial: "medium",
+        controls: "Disposable coveralls worn for any opening up and removed before leaving the property. Equipment wiped down rather than brushed. Nothing dusty placed in the passenger cabin of the vehicle. Footwear cleaned outside. Contaminated disposables bagged and disposed of through the client's arrangements, never taken home or put in office waste.",
+        residual: "low",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 12 — Working at height during survey",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Fall from a ladder",
+        who: "Employees",
+        how: "Using a ladder to reach a loft hatch, high level detail or roof edge",
+        initial: "high",
+        controls: "Work at height avoided where the information can be obtained from the ground, from a pole camera or from drawings. Ladder used only for short duration light work with three points of contact maintained. Ladder inspected before use, set at the correct angle, on firm level ground and secured or footed. Property ladders and occupiers' own steps not used. Nothing carried up by hand.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Fall through a ceiling or fragile surface",
+        who: "Employees / Occupants below",
+        how: "Stepping off the boarded area in a loft, or onto a fragile roof light or asbestos cement sheet",
+        initial: "high",
+        controls: "Loft inspection made from the hatch wherever possible, using a torch and a pole camera rather than entering. Where entry is unavoidable, only boarded and load bearing areas are used and joists are never walked along. Roofs are not walked on. Fragile materials assumed present in outbuildings and garages until proven otherwise.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Objects falling onto people below",
+        who: "Employees / Occupants / Public",
+        how: "Tools, a torch or debris dropped from a loft hatch, ladder or upper window",
+        initial: "medium",
+        controls: "Area below the hatch or ladder cleared and occupants kept out of the room while the work is done. Tools carried in a belt or bag, not in hands or pockets. Nothing placed on a ladder rung or window ledge. Loose debris around the hatch cleared before it is opened fully.",
+        residual: "low",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 13 — Restricted spaces: lofts, underfloor voids and cellars",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Entrapment or being overcome in a confined space",
+        who: "Employees",
+        how: "Entering an underfloor void, sealed cellar or similar space with restricted access",
+        initial: "high",
+        controls: "Practice staff do not enter any space that meets the definition of a confined space. Inspection is carried out from the access point using lighting, a pole camera or a borescope. Where internal information is genuinely needed, it is obtained by a specialist contractor with the training, equipment and emergency arrangements to enter. No exception is made because a space looks small or the visit is brief.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Oxygen deficiency or harmful gases",
+        who: "Employees",
+        how: "Standing water, decomposition, ground gas or a disused fuel tank in a cellar or void",
+        initial: "high",
+        controls: "Heads not put into voids, cellars or chambers that have been closed up. Cellars ventilated by opening up and left before entry where entry is justified at all. Any smell, haze or symptom of dizziness or headache treated as a reason to leave immediately and not return. Work in such spaces referred to a specialist.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Poor access and egress",
+        who: "Employees",
+        how: "Narrow hatches, steep cellar steps, obstructed routes out",
+        initial: "medium",
+        controls: "Route out identified and kept clear before going in anywhere. Equipment not carried through a restricted opening in the hands. Cellar steps tested and a handrail used, or the cellar viewed from the head of the steps only. Hatches propped so they cannot fall closed.",
+        residual: "low",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 14 — Void property: services, structure, sharps and vermin",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Contact with live or damaged electrical services",
+        who: "Employees",
+        how: "Stripped cabling, exposed conductors or a supply believed dead but still live",
+        initial: "high",
+        controls: "Client asked to confirm in writing that supplies are isolated before an intrusive survey of a void property. Supplies treated as live regardless. Exposed cabling and consumer units not touched, opened or tested. Nothing drilled or cut into a wall until the survey information and a cable detector confirm the route is clear. Damaged installations reported to the client and the area avoided.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Structural collapse or failure of floors and stairs",
+        who: "Employees",
+        how: "Rot, fire damage, water damage or removed structure in a neglected or void property",
+        initial: "high",
+        controls: "External and internal condition assessed before committing weight anywhere. Floors tested at the edge near a wall rather than mid span. Stairs used one person at a time with the handrail. Areas showing sagging, water staining, charring or movement are not entered and are reported. Survey abandoned and the client informed where the structure is in doubt.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Sharps injury",
+        who: "Employees",
+        how: "Discarded needles, broken glass and metal in rubbish left in a void property",
+        initial: "high",
+        controls: "Rubbish and debris never moved by hand or searched through. Nothing reached into where the bottom cannot be seen. Cut resistant gloves and protective footwear worn. Sharps found are left in place, photographed and reported to the client for specialist clearance. Any skin puncture treated as urgent and medical advice sought the same day.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Infection from vermin and fouling",
+        who: "Employees",
+        how: "Rodent and bird droppings, animal fouling and stagnant water in a long term void",
+        initial: "medium",
+        controls: "Disposable gloves worn and hands washed or sanitised before eating, drinking or driving. Dry droppings not swept or disturbed so they become airborne. Disposable coveralls worn where contamination is widespread. Cuts covered before entering. Heavily fouled properties referred back to the client for cleaning before the survey proceeds.",
+        residual: "low",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 15 — Damp, mould and dust during survey",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Respiratory effects from mould spores",
+        who: "Employees",
+        how: "Surveying a property with extensive damp and visible mould growth, which is common on retrofit work",
+        initial: "medium",
+        controls: "Property ventilated by opening up before working in it where that is possible. Disposable FFP3 respirator carried and worn where mould growth is extensive, with the wearer face fit tested and clean shaven. Time in heavily affected rooms kept short. Mould not brushed, scraped or disturbed. Staff with asthma or a respiratory condition identify themselves and are not assigned to heavily affected properties.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Dust from opening up",
+        who: "Employees / Occupants",
+        how: "Lifting boards, drilling for borescope access or removing panels, releasing accumulated dust",
+        initial: "medium",
+        controls: "Asbestos position confirmed before any opening up, as separately assessed. Dust suppressed by working slowly rather than pulling material away. Dust extraction or an on tool shroud used for drilling. Occupants and their belongings kept out of the room or covered. Area cleaned by vacuum or damp wipe, never by dry sweeping.",
+        residual: "low",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 16 — Matterport 3D scanning",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Trips over tripod, camera and cables",
+        who: "Employees / Occupants / Others in the property",
+        how: "Equipment set up in circulation space and left while the operator steps out of shot",
+        initial: "medium",
+        controls: "Tripod positioned clear of doorways, stair heads and main walking routes. Legs set wide and low rather than tall and narrow. Operator stays in the room with the equipment while it is scanning. Occupants told which room is being scanned and asked to wait. Equipment moved with it, never left set up in an unattended room.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Equipment toppling",
+        who: "Employees / Occupants",
+        how: "Tripod knocked or set up on an uneven, sloping or damaged floor",
+        initial: "medium",
+        controls: "Tripod set on a firm level surface with all three legs fully locked. Not set up on stair treads, loose boards or rubble. Weight kept low where floors are uneven. Camera removed from the tripod before the tripod is moved between rooms.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Manual handling of the scanning kit",
+        who: "Employees",
+        how: "Carrying the camera case and tripod between floors and in and out of the vehicle repeatedly through the day",
+        initial: "medium",
+        controls: "Kit carried in a rucksack style case where available so both hands stay free on stairs. Case and tripod carried in separate trips on stairs. Vehicle parked as close to the entrance as practical. Loads split rather than carried in one journey.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Capturing occupants and personal information",
+        who: "Occupants / Employees",
+        how: "Scanning an occupied dwelling and recording people, documents or personal belongings",
+        initial: "medium",
+        controls: "Occupants told what is being scanned, why, and who will see it, before scanning starts. Scanning paused while anyone is in the room. Personal documents and belongings not scanned and the occupant given the chance to move or cover items. Scans stored on practice systems with access limited to the project team and the client. Scan deleted or edited on reasonable request.",
+        residual: "low",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 17 — Drone flight for external survey (under 250g)",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Injury from loss of control or collision",
+        who: "Employees / Public / Occupants",
+        how: "Flyaway, battery failure, signal loss or striking a structure, tree or overhead line during a building survey",
+        initial: "high",
+        controls: "Aircraft is under 250g and flown in the A1 subcategory of the Open category. Pilot holds a valid Flyer ID and the aircraft displays the practice Operator ID. Pre flight check of airframe, propellers, battery and firmware. Site checked on arrival for overhead lines, trees, aerials and people. Aircraft kept within the pilot's direct line of sight throughout and never more than 120m (400ft) from the closest point of the ground. Flight abandoned in rain, fog, or wind beyond the manufacturer's stated limit.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Overflight of people",
+        who: "Public / Occupants",
+        how: "Flying over uninvolved people in a residential street or garden while photographing a roof or elevation",
+        initial: "high",
+        controls: "Uninvolved people are only overflown where it is necessary to achieve the survey, and the time spent above anyone is kept to the minimum. The aircraft is never flown over an assembly of people. Take off and landing point kept clear and, where practical, screened by the vehicle or a fence. Flight paused and the aircraft brought back if anyone approaches. Neighbours and occupants told what is happening before the flight.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Flight in restricted airspace",
+        who: "Employees / Third parties",
+        how: "Surveying near an airport, aerodrome, prison or other site inside a flight restriction zone",
+        initial: "high",
+        controls: "Airspace checked immediately before every flight using a current drone airspace app. No flight inside a flight restriction zone without the required permission from the controlling authority. Temporary restrictions checked on the day. Landowner permission obtained for the take off and landing point. Flight not started where the airspace position cannot be confirmed.",
+        residual: "low",
+        action: "Director"
+      },
+      {
+        hazard: "Lithium battery fire",
+        who: "Employees / Others",
+        how: "Damaged, swollen or overcharged flight batteries in the office, the vehicle or on charge overnight",
+        initial: "medium",
+        controls: "Batteries charged on a hard non combustible surface, attended, and never left on charge overnight or unattended in the office. Damaged, swollen or dropped batteries taken out of use immediately and disposed of through a battery recycling route. Batteries carried in a fire resistant bag, not loose in a bag or footwell, and not left in direct sunlight in a parked vehicle. Charging kept away from escape routes.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Privacy complaint from camera use",
+        who: "Occupants / Neighbours / Employees",
+        how: "Capturing neighbouring gardens, windows and people while photographing the subject building",
+        initial: "medium",
+        controls: "Occupants and immediate neighbours told before the flight what is being photographed and why. Camera pointed at the subject building and recording stopped while repositioning over neighbouring land. Footage reviewed and anything capturing neighbouring private space deleted before the survey is issued. Images held on practice systems, used only for the commission, and not published or shared beyond the client. Flight stopped if a resident objects and the matter referred to the client.",
+        residual: "low",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 18 — Occupied property: residents, pets and vulnerable persons",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Aggressive or uncontrolled dog",
+        who: "Employees",
+        how: "A dog loose in the property or garden during a survey visit",
+        initial: "high",
+        controls: "Occupant asked when the appointment is made whether there are dogs, and asked to secure them in another room before arrival. Surveyor does not enter, and does not open a gate, while a loose dog is present. Visit rearranged rather than risked. Dogs not approached, petted or stepped past in a confined hallway.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Injury to an occupant from survey work",
+        who: "Occupants",
+        how: "Occupant walking into equipment, a lifted hatch or an opened up area during the visit",
+        initial: "medium",
+        controls: "Occupants told which rooms are in use and asked to stay clear while work is in progress. Openings never left unattended and made good or covered before moving on. Equipment kept together rather than spread through the property. Children and pets kept out of rooms being surveyed. Property left as found.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Allegation arising from working in an occupied home",
+        who: "Employees / Occupants",
+        how: "Lone visit to a property with a vulnerable resident, with no record of what took place",
+        initial: "medium",
+        controls: "Appointments made in advance and confirmed with the client or occupant. Photographic identification carried and shown on arrival without being asked. Surveyor stays in the rooms relevant to the survey. Two person visit arranged where the client identifies a vulnerable occupant or where the surveyor has any concern. Time of arrival and departure recorded. Concerns about a resident's welfare reported to the client the same day.",
+        residual: "low",
+        action: "Project Architect"
+      }
+    ]
+  },
+  {
+    name: "FL — 19 — Driving on company business (own vehicles)",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Road traffic collision",
+        who: "Employees / Other road users",
+        how: "Driving to and from survey and client sites, often in unfamiliar areas and in poor weather",
+        initial: "high",
+        controls: "Licence checked at recruitment and at regular intervals afterwards. Journeys planned before setting off and route entered into the navigation system while stationary. Weather checked and non urgent journeys postponed in severe conditions. Drivers report any medical condition or medication affecting their fitness to drive.",
+        residual: "medium",
+        action: "Director"
+      },
+      {
+        hazard: "Use of a vehicle that is not roadworthy or not insured for business use",
+        who: "Employees / Other road users",
+        how: "Staff using their own cars for site visits without business cover or with defects",
+        initial: "high",
+        controls: "Anyone driving on practice business provides evidence of a valid licence, MOT, and insurance including business use, and this is recorded and checked annually. Drivers carry out a walk round check of tyres, lights and fluid levels at sensible intervals. Vehicles with defects affecting safety are not used for practice journeys until repaired.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Driver distraction",
+        who: "Employees / Other road users",
+        how: "Calls, messages and survey queries arriving while driving between properties",
+        initial: "high",
+        controls: "Hand held phone use while driving is prohibited, including when stopped in traffic. Calls go to voicemail and are returned during a break. Office does not expect staff to answer while travelling. Route and appointment changes made before setting off or after parking safely.",
+        residual: "low",
+        action: "Director"
+      },
+      {
+        hazard: "Fatigue at the wheel",
+        who: "Employees / Other road users",
+        how: "Driving home after a long survey day, or an early start following a late finish",
+        initial: "high",
+        controls: "Breaks taken on journeys over two hours. Survey days planned so the return journey is not made when tired, with an overnight stay where needed. Staff supported to stop and rest, or stay over, without having to justify it. Driving not undertaken directly after a physically demanding survey without a break.",
+        residual: "medium",
+        action: "Director"
+      }
+    ]
+  },
+  {
+    name: "FL — 20 — Company van: loading, securing and driving",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Injury loading and unloading",
+        who: "Employees",
+        how: "Lifting survey kit, ladders, equipment cases and sample material in and out of the van",
+        initial: "medium",
+        controls: "Heaviest items loaded last and nearest the door so they are not lifted across the load bed. Kit kept in cases with handles. Two person lift for ladders and anything long or awkward. Loading done from the side or rear at waist height rather than climbing into the van. Van parked so loading does not take place in the carriageway.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Load shifting in transit",
+        who: "Employees / Other road users",
+        how: "Unsecured equipment moving under braking or becoming a projectile in a collision",
+        initial: "high",
+        controls: "All equipment secured with straps or in a fixed rack. Nothing loose in the load area and nothing carried on the passenger seat or in the footwell. Ladders on a proper roof rack with both ends secured. Load checked before setting off and again after the first stop. Load restraint checked as part of the walk round.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Overloading the van",
+        who: "Employees / Other road users",
+        how: "Carrying equipment, materials and samples beyond the vehicle's permitted weight",
+        initial: "medium",
+        controls: "Gross vehicle weight and payload known and displayed in the cab. Loads planned against the payload rather than filling the space. Waste and samples removed rather than accumulating in the van between jobs. Tyre pressures set for the load being carried.",
+        residual: "low",
+        action: "Practice Manager"
+      },
+      {
+        hazard: "Reversing incident",
+        who: "Employees / Public / Occupants",
+        how: "Reversing on a narrow residential street, a driveway or an estate road with restricted visibility",
+        initial: "high",
+        controls: "Reversing avoided by parking so the vehicle can drive out forwards. Walk round completed before reversing, checking behind and for children. Reversing aids used but not relied on alone. A colleague banks the vehicle where one is present, staying in view of the mirrors. Reversing done slowly with the option to stop and get out and look again.",
+        residual: "low",
+        action: "Project Architect"
       }
     ]
   }
@@ -3207,6 +3889,258 @@ const SNIPPETS_MS = [
       spill: "",
       contacts: ""
     }
+  },
+  {
+    name: "MS — FL 09 — Retrofit survey visit (including opening up)",
+    group: FL_GROUP,
+    fields: {
+      title: "Retrofit survey of a dwelling, including intrusive opening up",
+      equipment: "Torch and head torch with spare batteries; moisture meter; borescope; cable detector; hand tools for opening up; camera; tape and laser measure; disposable coveralls and bags; hand sanitiser and wipes; first aid kit; mobile phone",
+      ppe: "Safety footwear with protective sole; cut resistant gloves; disposable gloves; eye protection when opening up; disposable coveralls for dusty or fouled areas; FFP3 respirator (face fit tested) where mould or dust is significant",
+      raRef: "FL-09, FL-10, FL-11, FL-12, FL-13, FL-14, FL-15",
+      procedure: "**Before the visit**\nObtain from the client the property history, the asbestos register and a refurbishment and demolition survey covering every area to be opened up.\nConfirm in writing whether services are live or isolated, and whether the property is void or occupied.\nAsk about known aggression, unauthorised occupation, dogs and vulnerable occupants.\nIf no asbestos survey is available, the visit is limited to non intrusive inspection and the client is told why in writing before the visit.\nLeave the itinerary with the office: address, expected duration, finish time and check in arrangements.\n\n**On arrival**\nPark for an unobstructed exit and do not block yourself in.\nComplete an external walk round before entering. Look for structural movement, fire damage, fragile roofs, open voids and signs of occupation.\nCheck the phone signal. Check in with the office.\nMake noise on entry rather than entering silently. Withdraw and call the client if there is any sign of unauthorised occupation.\n\n**Non intrusive inspection first**\nWork through the property one room at a time, checking the floor ahead before committing weight.\nUse the torch in every unlit room. Test floors at the edge near a wall, not mid span.\nRecord condition, photograph, measure and note suspected asbestos containing materials against the survey.\nDo not enter any confined space. Inspect voids, cellars and lofts from the access point using a torch, pole camera or borescope.\n\n**Opening up**\nOnly proceed where the refurbishment and demolition survey covers the exact location and confirms it is clear.\nUse the cable detector before drilling or cutting into any wall, floor or ceiling. Treat all services as live.\nPut on coveralls and eye protection. Clear and cover the area below.\nWork slowly to limit dust. Use on tool extraction or a shroud when drilling.\nIf any unexpected suspect material is found or damaged, STOP. Leave the area, close the door, prevent access, and report to the client duty holder and the practice the same day. Do not clean up.\n\n**Making good and leaving**\nMake good or securely cover every opening before leaving the room.\nClean by vacuum or damp wipe. Never dry sweep.\nRemove and bag coveralls before leaving the property. Clean footwear outside. Do not put dusty items in the passenger cabin.\nLeave the property secure and as found. Check out with the office.",
+      training: "Asbestos awareness (in date); lone working briefing; manual handling; working at height awareness; first aid at work or emergency first aid",
+      risks: "Asbestos; unsafe structure and floors; live electrical services; sharps and vermin; mould and dust; falls from height and through ceilings; lone working and personal safety; confined spaces",
+      sequence: [
+        {
+          step: "Obtain survey information",
+          detail: "Asbestos register and refurbishment and demolition survey obtained and read. No survey means no opening up."
+        },
+        {
+          step: "Confirm services and occupancy",
+          detail: "Client confirms in writing whether supplies are isolated and whether the property is void or occupied."
+        },
+        {
+          step: "Lodge the itinerary",
+          detail: "Address, duration, finish time and check in arrangements left with the office."
+        },
+        {
+          step: "External walk round",
+          detail: "Structure, roof, fragile materials, open voids and signs of occupation checked before entry."
+        },
+        {
+          step: "Enter and check in",
+          detail: "Noise made on entry. Signal checked. Arrival reported to the office."
+        },
+        {
+          step: "Non intrusive inspection",
+          detail: "Room by room, floors tested at the edge, torch used, voids viewed from the access point only."
+        },
+        {
+          step: "Locate against the survey",
+          detail: "Suspected asbestos containing materials identified and cross checked against the survey before anything is disturbed."
+        },
+        {
+          step: "Open up (only where cleared)",
+          detail: "Cable detector used, coveralls and eye protection on, area below cleared and covered, dust minimised."
+        },
+        {
+          step: "Stop on the unexpected",
+          detail: "Any unexpected suspect material means stop, leave, secure the area and report. No clean up."
+        },
+        {
+          step: "Make good",
+          detail: "Openings covered or made good. Area cleaned by vacuum or damp wipe, never dry swept."
+        },
+        {
+          step: "Decontaminate and leave",
+          detail: "Coveralls bagged, footwear cleaned, nothing dusty in the cabin, property secured."
+        },
+        {
+          step: "Check out",
+          detail: "Departure reported to the office and the itinerary closed."
+        }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle. Any skin puncture from a sharp is treated as urgent and medical advice sought the same day. Nearest A&E identified before the visit for properties in unfamiliar areas.",
+      fire: "Escape route identified on entry and kept clear. In a void property with no alarm, leave immediately and call 999 from outside. Do not re-enter.",
+      spill: "Suspected asbestos disturbance: stop, leave, secure the area, report to the client duty holder. Do not sweep, vacuum or clean up. Bag outer clothing where contact is suspected.",
+      contacts: "Practice Manager — TBC | Client duty holder — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — FL 16 — Matterport 3D scan",
+    group: FL_GROUP,
+    fields: {
+      title: "Matterport 3D scan of a dwelling or building",
+      equipment: "Matterport camera; tripod; tablet or phone with the capture app; spare batteries and charger; carry case",
+      ppe: "Safety footwear; gloves as required by the property condition",
+      raRef: "FL-16, FL-09, FL-10, FL-18",
+      procedure: "**Before starting**\nConfirm access arrangements and, for an occupied property, tell the occupant what is being scanned, why, and who will see it.\nAgree which rooms are out of scope and give the occupant the chance to move or cover personal items.\nPlan the scan route so the tripod is never set up in a doorway, at a stair head or across the main walking route.\n\n**Setting up**\nCarry the case and tripod in separate trips on stairs so a hand is free for the handrail.\nSet the tripod on a firm level surface with all three legs fully locked. Do not set up on stair treads, loose boards or rubble.\nKeep the tripod low and wide where floors are uneven.\nFit the camera only once the tripod is stable.\n\n**Scanning**\nStay in the room with the equipment while it is scanning.\nPause scanning while anyone is in the room.\nMove to the next position by removing the camera first, then the tripod. Never drag the tripod with the camera fitted.\nKeep the equipment together rather than spread through the property.\n\n**Finishing**\nReview the scan for any capture of personal documents, belongings or people and delete or edit before issue.\nPack the equipment and check nothing is left in any room.\nUpload to practice systems with access limited to the project team and the client.",
+      training: "Equipment familiarisation; lone working briefing; data protection awareness",
+      risks: "Trips over tripod and cables; equipment toppling; manual handling of the kit; capture of personal information; property condition hazards as per the survey assessment",
+      sequence: [
+        {
+          step: "Brief the occupant",
+          detail: "What is scanned, why, who sees it. Rooms out of scope agreed and personal items moved or covered."
+        },
+        {
+          step: "Plan the route",
+          detail: "Positions chosen clear of doorways, stair heads and walking routes."
+        },
+        {
+          step: "Carry the kit",
+          detail: "Case and tripod in separate trips on stairs, handrail kept free."
+        },
+        {
+          step: "Set the tripod",
+          detail: "Firm level surface, legs fully locked, low and wide on uneven floors."
+        },
+        {
+          step: "Fit the camera",
+          detail: "Camera fitted only once the tripod is stable."
+        },
+        {
+          step: "Scan the position",
+          detail: "Operator stays in the room. Scanning paused while anyone is present."
+        },
+        {
+          step: "Reposition",
+          detail: "Camera removed first, then the tripod moved. Never moved together."
+        },
+        {
+          step: "Review and edit",
+          detail: "Capture of people, documents and personal belongings removed before issue."
+        },
+        {
+          step: "Pack and check",
+          detail: "All equipment accounted for and no items left in any room."
+        }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle.",
+      fire: "Escape route identified on arrival. Equipment abandoned in the event of an alarm. Do not return for the camera.",
+      spill: "Not applicable.",
+      contacts: "Practice Manager — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — FL 17 — Drone external survey (aircraft under 250g)",
+    group: FL_GROUP,
+    fields: {
+      title: "External building survey using an unmanned aircraft under 250g, Open category subcategory A1",
+      equipment: "Unmanned aircraft under 250g with camera; spare propellers; flight batteries in a fire resistant bag; controller and mobile device; current airspace app; landing pad; cones or a barrier for the take off point; high visibility vest",
+      ppe: "High visibility vest; safety footwear; eye protection when handling propellers",
+      raRef: "FL-17, FL-19",
+      procedure: "**Before the day**\nConfirm the aircraft is under 250g and is being flown in the A1 subcategory of the Open category.\nConfirm the pilot holds a valid Flyer ID and that the practice Operator ID is displayed on the aircraft.\nObtain landowner permission for the take off and landing point.\nCheck the airspace for the site and identify any flight restriction zone. Where the site sits inside one, no flight takes place without permission from the controlling authority.\nCheck insurance covers the flight.\n\n**On site, before flight**\nRe-check the airspace on the current app, including temporary restrictions, immediately before flying.\nCheck the weather. Do not fly in rain, fog, or wind beyond the manufacturer's stated limit.\nWalk the site. Identify overhead lines, trees, aerials, chimneys, and where people are likely to be.\nChoose a take off and landing point clear of people and, where practical, screened by the vehicle or a fence.\nTell the occupants and immediate neighbours what is happening and roughly how long it will take.\nPre flight check: airframe, propellers for chips and cracks, battery charge and condition, firmware, controller link, return to home point set.\n\n**Flying**\nKeep the aircraft within direct line of sight at all times. Do not rely on the camera view to maintain awareness.\nNever more than 120m (400ft) from the closest point of the earth's surface.\nOverfly uninvolved people only where it is necessary to achieve the survey, and keep the time overhead to a minimum.\nNever fly over an assembly of people.\nPoint the camera at the subject building. Stop recording while repositioning over neighbouring land.\nPause the flight and bring the aircraft back if anyone approaches the take off point or if a resident objects.\nLand immediately on any warning, unexpected behaviour, or a drop in battery below the planned reserve.\n\n**After the flight**\nInspect the aircraft and propellers. Take damaged propellers out of use.\nAllow batteries to cool before packing. Carry them in a fire resistant bag, never loose and never in direct sun.\nReview the footage and delete anything capturing neighbouring private space before the survey is issued.\nRecord the flight: date, site, pilot, aircraft, duration, and anything that went wrong.",
+      training: "Flyer ID held and valid; manufacturer familiarisation on the aircraft type; briefing on practice drone procedure and privacy expectations",
+      risks: "Loss of control or flyaway; collision with structure, tree or overhead line; overflight of people; restricted airspace; lithium battery fire; privacy complaint",
+      sequence: [
+        {
+          step: "Confirm permissions",
+          detail: "Aircraft under 250g, A1 subcategory. Flyer ID valid, Operator ID displayed, insurance in place."
+        },
+        {
+          step: "Landowner permission",
+          detail: "Permission obtained for the take off and landing point."
+        },
+        {
+          step: "Airspace check",
+          detail: "Checked when planning and again on site immediately before flight, including temporary restrictions."
+        },
+        {
+          step: "Weather check",
+          detail: "No flight in rain, fog, or wind beyond the manufacturer limit."
+        },
+        {
+          step: "Site walk",
+          detail: "Overhead lines, trees, aerials and likely positions of people identified."
+        },
+        {
+          step: "Set the take off point",
+          detail: "Clear of people, screened where practical, return to home point set."
+        },
+        {
+          step: "Inform those nearby",
+          detail: "Occupants and immediate neighbours told what is happening and for how long."
+        },
+        {
+          step: "Pre flight check",
+          detail: "Airframe, propellers, battery, firmware and controller link checked."
+        },
+        {
+          step: "Fly the survey",
+          detail: "Direct line of sight kept, below 120m (400ft), overflight of people minimised, never over an assembly."
+        },
+        {
+          step: "Abort criteria",
+          detail: "Land immediately on any warning, unexpected behaviour, approach by a person, or low battery."
+        },
+        {
+          step: "Post flight check",
+          detail: "Airframe and propellers inspected. Batteries cooled and packed in a fire resistant bag."
+        },
+        {
+          step: "Review and log",
+          detail: "Footage reviewed and neighbouring private space removed. Flight recorded in the log."
+        }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle. Propeller injuries cleaned and covered, and medical advice sought for any deep cut.",
+      fire: "Battery fire is not extinguished with water on a lithium cell in a confined space. Move people away, call 999, and do not attempt to pick up a burning battery. Batteries charged and carried in a fire resistant bag to contain a failure.",
+      spill: "Not applicable.",
+      contacts: "Practice Manager — TBC | Landowner or client contact — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — FL 20 — Company van loading and securing",
+    group: FL_GROUP,
+    fields: {
+      title: "Loading, securing and unloading the company van for survey work",
+      equipment: "Company van; load straps or fixed racking; roof rack with ladder clamps; equipment cases; payload plate or weight information in the cab",
+      ppe: "Safety footwear; gloves; high visibility vest when loading at the roadside",
+      raRef: "FL-20, FL-19",
+      procedure: "**Before loading**\nPark where loading does not take place in the carriageway. Use the driveway, a bay or a side road.\nPut on a high visibility vest if any part of loading is near live traffic.\nCheck the payload figure for the vehicle and plan the load against it, not against the space available.\n\n**Loading**\nBreak the load into manageable items. Keep equipment in cases with handles.\nLoad from the side or rear at waist height. Do not climb into the load area to drag items across.\nPut the heaviest items last and nearest the door, so they are not lifted across the load bed.\nUse a two person lift for ladders and anything long, heavy or awkward.\nLadders go on the roof rack with both ends secured, never loose in the load area.\n\n**Securing**\nStrap everything, or stow it in fixed racking. Nothing loose in the load area.\nNothing carried on the passenger seat or in the footwell.\nCarry drone batteries in a fire resistant bag, not loose and not in direct sun.\nCheck the load before setting off and again after the first stop.\nSet tyre pressures for the load being carried.\n\n**Driving and unloading**\nPark so the vehicle can be driven out forwards and reversing is avoided.\nWhere reversing is unavoidable, walk round the vehicle first and check for children, then reverse slowly, using a banksman who stays in the mirrors where one is available.\nOn arrival, open the rear doors standing to one side in case the load has shifted.\nUnload in reverse order, heaviest first, and carry to the property in more than one trip rather than overloading a single carry.\nRemove waste and samples from the van at the end of the job rather than letting them accumulate.",
+      training: "Manual handling; load securing briefing; driver induction for the van",
+      risks: "Manual handling injury; load shifting in transit; overloading; reversing incident; roadside traffic during loading",
+      sequence: [
+        {
+          step: "Park safely to load",
+          detail: "Off the carriageway where possible. High visibility vest worn if near live traffic."
+        },
+        {
+          step: "Plan against payload",
+          detail: "Load planned against the vehicle payload figure, not the available space."
+        },
+        {
+          step: "Load in order",
+          detail: "Heaviest last and nearest the door. Loaded from side or rear at waist height."
+        },
+        {
+          step: "Two person lift",
+          detail: "Used for ladders and anything long, heavy or awkward."
+        },
+        {
+          step: "Ladders to the rack",
+          detail: "On the roof rack with both ends secured, never loose inside."
+        },
+        {
+          step: "Secure everything",
+          detail: "Strapped or racked. Nothing loose, nothing on the passenger seat or in the footwell."
+        },
+        {
+          step: "Battery stowage",
+          detail: "Drone batteries in a fire resistant bag, out of direct sunlight."
+        },
+        {
+          step: "Check before moving",
+          detail: "Load checked before setting off and again after the first stop. Tyre pressures set for the load."
+        },
+        {
+          step: "Park to drive out",
+          detail: "Parked so the vehicle leaves forwards. Walk round and bank the vehicle where reversing is unavoidable."
+        },
+        {
+          step: "Unload",
+          detail: "Doors opened from one side. Heaviest first. More than one trip rather than an overloaded carry."
+        },
+        {
+          step: "Clear the van",
+          detail: "Waste and samples removed at the end of the job."
+        }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle.",
+      fire: "Vehicle fire: stop, get everyone out and well clear, call 999. Do not open the bonnet. Drone batteries carried in a fire resistant bag to contain a cell failure.",
+      spill: "Absorbent material carried for fuel or fluid spillage from equipment. Spilled material contained and disposed of properly, not washed into a drain.",
+      contacts: "Practice Manager — TBC | Emergency 999"
+    }
   }
 ];
 
@@ -3549,17 +4483,30 @@ function formatDate(iso){
 /* ════════════════════════════════════════════════════════════════════
    SNIPPETS — RA & MS
    ════════════════════════════════════════════════════════════════════ */
+/* Build <optgroup> markup, keeping each option value as the ORIGINAL array
+   index so the insert handlers are unaffected. Groups appear in the order
+   they first occur in the array. */
+function snippetOptgroups(list){
+  const groups = [];
+  list.forEach((s,i)=>{
+    const label = s.group || ET_GROUP;
+    let g = groups.find(x=>x.label===label);
+    if(!g){ g = {label:label, items:[]}; groups.push(g); }
+    g.items.push({i:i, name:s.name});
+  });
+  return groups.map(g=>'<optgroup label="'+escapeHtml(g.label)+'">'+
+    g.items.map(it=>'<option value="'+it.i+'">'+escapeHtml(it.name)+'</option>').join("")+
+    '</optgroup>').join("");
+}
 function populateRaSnippets(sel){
   if(sel.dataset.populated) return;
   sel.dataset.populated = "1";
-  sel.innerHTML = '<option value="">— pick a hazard snippet —</option>' +
-    SNIPPETS_RA.map((s,i)=>'<option value="'+i+'">'+escapeHtml(s.name)+'</option>').join("");
+  sel.innerHTML = '<option value="">— pick a hazard snippet —</option>' + snippetOptgroups(SNIPPETS_RA);
 }
 function populateMsSnippets(sel){
   if(sel.dataset.populated) return;
   sel.dataset.populated = "1";
-  sel.innerHTML = '<option value="">— pick a method snippet —</option>' +
-    SNIPPETS_MS.map((s,i)=>'<option value="'+i+'">'+escapeHtml(s.name)+'</option>').join("");
+  sel.innerHTML = '<option value="">— pick a method snippet —</option>' + snippetOptgroups(SNIPPETS_MS);
 }
 
 /* ─── Build a single hazards table row from a structured object ─── */
