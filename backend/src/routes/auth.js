@@ -11,6 +11,12 @@ const router = Router();
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
   max: 5,                   // 5 attempts per window per IP
+  // The integration tests sign in more than five times from one IP in a single
+  // run, so the limiter would reject the last logins and make unrelated
+  // assertions fail on a missing cookie. Only skipped under NODE_ENV=test,
+  // which the CI test job sets; the Dockerfile pins production to 'production',
+  // so the live limit is unchanged.
+  skip: () => process.env.NODE_ENV === 'test',
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: { code: 'RATE_LIMITED', message: 'Too many login attempts. Try again later.' } },
