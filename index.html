@@ -141,15 +141,36 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .sheet-landscape{max-width:100%;}
 
 /* Letterhead */
-.letterhead{display:grid;grid-template-columns:1fr 2fr 1fr;gap:20px;align-items:center;padding:14px 0;border-bottom:3px solid var(--accent);margin-bottom:18px;}
+.letterhead{display:grid;grid-template-columns:1fr 2fr 1fr;gap:20px;align-items:center;padding:2px 0 10px;border-bottom:3px solid var(--accent);margin-bottom:12px;}
 .lh-left{display:flex;align-items:center;gap:14px;}
 .lh-logo{height:60px;width:auto;max-width:120px;object-fit:contain;}
 .lh-produced{display:flex;flex-direction:column;line-height:1.25;}
 .lh-muted{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:600;}
 .lh-strong{font-size:13px;font-weight:700;color:var(--primary);margin-top:2px;}
 .lh-center{text-align:center;}
-.lh-clientline{display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:6px;}
 .lh-client{font-size:14px;font-weight:700;color:var(--primary);}
+
+/* ── Page footer ─────────────────────────────────────────────────────
+   House footer, same shape as Compass and Site Inspection: producer mark
+   and name on the left, "Prepared for <client>" in the middle, page count
+   and date on the right, over a light hairline. One per .sheet on screen
+   and in browser Print; the PDF export stamps its own copy on every page
+   (see stampPdfFooters) and hides this one so they cannot double up.
+   ─────────────────────────────────────────────────────────────────── */
+.sheet-footer{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;
+  margin-top:20px;padding-top:8px;border-top:1px solid var(--border);
+  font-size:10.5px;color:var(--text-muted);page-break-inside:avoid;}
+.sheet-footer .sf-left{display:flex;align-items:center;gap:7px;min-width:0;}
+.sheet-footer .sf-mark{width:15px;height:15px;flex-shrink:0;}
+.sheet-footer .sf-producer{font-weight:700;color:var(--text);letter-spacing:.01em;}
+.sheet-footer .sf-contact{color:var(--text-muted);}
+.sheet-footer .sf-contact:before{content:"·";margin:0 5px;}
+.sheet-footer .sf-contact:empty{display:none;}
+.sheet-footer .sf-center{text-align:center;font-style:italic;}
+.sheet-footer .sf-right{text-align:right;white-space:nowrap;}
+.sheet-footer .sf-page{font-weight:700;color:var(--text);}
+.sheet-footer [contenteditable]:focus{outline:none;background:var(--accent-light);border-radius:3px;}
+@media print{ .sheet-footer{margin-top:14px;} }
 .lh-title{font-size:22px;font-weight:700;color:var(--primary);letter-spacing:-.01em;}
 .lh-subtitle{font-size:13px;color:var(--text-muted);margin-top:2px;}
 .lh-right{display:flex;justify-content:flex-end;}
@@ -158,9 +179,11 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .lh-chip-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-dark);font-weight:700;}
 .lh-chip-value{font-size:14px;font-weight:700;color:var(--primary);margin-top:2px;}
 
-/* Centred client logo strip */
-.client-logo-section{text-align:center;padding:6px 0 14px;}
-.client-logo-section img{height:70px;width:auto;display:block;margin:0 auto;}
+/* Centred client logo strip — no padding of its own, so an empty strip
+   (the usual case: no client logo loaded) takes no vertical space at all.
+   The spacing lives on the image, which only exists when a logo is shown. */
+.client-logo-section{text-align:center;padding:0;}
+.client-logo-section img{height:70px;width:auto;display:block;margin:2px auto 12px;}
 
 /* Meta band — RA */
 .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:var(--muted-bg);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px;}
@@ -191,8 +214,10 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .swatch.med{background:var(--risk-med-fg);}
 .swatch.high{background:var(--risk-high-fg);}
 
-/* Risk pills */
-.matrix-col .badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;border:1.5px solid;}
+/* Risk pills — fixed width so LOW / MEDIUM / HIGH all sit the same size and
+   the wording beside them starts on one vertical line. 64px is MEDIUM's
+   natural width, so MEDIUM is unchanged and LOW / HIGH grow to match. */
+.matrix-col .badge{display:inline-block;min-width:64px;text-align:center;box-sizing:border-box;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;border:1.5px solid;}
 .matrix-col .badge.low{background:var(--risk-low-bg);color:var(--risk-low-fg);border-color:var(--risk-low-brd);}
 .matrix-col .badge.med{background:var(--risk-med-bg);color:var(--risk-med-fg);border-color:var(--risk-med-brd);}
 .matrix-col .badge.high{background:var(--risk-high-bg);color:var(--risk-high-fg);border-color:var(--risk-high-brd);}
@@ -203,6 +228,9 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .table thead th{background:var(--primary);color:#fff;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
 .table .center{text-align:center;}
 .table .muted{color:var(--text-muted);font-weight:400;font-size:11px;}
+/* In a dark header row the muted grey lands on grey and is unreadable in
+   print. Keep it subordinate, but legible. */
+.table thead th .muted{color:rgba(255,255,255,.78);}
 .table .w-10{width:10%;} .table .w-12{width:12%;} .table .w-20{width:20%;}
 .table .editable{outline:none;min-height:22px;}
 .table .editable:focus{background:var(--accent-light);}
@@ -421,6 +449,147 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
   /* Tighter sheet padding so content uses more of the narrow viewport */
   .sheet { padding: 14px; }
 }
+/* ════════════════════════════════════════════════════════
+   DYNAMIC RISK ASSESSMENT (DRA) — on site go / no-go check
+   Not a permit to work. It checks the site against the generic
+   survey risk assessment and forces a decision where it differs.
+   ════════════════════════════════════════════════════════ */
+.dra-wrap{max-width:900px;margin:0 auto;}
+.dra-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px 20px;margin-bottom:16px;}
+.dra-card > h2{font-size:15px;font-weight:700;color:var(--primary);margin:0 0 4px;
+  text-transform:uppercase;letter-spacing:.05em;}
+.dra-card > .dra-sub{font-size:12.5px;color:var(--text-muted);margin:0 0 14px;line-height:1.5;}
+
+.dra-note{border-left:4px solid var(--warning-brd);background:var(--warning-bg);color:var(--warning);
+  padding:10px 12px;border-radius:6px;font-size:12.5px;line-height:1.5;margin-bottom:14px;}
+.dra-note strong{color:var(--warning);}
+.dra-note.info{border-left-color:var(--info-brd);background:var(--info-bg);color:var(--info);}
+.dra-note.stop{border-left-color:var(--danger-brd);background:var(--danger-bg);color:var(--danger);}
+.dra-note.ok{border-left-color:var(--success-brd);background:var(--success-bg);color:var(--success);}
+
+/* Visit details */
+.dra-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.dra-field{display:flex;flex-direction:column;gap:4px;}
+.dra-field label{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--text-muted);font-weight:700;}
+.dra-field input,.dra-field textarea,.dra-field select{font:inherit;font-size:13px;padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:6px;background:var(--input-bg);color:var(--text);}
+.dra-field input:focus,.dra-field textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+.dra-field.wide{grid-column:1 / -1;}
+@media(max-width:620px){ .dra-fields{grid-template-columns:1fr;} }
+
+/* Activity pickers */
+.dra-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:620px){ .dra-acts{grid-template-columns:1fr;} }
+.dra-act-pick{display:flex;align-items:flex-start;gap:9px;border:1.5px solid var(--border);
+  border-radius:8px;padding:10px 12px;font-size:13px;cursor:pointer;background:var(--surface);}
+.dra-act-pick:hover{border-color:var(--accent);}
+.dra-act-pick input{margin-top:2px;width:16px;height:16px;flex-shrink:0;}
+.dra-act-pick.fixed{background:var(--muted-bg);cursor:default;color:var(--text-muted);}
+.dra-act-pick .dra-act-always{font-size:10px;text-transform:uppercase;letter-spacing:.06em;
+  font-weight:700;color:var(--text-muted);}
+
+/* Questions */
+.dra-group{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;}
+.dra-group-head{background:var(--primary);color:#fff;padding:9px 14px;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;gap:10px;}
+.dra-group-head .dra-group-count{font-weight:400;opacity:.85;}
+.dra-q{border-top:1.5px solid var(--border);padding:14px;}
+.dra-q:first-of-type{border-top:none;}
+.dra-q.answered{background:var(--muted-bg);}
+.dra-q.flag{background:var(--danger-bg);}
+.dra-q-top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;}
+.dra-q-haz{font-size:13.5px;font-weight:700;color:var(--text);line-height:1.4;}
+.dra-q-meta{font-size:11.5px;color:var(--text-muted);margin-top:3px;line-height:1.45;}
+.dra-q-ref{font-size:10.5px;font-weight:700;color:var(--text-muted);white-space:nowrap;letter-spacing:.04em;}
+.dra-hs{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--danger-bg);color:var(--danger);border:1.5px solid var(--danger-brd);
+  border-radius:4px;padding:2px 6px;margin-left:8px;vertical-align:middle;}
+
+.dra-answers{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap;}
+.dra-ans{flex:1 1 160px;font:inherit;font-size:12.5px;font-weight:600;text-align:left;padding:9px 11px;
+  border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);cursor:pointer;}
+.dra-ans:hover{border-color:var(--accent);}
+.dra-ans[aria-pressed="true"]{border-width:2px;padding:8px 10px;}
+.dra-ans.none[aria-pressed="true"]{background:var(--success-bg);border-color:var(--success);color:var(--success);}
+.dra-ans.ctrl[aria-pressed="true"]{background:var(--accent-light);border-color:var(--accent-dark);color:var(--accent-dark);}
+.dra-ans.fail[aria-pressed="true"]{background:var(--danger-bg);border-color:var(--danger);color:var(--danger);}
+
+.dra-controls{margin-top:11px;border:1.5px solid var(--accent);border-radius:8px;
+  background:var(--accent-light);padding:11px 12px;}
+.dra-controls > p{margin:0 0 8px;font-size:11.5px;font-weight:700;color:var(--accent-dark);
+  text-transform:uppercase;letter-spacing:.05em;}
+.dra-ctl{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.45;
+  padding:5px 0;cursor:pointer;color:var(--text);}
+.dra-ctl input{margin-top:2px;width:16px;height:16px;flex-shrink:0;}
+.dra-controls .dra-ctl-warn{font-size:11.5px;color:var(--danger);margin:7px 0 0;font-weight:600;
+  text-transform:none;letter-spacing:normal;}
+
+.dra-extra{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;}
+.dra-extra input[type=text]{flex:1 1 220px;font:inherit;font-size:12.5px;padding:7px 9px;
+  border:1.5px solid var(--border);border-radius:6px;background:var(--input-bg);}
+.dra-photo-tag{font-size:11.5px;color:var(--success);font-weight:700;}
+.dra-thumb{height:46px;width:auto;border:1.5px solid var(--border);border-radius:4px;display:block;}
+
+/* Progress + actions */
+.dra-bar{position:sticky;bottom:0;background:var(--surface);border-top:2px solid var(--accent);
+  padding:11px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  box-shadow:0 -2px 8px rgba(16,24,40,.07);z-index:20;margin:0 -20px -18px;border-radius:0 0 var(--radius) var(--radius);}
+.dra-bar .dra-prog{font-size:12.5px;color:var(--text-muted);font-weight:600;}
+.dra-bar .dra-prog b{color:var(--text);}
+.dra-bar .dra-spacer{margin-left:auto;}
+
+/* Records list */
+.dra-rec{display:flex;gap:12px;align-items:center;border:1.5px solid var(--border);border-radius:8px;
+  padding:11px 13px;margin-bottom:8px;cursor:pointer;background:var(--surface);}
+.dra-rec:hover{border-color:var(--accent);}
+.dra-rec-main{flex:1;min-width:0;}
+.dra-rec-t{font-size:13.5px;font-weight:700;color:var(--text);}
+.dra-rec-s{font-size:11.5px;color:var(--text-muted);margin-top:2px;}
+.dra-status{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 8px;border-radius:4px;border:1.5px solid;white-space:nowrap;}
+.dra-status.open{background:var(--muted-bg);color:var(--text-muted);border-color:var(--border);}
+.dra-status.proceeding{background:var(--success-bg);color:var(--success);border-color:var(--success-brd);}
+.dra-status.escalated{background:var(--warning-bg);color:var(--warning);border-color:var(--warning-brd);}
+.dra-status.aborted{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-brd);}
+.dra-status.complete{background:var(--info-bg);color:var(--info);border-color:var(--info-brd);}
+
+/* Escalation */
+.dra-mgr{display:flex;gap:12px;align-items:center;justify-content:space-between;
+  border:1.5px solid var(--border);border-radius:8px;padding:11px 13px;margin-bottom:8px;}
+.dra-mgr-n{font-size:13.5px;font-weight:700;color:var(--text);}
+.dra-mgr-p{font-size:13px;color:var(--accent-dark);font-weight:700;}
+
+/* Round history */
+.dra-round{border:1.5px solid var(--border);border-radius:8px;padding:11px 13px;margin-bottom:8px;
+  font-size:12.5px;line-height:1.5;}
+.dra-round h4{margin:0 0 5px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--primary);}
+.dra-round ul{margin:6px 0 0 18px;padding:0;}
+
+/* Blank paper version. Hidden on screen, printed on its own. */
+#draBlank{display:none;}
+body.dra-print-blank #draBlank{display:block;}
+body.dra-print-blank .app-header,
+body.dra-print-blank .tab-bar,
+body.dra-print-blank main{display:none!important;}
+#draBlank .dpb-head{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:2.5px solid var(--accent);padding-bottom:5px;margin-bottom:7px;}
+#draBlank .dpb-title{font-size:15px;font-weight:700;color:var(--primary);}
+#draBlank .dpb-sub{font-size:10.5px;color:var(--text-muted);}
+#draBlank table{width:100%;border-collapse:collapse;}
+#draBlank th,#draBlank td{border:1px solid #9aa1ab;padding:1.5px 4px;font-size:7.9px;
+  text-align:left;vertical-align:top;line-height:1.22;}
+#draBlank th{background:var(--primary);color:#fff;text-transform:uppercase;letter-spacing:.03em;font-size:7.4px;}
+#draBlank td.dpb-tick{text-align:center;width:26px;}
+#draBlank th.dpb-tick{width:26px;}
+#draBlank .dpb-fields{display:flex;gap:10px;margin-bottom:6px;font-size:8.4px;flex-wrap:wrap;}
+#draBlank .dpb-fields span{flex:1 1 150px;border-bottom:1px solid #9aa1ab;padding-bottom:9px;}
+#draBlank .dpb-foot{margin-top:6px;font-size:8px;line-height:1.35;}
+/* The blank form prints portrait while the RA and MS print landscape. @page
+   cannot be scoped by a body class, so printDraBlank() injects the portrait
+   @page rule just for that print run and takes it out again afterwards. */
+
 </style>
 </head>
 <body>
@@ -433,7 +602,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 <header class="app-header">
   <div class="header-inner">
     <div class="header-brand">
-      <div class="logo-mark"><img id="brandLogo" alt="" style="display:none;"><svg id="brandMark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="21" cy="20" r="16.5" stroke="var(--accent)" stroke-width="2.3"/><circle cx="21" cy="20" r="9.5" stroke="var(--accent)" stroke-width="2.3"/><line x1="21" y1="20" x2="40" y2="8" stroke="#8b9096" stroke-width="2.3" stroke-linecap="round"/></svg></div>
+      <div class="logo-mark"><img id="brandLogo" alt="" style="display:none;"><svg id="brandMark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="21" cy="20" r="16.5" stroke="#4bbfd6" stroke-width="2.3"/><circle cx="21" cy="20" r="9.5" stroke="#4bbfd6" stroke-width="2.3"/><line x1="21" y1="20" x2="40" y2="8" stroke="#8b9096" stroke-width="2.3" stroke-linecap="round"/></svg></div>
       <div class="header-text">
         <div class="header-title"><span data-brand="name"><strong>AHS</strong> <em style="font-style:italic;font-weight:600;">RAMS</em></span></div>
         <div class="header-sub"><span data-brand="tagline">Risk Assessment &amp; Method Statement</span></div>
@@ -456,6 +625,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
     <div class="row"><label>Logo</label><input type="file" accept="image/*" id="brandLogoFile"></div>
     <div class="row"><label>Name</label><input type="text" id="brandNameIn" placeholder="Your company name"></div>
     <div class="row"><label>Tagline</label><input type="text" id="brandTaglineIn" placeholder="Tagline"></div>
+    <div class="row"><label>Website</label><input type="text" id="brandWebsiteIn" placeholder="archerhs.co.uk"></div>
     <div class="row"><label>Primary</label><input type="color" id="brandPrimaryIn" value="#757575"></div>
     <div class="row"><label>Accent</label><input type="color" id="brandAccentIn" value="#4bbfd6"></div>
     <div class="row"><label>Text</label><input type="color" id="brandTextIn" value="#111827"></div>
@@ -473,6 +643,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
   <div class="tab-bar-inner">
     <button class="tab-btn active" data-tab="ra">Risk Assessment</button>
     <button class="tab-btn" data-tab="ms">Method Statement</button>
+    <button class="tab-btn" data-tab="dra">Dynamic Risk Assessment</button>
   </div>
 </nav>
 
@@ -494,14 +665,10 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
             <img class="lh-logo brand-letterhead-logo" src="" alt="" style="display:none;">
             <div class="lh-produced">
               <span class="lh-muted">Produced by</span>
-              <span class="lh-strong" data-brand="name" contenteditable="true" data-persist data-key="ra.lh.producer">ARCHER HEALTH AND SAFETY</span>
+              <span class="lh-strong lh-producer">ARCHER HEALTH AND SAFETY</span>
             </div>
           </div>
           <div class="lh-center">
-            <div class="lh-clientline">
-              <span class="lh-muted">Prepared for</span>
-              <span class="lh-client" contenteditable="true" data-persist data-key="ra.lh.client">Client Name</span>
-            </div>
             <div class="lh-title" contenteditable="true" data-persist data-key="ra.lh.title">Risk Assessment</div>
             <div class="lh-subtitle" contenteditable="true" data-persist data-key="ra.lh.subtitle">Risk Assessment</div>
           </div>
@@ -711,14 +878,10 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
           <img class="lh-logo brand-letterhead-logo" src="" alt="" style="display:none;">
           <div class="lh-produced">
             <span class="lh-muted">Produced by</span>
-            <span class="lh-strong" data-brand="name" contenteditable="true" data-persist data-key="ms.lh.producer">ARCHER HEALTH AND SAFETY</span>
+            <span class="lh-strong lh-producer">ARCHER HEALTH AND SAFETY</span>
           </div>
         </div>
         <div class="lh-center">
-          <div class="lh-clientline">
-            <span class="lh-muted">Prepared for</span>
-            <span class="lh-client" contenteditable="true" data-persist data-key="ms.lh.client">Client Name</span>
-          </div>
           <div class="lh-title" contenteditable="true" data-persist data-key="ms.lh.title">Method Statement</div>
           <div class="lh-subtitle" contenteditable="true" data-persist data-key="ms.lh.subtitle"></div>
         </div>
@@ -905,7 +1068,20 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
     </div><!-- /.sheet -->
   </div><!-- /#tab-ms -->
 
+
+  <!-- ════════════════════════════════════════════════════════
+       TAB: DYNAMIC RISK ASSESSMENT
+       On site go / no-go check. The body is rendered by draRender().
+       ════════════════════════════════════════════════════════ -->
+  <div id="tab-dra" class="tab-panel">
+    <div class="dra-wrap" id="draBody"></div>
+  </div>
+
 </main>
+
+<!-- Blank paper version of the go / no-go check. Screen hidden, print only. -->
+<div id="draBlank"></div>
+
 
 <!-- Hidden file input for restore -->
 <input type="file" id="restoreFile" accept="application/json" style="display:none;">
@@ -4149,6 +4325,14 @@ const SNIPPETS_MS = [
    ════════════════════════════════════════════════════════════════════ */
 const LS_PREFIX = "easytravel.ramsv1.";
 
+/* Who produced the document. Deliberately NOT wired to the brand modal:
+   the brand name renames the app for a client, but the produced-by line,
+   the footer and the ring mark stay AHS on every page so a rebranded copy
+   still says who built it. Change the wording here and it changes everywhere. */
+const AHS_PRODUCER = "ARCHER HEALTH AND SAFETY";
+const AHS_TEAL = "#4bbfd6";
+const AHS_GREY = "#8b9096";
+
 // Canonical PPE checklist template — used to re-seed empty PPE areas.
 const PPE_TEMPLATE_HTML = ''
   + '<div class="check"><label><input type="checkbox"> <span contenteditable="true">Safety Helmet</span></label></div>'
@@ -4465,6 +4649,7 @@ function wireDateChip(chip){
       delete chip.dataset.iso;
       if(key){ lsDel(key); flagSaving(); }
     }
+    if(typeof refreshSheetFooters === "function") refreshSheetFooters();
   });
   // Convenience: clicking the chip label or anywhere on the chip focuses
   // the input and pops the calendar (native showPicker on supporting browsers).
@@ -4784,6 +4969,7 @@ function addRaForm(){
 
   $("#raForms").appendChild(clone);
   attachPersistHandlers(clone);
+  ensureSheetFooters();
   persistContainer($("#raForms"));
   toast("Form page added");
   try { if(typeof clone.scrollIntoView === "function") clone.scrollIntoView({behavior:"smooth", block:"start"}); } catch(e) {}
@@ -4793,6 +4979,7 @@ function removeRaForm(target){
   if(pages.length <= 1){ toast("At least one form page is required", "error"); return; }
   const page = target.closest(".form-page");
   page.remove();
+  refreshSheetFooters();
   persistContainer($("#raForms"));
   toast("Form page removed");
 }
@@ -4856,6 +5043,7 @@ function activateTab(name){
   $$(".tab-btn").forEach(b=> b.classList.toggle("active", b.dataset.tab===name));
   $$(".tab-panel").forEach(p=> p.classList.toggle("active", p.id==="tab-"+name));
   lsSet("ui.activeTab", name);
+  if(name === "dra" && typeof draRender === "function") draRender();
 }
 $$(".tab-btn").forEach(b=> b.addEventListener("click", ()=> activateTab(b.dataset.tab)));
 
@@ -4902,6 +5090,185 @@ function applyBrandingFromStorage(){
   if($("#brandTextIn") && text) $("#brandTextIn").value = text;
   if($("#brandNameIn")) $("#brandNameIn").value = localStorage.getItem("brand.name") || "";
   if($("#brandTaglineIn")) $("#brandTaglineIn").value = localStorage.getItem("brand.tagline") || "";
+  if($("#brandWebsiteIn")) $("#brandWebsiteIn").value = localStorage.getItem("brand.website") || "";
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   PAGE FOOTERS
+   Every .sheet carries a footer: producer mark + name (+ website) left,
+   "Prepared for <client>" centre, page count + document date right. The
+   client field is the one that used to sit under "Prepared for" at the top
+   of the letterhead — same data-key, so nothing already typed is lost.
+
+   Footers are injected by JS rather than written into the markup, because
+   #raForms / #msPages persist their innerHTML: a blob saved before this
+   change would restore over any hard-coded footer. Injecting after the
+   restore pass means existing saved work picks the footer up with no
+   SCHEMA_VERSION bump (a bump would wipe the user's forms).
+   ════════════════════════════════════════════════════════════════════ */
+const AHS_FOOTER_MARK =
+  '<svg class="sf-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">'
+  + '<circle cx="21" cy="20" r="16.5" stroke="' + AHS_TEAL + '" stroke-width="3.4"/>'
+  + '<circle cx="21" cy="20" r="9.5" stroke="' + AHS_TEAL + '" stroke-width="3.4"/>'
+  + '<line x1="21" y1="20" x2="40" y2="8" stroke="' + AHS_GREY + '" stroke-width="3.4" stroke-linecap="round"/></svg>';
+
+function buildSheetFooter(){
+  const f = document.createElement("div");
+  f.className = "sheet-footer";
+  f.innerHTML =
+      '<div class="sf-left">' + AHS_FOOTER_MARK
+    +   '<span><span class="sf-producer">' + AHS_PRODUCER + '</span>'
+    +   '<span class="sf-contact" data-brand="website">archerhs.co.uk</span></span>'
+    + '</div>'
+    + '<div class="sf-right"><span class="sf-page"></span><span class="sf-date"></span></div>';
+  return f;
+}
+
+/* Give every sheet a footer if it has not got one yet. */
+function ensureSheetFooters(){
+  $$(".tab-panel").forEach(panel=>{
+    $$(".sheet", panel).forEach(sheet=>{
+      const had = sheet.querySelector(":scope > .sheet-footer");
+      if(had){
+        // Saved before the producer was baked in: strip the old "Prepared
+        // for" block and force the AHS name back on.
+        const mid = had.querySelector(".sf-center");
+        if(mid) mid.remove();
+        const pr = had.querySelector(".sf-producer");
+        if(pr){ pr.removeAttribute("data-brand"); pr.textContent = AHS_PRODUCER; }
+        return;
+      }
+      const f = buildSheetFooter();
+      sheet.appendChild(f);
+      // The restore pass has already run by the time we get here, so restore
+      // and wire this footer's own fields.
+      $$("[data-persist]", f).forEach(restoreField);
+      attachPersistHandlers(f);
+    });
+  });
+  // A producer name typed in before this change is still in localStorage and
+  // would restore over the fixed one. Put it back.
+  $$(".lh-producer").forEach(el=>{ el.textContent = AHS_PRODUCER; });
+  applyBrandingFromStorage();   // paint the brand website into new footers
+  refreshSheetFooters();
+}
+
+/* Document date as dd/mm/yyyy, taken from the tab's letterhead date. */
+function footerDateStr(panel){
+  const inp = panel.querySelector(".lh-date-input");
+  const v = inp && inp.value;
+  if(!v) return "";
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+  return m ? (m[3] + "/" + m[2] + "/" + m[1]) : v;
+}
+
+/* Re-number the footers. Called whenever pages are added or removed. */
+function refreshSheetFooters(){
+  $$(".tab-panel").forEach(panel=>{
+    const sheets = $$(".sheet", panel);
+    const total = sheets.length;
+    const date = footerDateStr(panel);
+    sheets.forEach((sheet, i)=>{
+      const f = sheet.querySelector(":scope > .sheet-footer");
+      if(!f) return;
+      // Only claim a page count when the tab really is paginated on screen.
+      // The MS tab is one .sheet holding many .ms-page sections, so "Page 1
+      // of 1" there would be wrong — the PDF stamp carries the real numbers.
+      const pg = f.querySelector(".sf-page");
+      const pageStr = total > 1 ? ("Page " + (i+1) + " of " + total) : "";
+      if(pg) pg.textContent = pageStr;
+      const dt = f.querySelector(".sf-date");
+      if(dt) dt.textContent = date ? ((pageStr ? "  ·  " : "") + date) : "";
+    });
+  });
+}
+
+/* Stamp the same footer onto EVERY page of a generated PDF with jsPDF.
+   The on-screen footers are hidden during the render (body.pdf-render), so
+   this is the only one that appears — and because it is drawn per PDF page
+   it lands on continuation pages too, which a DOM footer cannot do. */
+function stampPdfFooters(pdf, activeTab){
+  const first = activeTab.querySelector(".sheet-footer");
+  const txt = sel => {
+    const el = first && first.querySelector(sel);
+    return el ? (el.textContent || "").trim() : "";
+  };
+  const producer = AHS_PRODUCER;
+  const website  = txt(".sf-contact");
+  const date     = footerDateStr(activeTab);
+
+  const W = pdf.internal.pageSize.getWidth();
+  const H = pdf.internal.pageSize.getHeight();
+  const M = 10;
+  const total = pdf.internal.getNumberOfPages();
+
+  for(let p = 1; p <= total; p++){
+    pdf.setPage(p);
+    const base = H - 5.2;
+
+    // Hairline
+    pdf.setDrawColor(209, 213, 219);
+    pdf.setLineWidth(0.25);
+    pdf.line(M, H - 9.4, W - M, H - 9.4);
+
+    // Left — compass ring mark, then producer name (+ website)
+    const cx = M + 2.2, cy = base - 1.1;
+    pdf.setLineWidth(0.45);
+    pdf.setDrawColor(75, 191, 214);
+    pdf.circle(cx, cy, 2.2, "S");
+    pdf.circle(cx, cy, 1.15, "S");
+    pdf.setDrawColor(139, 144, 150);
+    pdf.line(cx, cy, cx + 2.6, cy - 1.7);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(17, 24, 39);
+    pdf.text(producer, M + 6, base);
+    const leftEnd = M + 6 + pdf.getTextWidth(producer);
+
+    // Measure the centre before deciding whether the website still fits.
+    // A4 portrait (the MS export) is narrow, so a long client name and a long
+    // producer name can otherwise run into each other.
+    let centreText = "";   // the footer no longer carries a client line
+    pdf.setFont("helvetica", "italic");
+    pdf.setFontSize(7);
+    let centreW = centreText ? pdf.getTextWidth(centreText) : 0;
+    const centreStart = W / 2 - centreW / 2;
+
+    if(website){
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(7);
+      const webW = pdf.getTextWidth("· " + website);
+      if(!centreText || leftEnd + 1.6 + webW + 3 <= centreStart){
+        pdf.setTextColor(107, 114, 128);
+        pdf.text("· " + website, leftEnd + 1.6, base);
+      }
+    }
+
+    // Centre — prepared for. Trimmed with an ellipsis if it would still reach
+    // the producer name on the left.
+    if(centreText){
+      pdf.setFont("helvetica", "italic");
+      pdf.setFontSize(7);
+      const fits = s => (W / 2 - pdf.getTextWidth(s) / 2) >= leftEnd + 3;
+      while(!fits(centreText) && centreText.length > 20){
+        centreText = centreText.slice(0, -3) + "…";
+      }
+      pdf.setTextColor(107, 114, 128);
+      pdf.text(centreText, W / 2, base, { align: "center" });
+    }
+
+    // Right — page x of y, then the document date
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(7);
+    pdf.setTextColor(107, 114, 128);
+    const dateStr = date ? ("· " + date) : "";
+    const dateW = dateStr ? pdf.getTextWidth(dateStr) : 0;
+    if(dateStr) pdf.text(dateStr, W - M, base, { align: "right" });
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(17, 24, 39);
+    pdf.text("Page " + p + " of " + total, W - M - (dateW ? dateW + 1.6 : 0), base, { align: "right" });
+  }
 }
 
 function toggleBrandPanel(){ $("#brandPanel").classList.toggle("open"); }
@@ -4922,6 +5289,7 @@ function wireBrandPanel(){
   $("#brandTextIn").addEventListener("input", e=> set("text", e.target.value));
   $("#brandNameIn").addEventListener("input", e=> set("name", e.target.value));
   $("#brandTaglineIn").addEventListener("input", e=> set("tagline", e.target.value));
+  $("#brandWebsiteIn").addEventListener("input", e=> set("website", e.target.value));
   $("#brandLogoFile").addEventListener("change", e=>{
     const f = e.target.files[0]; if(!f) return;
     const r = new FileReader();
@@ -5021,6 +5389,9 @@ window.exportPDF = async function(){
       body.pdf-render .method-table th, body.pdf-render .method-table td { font-size:10.5px; padding:5px 6px; }
       body.pdf-render .lh-title { font-size:18px; }
       body.pdf-render .risk-cell select { display:none; }
+      /* The PDF draws its own footer on every page (stampPdfFooters), so the
+         on-screen one must not also be captured into the page image. */
+      body.pdf-render .sheet-footer { display:none !important; }
     `;
     document.head.appendChild(styleEl);
   }
@@ -5293,6 +5664,8 @@ window.exportPDF = async function(){
       }
     }
 
+    stampPdfFooters(pdf, activeTab);
+
     const tabName = activeTab.id === "tab-ra" ? "RA" : (activeTab.id === "tab-ms" ? "MS" : activeTab.id);
     const brandSlug = (localStorage.getItem("brand.name") || "AHS").replace(/[^A-Za-z0-9]+/g,"").slice(0,24) || "AHS";
     pdf.save(brandSlug + "-" + tabName + "-" + new Date().toISOString().slice(0,10) + ".pdf");
@@ -5343,6 +5716,1219 @@ function purgeStaleStructureIfNeeded(){
   console.log("[AHS RAMS] Schema upgraded to " + SCHEMA_VERSION + " — structural state refreshed.");
 }
 
+
+/* ════════════════════════════════════════════════════════════════════
+   DYNAMIC RISK ASSESSMENT (DRA)
+   An on site go / no-go check. It is NOT a permit to work: nobody issues
+   it to anybody, the surveyor completes it on arrival for themselves.
+
+   What it does: checks the site in front of the operative against FAD's
+   generic survey risk assessment. Where the site does not match, it forces
+   one of three routes and will not let them carry on by writing their own
+   control:
+       apply a control already listed in the generic RA, or
+       call a senior manager and record what was authorised, or
+       stop and abort.
+
+   Legal basis (Management of Health and Safety at Work Regulations 1999):
+     reg 3(1)  the generic RA is the suitable and sufficient assessment.
+               This does not replace it.
+     reg 3(3)  this is the on site review of whether that RA still holds.
+     reg 5     every "not as planned" and every abort goes to Feedback,
+               which drives review of the generic RA.
+     reg 8     the abort route is the serious and imminent danger procedure.
+     regs 11/12 FAD owns the RA for its contractors, so coordination and
+               information are covered by that ownership.
+   Control of Asbestos Regulations 2012 reg 5: asbestos information is
+   gathered at planning stage. It is not worked out on the doorstep. The
+   only asbestos questions here confirm the planning information is in hand
+   and that nothing on site contradicts it.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── PLACEHOLDERS — Simon to supply, see the Phase 2 review sheet ──────
+   Everything in DRA_CONFIG is a placeholder and shows on screen as one.
+   Nothing here is real FAD content. */
+const DRA_CONFIG = {
+  managers: [
+    { name: "[Senior manager 1 - name to be supplied]", phone: "[phone number]" },
+    { name: "[Senior manager 2 - name to be supplied]", phone: "[phone number]" }
+  ],
+  loneWorkingApp: "[lone working app name to be supplied]"
+};
+
+/* Two checks that come from the brief rather than from the hazard list.
+   Both are hard stops. */
+const DRA_PRECHECKS = [
+  { ref: "PRE-1", hardStop: true,
+    hazard: "Asbestos information from planning is in hand",
+    detail: "The asbestos register and, where anything is being opened up, a refurbishment and demolition survey covering those areas. This is gathered before the visit, not worked out here.",
+    yes: "Yes, in hand and read",
+    no: "No, not in hand" },
+  { ref: "PRE-2", hardStop: true,
+    hazard: "Lone working check-in active?",
+    detail: "Lone working is run in its own app. This only confirms the check-in is running before the survey starts.",
+    yes: "Yes, check-in is running",
+    no: "No, not running" }
+];
+
+/* ── The hazard questions ─────────────────────────────────────────────
+   Generated from the generic survey RA held in SNIPPETS_RA under the group
+   "Office & survey (Fineline Architects)". Every hazard, who, how and
+   control below is word for word as the RA has it. The only change is that
+   each control paragraph is presented as its own sentences so the operative
+   can tick the ones they have actually applied.
+
+   core:true   always asked, cannot be switched off
+   core:false  only asked when the visit says that activity applies
+   hardStop    "can't check / not controlled" aborts with no override
+
+   The core / optional split and every hardStop flag below are PLACEHOLDERS
+   awaiting Simon's Phase 2 sheet. The office hazards FL-01 to FL-08 are
+   deliberately not here: they are not doorstep questions.
+   ─────────────────────────────────────────────────────────────────── */
+const DRA_ACTIVITIES = [
+  { num:'09', title:'Retrofit survey: property visit (general)', core:true, rows:[
+    { ref:'FL-09.1', hardStop:false,
+      hazard:'Injury from unknown property condition',
+      who:'Employees', how:'Arriving at a property with no prior knowledge of its structural or service condition',
+      controls:[
+        'Client asked for the property history, asbestos register, any structural reports and the condition of services before the visit.',
+        'Void properties confirmed as isolated or live before arrival.',
+        'External walk round completed before entry and the visit abandoned if the property looks unsafe.',
+        'Nothing entered that cannot be left quickly.'
+      ] },
+    { ref:'FL-09.2', hardStop:false,
+      hazard:'Slips, trips and falls inside the property',
+      who:'Employees', how:'Damaged floors, missing boards, rubbish, debris and uneven surfaces',
+      controls:[
+        'Route checked ahead one room at a time rather than walking and looking up.',
+        'Torch used in every unlit room.',
+        'Footwear with ankle support and a protective sole worn.',
+        'Floors tested before weight is committed, particularly on landings and near bathrooms.',
+        'Debris not climbed over.'
+      ] },
+    { ref:'FL-09.3', hardStop:false,
+      hazard:'Working in darkness',
+      who:'Employees', how:'Power disconnected in a void property, boarded windows, survey running into dusk',
+      controls:[
+        'Head torch and a hand torch carried, with spare batteries.',
+        'Surveys planned for daylight hours.',
+        'Survey stopped and rearranged if lighting is not adequate to see the floor and the route out.',
+        'Lighting never assumed to be working.'
+      ] }
+  ] },
+  { num:'10', title:'Lone working and personal safety on survey visits', core:true, rows:[
+    { ref:'FL-10.1', hardStop:false,
+      hazard:'Violence, aggression or intimidation',
+      who:'Employees', how:'Hostile occupant, neighbour or third party during a visit, including in areas with a known crime problem',
+      controls:[
+        'Area and property checked with the client beforehand and any known history of aggression passed on.',
+        'Visit arranged in daylight.',
+        'Vehicle parked for an easy exit and not blocked in.',
+        'Identification carried and shown.',
+        'Surveyor withdraws immediately if anyone becomes hostile, and does not argue or defend property.',
+        'Two person visit arranged wherever there is any doubt.'
+      ] },
+    { ref:'FL-10.2', hardStop:false,
+      hazard:'Lone worker injured or taken ill with nobody aware',
+      who:'Employees', how:'Working alone in an empty property with no communication and no fixed return time',
+      controls:[
+        'Itinerary left with the office including address, expected duration and finish time.',
+        'Check in on arrival and on leaving each property.',
+        'Agreed procedure if a check in is missed, ending in a call to the emergency services.',
+        'Phone kept charged, on the person and with a signal checked on arrival.',
+        'No entry to any area where a fall or entrapment would leave the surveyor unable to call for help.'
+      ] },
+    { ref:'FL-10.3', hardStop:false,
+      hazard:'Encountering unauthorised occupants',
+      who:'Employees', how:'Squatters, drug use or stored property found in a void dwelling',
+      controls:[
+        'Property approached expecting it may be occupied.',
+        'Noise made on entry rather than arriving silently.',
+        'Surveyor withdraws from the property immediately and does not attempt to challenge or remove anyone.',
+        'Client and police informed.',
+        'Property not revisited until the client confirms it is clear.'
+      ] }
+  ] },
+  { num:'11', title:'Asbestos during intrusive retrofit survey', core:true, rows:[
+    { ref:'FL-11.1', hardStop:true,
+      hazard:'Exposure to asbestos fibres from disturbing materials',
+      who:'Employees / Occupants / Others', how:'Lifting hatches, opening up fabric, drilling for a borescope or taking samples in a property built or altered before 2000',
+      controls:[
+        'Every property built or altered before 2000 is presumed to contain asbestos unless a survey proves otherwise.',
+        'The asbestos register and a refurbishment and demolition survey covering the areas to be opened up are obtained from the client duty holder and read before the visit.',
+        'No drilling, cutting, lifting, opening up or sampling takes place until that survey is in hand.',
+        'Where no survey is available the visit is limited to non intrusive inspection only and the client is told why.',
+        'Asbestos awareness training held and in date by anyone attending.'
+      ] },
+    { ref:'FL-11.2', hardStop:true,
+      hazard:'Disturbing material that the survey did not identify',
+      who:'Employees / Occupants / Others', how:'Unexpected material found behind a panel, in a void or under a floor during opening up',
+      controls:[
+        'Work stops the moment suspect material is found or damaged.',
+        'The area is left, the door closed and access prevented.',
+        'No attempt is made to clean up, sweep or remove anything.',
+        'The client duty holder and the practice are informed the same day.',
+        'Outer clothing bagged and hands washed where contact is suspected.',
+        'Work does not resume in that area until a licensed contractor or analyst confirms it is safe.'
+      ] },
+    { ref:'FL-11.3', hardStop:false,
+      hazard:'Carrying fibres away from the property',
+      who:'Employees / Family members / Office staff', how:'Dust on clothing, footwear, survey equipment or in the vehicle after working in a dusty void property',
+      controls:[
+        'Disposable coveralls worn for any opening up and removed before leaving the property.',
+        'Equipment wiped down rather than brushed.',
+        'Nothing dusty placed in the passenger cabin of the vehicle.',
+        'Footwear cleaned outside.',
+        'Contaminated disposables bagged and disposed of through the client\'s arrangements, never taken home or put in office waste.'
+      ] }
+  ] },
+  { num:'12', title:'Working at height during survey', core:false, rows:[
+    { ref:'FL-12.1', hardStop:false,
+      hazard:'Fall from a ladder',
+      who:'Employees', how:'Using a ladder to reach a loft hatch, high level detail or roof edge',
+      controls:[
+        'Work at height avoided where the information can be obtained from the ground, from a pole camera or from drawings.',
+        'Ladder used only for short duration light work with three points of contact maintained.',
+        'Ladder inspected before use, set at the correct angle, on firm level ground and secured or footed.',
+        'Property ladders and occupiers\' own steps not used.',
+        'Nothing carried up by hand.'
+      ] },
+    { ref:'FL-12.2', hardStop:true,
+      hazard:'Fall through a ceiling or fragile surface',
+      who:'Employees / Occupants below', how:'Stepping off the boarded area in a loft, or onto a fragile roof light or asbestos cement sheet',
+      controls:[
+        'Loft inspection made from the hatch wherever possible, using a torch and a pole camera rather than entering.',
+        'Where entry is unavoidable, only boarded and load bearing areas are used and joists are never walked along.',
+        'Roofs are not walked on.',
+        'Fragile materials assumed present in outbuildings and garages until proven otherwise.'
+      ] },
+    { ref:'FL-12.3', hardStop:false,
+      hazard:'Objects falling onto people below',
+      who:'Employees / Occupants / Public', how:'Tools, a torch or debris dropped from a loft hatch, ladder or upper window',
+      controls:[
+        'Area below the hatch or ladder cleared and occupants kept out of the room while the work is done.',
+        'Tools carried in a belt or bag, not in hands or pockets.',
+        'Nothing placed on a ladder rung or window ledge.',
+        'Loose debris around the hatch cleared before it is opened fully.'
+      ] }
+  ] },
+  { num:'13', title:'Restricted spaces: lofts, underfloor voids and cellars', core:true, rows:[
+    { ref:'FL-13.1', hardStop:true,
+      hazard:'Entrapment or being overcome in a confined space',
+      who:'Employees', how:'Entering an underfloor void, sealed cellar or similar space with restricted access',
+      controls:[
+        'Practice staff do not enter any space that meets the definition of a confined space.',
+        'Inspection is carried out from the access point using lighting, a pole camera or a borescope.',
+        'Where internal information is genuinely needed, it is obtained by a specialist contractor with the training, equipment and emergency arrangements to enter.',
+        'No exception is made because a space looks small or the visit is brief.'
+      ] },
+    { ref:'FL-13.2', hardStop:true,
+      hazard:'Oxygen deficiency or harmful gases',
+      who:'Employees', how:'Standing water, decomposition, ground gas or a disused fuel tank in a cellar or void',
+      controls:[
+        'Heads not put into voids, cellars or chambers that have been closed up.',
+        'Cellars ventilated by opening up and left before entry where entry is justified at all.',
+        'Any smell, haze or symptom of dizziness or headache treated as a reason to leave immediately and not return.',
+        'Work in such spaces referred to a specialist.'
+      ] },
+    { ref:'FL-13.3', hardStop:false,
+      hazard:'Poor access and egress',
+      who:'Employees', how:'Narrow hatches, steep cellar steps, obstructed routes out',
+      controls:[
+        'Route out identified and kept clear before going in anywhere.',
+        'Equipment not carried through a restricted opening in the hands.',
+        'Cellar steps tested and a handrail used, or the cellar viewed from the head of the steps only.',
+        'Hatches propped so they cannot fall closed.'
+      ] }
+  ] },
+  { num:'14', title:'Void property: services, structure, sharps and vermin', core:true, rows:[
+    { ref:'FL-14.1', hardStop:true,
+      hazard:'Contact with live or damaged electrical services',
+      who:'Employees', how:'Stripped cabling, exposed conductors or a supply believed dead but still live',
+      controls:[
+        'Client asked to confirm in writing that supplies are isolated before an intrusive survey of a void property.',
+        'Supplies treated as live regardless.',
+        'Exposed cabling and consumer units not touched, opened or tested.',
+        'Nothing drilled or cut into a wall until the survey information and a cable detector confirm the route is clear.',
+        'Damaged installations reported to the client and the area avoided.'
+      ] },
+    { ref:'FL-14.2', hardStop:true,
+      hazard:'Structural collapse or failure of floors and stairs',
+      who:'Employees', how:'Rot, fire damage, water damage or removed structure in a neglected or void property',
+      controls:[
+        'External and internal condition assessed before committing weight anywhere.',
+        'Floors tested at the edge near a wall rather than mid span.',
+        'Stairs used one person at a time with the handrail.',
+        'Areas showing sagging, water staining, charring or movement are not entered and are reported.',
+        'Survey abandoned and the client informed where the structure is in doubt.'
+      ] },
+    { ref:'FL-14.3', hardStop:false,
+      hazard:'Sharps injury',
+      who:'Employees', how:'Discarded needles, broken glass and metal in rubbish left in a void property',
+      controls:[
+        'Rubbish and debris never moved by hand or searched through.',
+        'Nothing reached into where the bottom cannot be seen.',
+        'Cut resistant gloves and protective footwear worn.',
+        'Sharps found are left in place, photographed and reported to the client for specialist clearance.',
+        'Any skin puncture treated as urgent and medical advice sought the same day.'
+      ] },
+    { ref:'FL-14.4', hardStop:false,
+      hazard:'Infection from vermin and fouling',
+      who:'Employees', how:'Rodent and bird droppings, animal fouling and stagnant water in a long term void',
+      controls:[
+        'Disposable gloves worn and hands washed or sanitised before eating, drinking or driving.',
+        'Dry droppings not swept or disturbed so they become airborne.',
+        'Disposable coveralls worn where contamination is widespread.',
+        'Cuts covered before entering.',
+        'Heavily fouled properties referred back to the client for cleaning before the survey proceeds.'
+      ] }
+  ] },
+  { num:'15', title:'Damp, mould and dust during survey', core:true, rows:[
+    { ref:'FL-15.1', hardStop:false,
+      hazard:'Respiratory effects from mould spores',
+      who:'Employees', how:'Surveying a property with extensive damp and visible mould growth, which is common on retrofit work',
+      controls:[
+        'Property ventilated by opening up before working in it where that is possible.',
+        'Disposable FFP3 respirator carried and worn where mould growth is extensive, with the wearer face fit tested and clean shaven.',
+        'Time in heavily affected rooms kept short.',
+        'Mould not brushed, scraped or disturbed.',
+        'Staff with asthma or a respiratory condition identify themselves and are not assigned to heavily affected properties.'
+      ] },
+    { ref:'FL-15.2', hardStop:false,
+      hazard:'Dust from opening up',
+      who:'Employees / Occupants', how:'Lifting boards, drilling for borescope access or removing panels, releasing accumulated dust',
+      controls:[
+        'Asbestos position confirmed before any opening up, as separately assessed.',
+        'Dust suppressed by working slowly rather than pulling material away.',
+        'Dust extraction or an on tool shroud used for drilling.',
+        'Occupants and their belongings kept out of the room or covered.',
+        'Area cleaned by vacuum or damp wipe, never by dry sweeping.'
+      ] }
+  ] },
+  { num:'16', title:'Matterport 3D scanning', core:false, rows:[
+    { ref:'FL-16.1', hardStop:false,
+      hazard:'Trips over tripod, camera and cables',
+      who:'Employees / Occupants / Others in the property', how:'Equipment set up in circulation space and left while the operator steps out of shot',
+      controls:[
+        'Tripod positioned clear of doorways, stair heads and main walking routes.',
+        'Legs set wide and low rather than tall and narrow.',
+        'Operator stays in the room with the equipment while it is scanning.',
+        'Occupants told which room is being scanned and asked to wait.',
+        'Equipment moved with it, never left set up in an unattended room.'
+      ] },
+    { ref:'FL-16.2', hardStop:false,
+      hazard:'Equipment toppling',
+      who:'Employees / Occupants', how:'Tripod knocked or set up on an uneven, sloping or damaged floor',
+      controls:[
+        'Tripod set on a firm level surface with all three legs fully locked.',
+        'Not set up on stair treads, loose boards or rubble.',
+        'Weight kept low where floors are uneven.',
+        'Camera removed from the tripod before the tripod is moved between rooms.'
+      ] },
+    { ref:'FL-16.3', hardStop:false,
+      hazard:'Manual handling of the scanning kit',
+      who:'Employees', how:'Carrying the camera case and tripod between floors and in and out of the vehicle repeatedly through the day',
+      controls:[
+        'Kit carried in a rucksack style case where available so both hands stay free on stairs.',
+        'Case and tripod carried in separate trips on stairs.',
+        'Vehicle parked as close to the entrance as practical.',
+        'Loads split rather than carried in one journey.'
+      ] },
+    { ref:'FL-16.4', hardStop:false,
+      hazard:'Capturing occupants and personal information',
+      who:'Occupants / Employees', how:'Scanning an occupied dwelling and recording people, documents or personal belongings',
+      controls:[
+        'Occupants told what is being scanned, why, and who will see it, before scanning starts.',
+        'Scanning paused while anyone is in the room.',
+        'Personal documents and belongings not scanned and the occupant given the chance to move or cover items.',
+        'Scans stored on practice systems with access limited to the project team and the client.',
+        'Scan deleted or edited on reasonable request.'
+      ] }
+  ] },
+  { num:'17', title:'Drone flight for external survey (under 250g)', core:false, rows:[
+    { ref:'FL-17.1', hardStop:false,
+      hazard:'Injury from loss of control or collision',
+      who:'Employees / Public / Occupants', how:'Flyaway, battery failure, signal loss or striking a structure, tree or overhead line during a building survey',
+      controls:[
+        'Aircraft is under 250g and flown in the A1 subcategory of the Open category.',
+        'Pilot holds a valid Flyer ID and the aircraft displays the practice Operator ID.',
+        'Pre flight check of airframe, propellers, battery and firmware.',
+        'Site checked on arrival for overhead lines, trees, aerials and people.',
+        'Aircraft kept within the pilot\'s direct line of sight throughout and never more than 120m (400ft) from the closest point of the ground.',
+        'Flight abandoned in rain, fog, or wind beyond the manufacturer\'s stated limit.'
+      ] },
+    { ref:'FL-17.2', hardStop:false,
+      hazard:'Overflight of people',
+      who:'Public / Occupants', how:'Flying over uninvolved people in a residential street or garden while photographing a roof or elevation',
+      controls:[
+        'Uninvolved people are only overflown where it is necessary to achieve the survey, and the time spent above anyone is kept to the minimum.',
+        'The aircraft is never flown over an assembly of people.',
+        'Take off and landing point kept clear and, where practical, screened by the vehicle or a fence.',
+        'Flight paused and the aircraft brought back if anyone approaches.',
+        'Neighbours and occupants told what is happening before the flight.'
+      ] },
+    { ref:'FL-17.3', hardStop:true,
+      hazard:'Flight in restricted airspace',
+      who:'Employees / Third parties', how:'Surveying near an airport, aerodrome, prison or other site inside a flight restriction zone',
+      controls:[
+        'Airspace checked immediately before every flight using a current drone airspace app.',
+        'No flight inside a flight restriction zone without the required permission from the controlling authority.',
+        'Temporary restrictions checked on the day.',
+        'Landowner permission obtained for the take off and landing point.',
+        'Flight not started where the airspace position cannot be confirmed.'
+      ] },
+    { ref:'FL-17.4', hardStop:false,
+      hazard:'Lithium battery fire',
+      who:'Employees / Others', how:'Damaged, swollen or overcharged flight batteries in the office, the vehicle or on charge overnight',
+      controls:[
+        'Batteries charged on a hard non combustible surface, attended, and never left on charge overnight or unattended in the office.',
+        'Damaged, swollen or dropped batteries taken out of use immediately and disposed of through a battery recycling route.',
+        'Batteries carried in a fire resistant bag, not loose in a bag or footwell, and not left in direct sunlight in a parked vehicle.',
+        'Charging kept away from escape routes.'
+      ] },
+    { ref:'FL-17.5', hardStop:false,
+      hazard:'Privacy complaint from camera use',
+      who:'Occupants / Neighbours / Employees', how:'Capturing neighbouring gardens, windows and people while photographing the subject building',
+      controls:[
+        'Occupants and immediate neighbours told before the flight what is being photographed and why.',
+        'Camera pointed at the subject building and recording stopped while repositioning over neighbouring land.',
+        'Footage reviewed and anything capturing neighbouring private space deleted before the survey is issued.',
+        'Images held on practice systems, used only for the commission, and not published or shared beyond the client.',
+        'Flight stopped if a resident objects and the matter referred to the client.'
+      ] }
+  ] },
+  { num:'18', title:'Occupied property: residents, pets and vulnerable persons', core:true, rows:[
+    { ref:'FL-18.1', hardStop:false,
+      hazard:'Aggressive or uncontrolled dog',
+      who:'Employees', how:'A dog loose in the property or garden during a survey visit',
+      controls:[
+        'Occupant asked when the appointment is made whether there are dogs, and asked to secure them in another room before arrival.',
+        'Surveyor does not enter, and does not open a gate, while a loose dog is present.',
+        'Visit rearranged rather than risked.',
+        'Dogs not approached, petted or stepped past in a confined hallway.'
+      ] },
+    { ref:'FL-18.2', hardStop:false,
+      hazard:'Injury to an occupant from survey work',
+      who:'Occupants', how:'Occupant walking into equipment, a lifted hatch or an opened up area during the visit',
+      controls:[
+        'Occupants told which rooms are in use and asked to stay clear while work is in progress.',
+        'Openings never left unattended and made good or covered before moving on.',
+        'Equipment kept together rather than spread through the property.',
+        'Children and pets kept out of rooms being surveyed.',
+        'Property left as found.'
+      ] },
+    { ref:'FL-18.3', hardStop:false,
+      hazard:'Allegation arising from working in an occupied home',
+      who:'Employees / Occupants', how:'Lone visit to a property with a vulnerable resident, with no record of what took place',
+      controls:[
+        'Appointments made in advance and confirmed with the client or occupant.',
+        'Photographic identification carried and shown on arrival without being asked.',
+        'Surveyor stays in the rooms relevant to the survey.',
+        'Two person visit arranged where the client identifies a vulnerable occupant or where the surveyor has any concern.',
+        'Time of arrival and departure recorded.',
+        'Concerns about a resident\'s welfare reported to the client the same day.'
+      ] }
+  ] },
+  { num:'19', title:'Driving on company business (own vehicles)', core:false, rows:[
+    { ref:'FL-19.1', hardStop:false,
+      hazard:'Road traffic collision',
+      who:'Employees / Other road users', how:'Driving to and from survey and client sites, often in unfamiliar areas and in poor weather',
+      controls:[
+        'Licence checked at recruitment and at regular intervals afterwards.',
+        'Journeys planned before setting off and route entered into the navigation system while stationary.',
+        'Weather checked and non urgent journeys postponed in severe conditions.',
+        'Drivers report any medical condition or medication affecting their fitness to drive.'
+      ] },
+    { ref:'FL-19.2', hardStop:false,
+      hazard:'Use of a vehicle that is not roadworthy or not insured for business use',
+      who:'Employees / Other road users', how:'Staff using their own cars for site visits without business cover or with defects',
+      controls:[
+        'Anyone driving on practice business provides evidence of a valid licence, MOT, and insurance including business use, and this is recorded and checked annually.',
+        'Drivers carry out a walk round check of tyres, lights and fluid levels at sensible intervals.',
+        'Vehicles with defects affecting safety are not used for practice journeys until repaired.'
+      ] },
+    { ref:'FL-19.3', hardStop:false,
+      hazard:'Driver distraction',
+      who:'Employees / Other road users', how:'Calls, messages and survey queries arriving while driving between properties',
+      controls:[
+        'Hand held phone use while driving is prohibited, including when stopped in traffic.',
+        'Calls go to voicemail and are returned during a break.',
+        'Office does not expect staff to answer while travelling.',
+        'Route and appointment changes made before setting off or after parking safely.'
+      ] },
+    { ref:'FL-19.4', hardStop:false,
+      hazard:'Fatigue at the wheel',
+      who:'Employees / Other road users', how:'Driving home after a long survey day, or an early start following a late finish',
+      controls:[
+        'Breaks taken on journeys over two hours.',
+        'Survey days planned so the return journey is not made when tired, with an overnight stay where needed.',
+        'Staff supported to stop and rest, or stay over, without having to justify it.',
+        'Driving not undertaken directly after a physically demanding survey without a break.'
+      ] }
+  ] },
+  { num:'20', title:'Company van: loading, securing and driving', core:false, rows:[
+    { ref:'FL-20.1', hardStop:false,
+      hazard:'Injury loading and unloading',
+      who:'Employees', how:'Lifting survey kit, ladders, equipment cases and sample material in and out of the van',
+      controls:[
+        'Heaviest items loaded last and nearest the door so they are not lifted across the load bed.',
+        'Kit kept in cases with handles.',
+        'Two person lift for ladders and anything long or awkward.',
+        'Loading done from the side or rear at waist height rather than climbing into the van.',
+        'Van parked so loading does not take place in the carriageway.'
+      ] },
+    { ref:'FL-20.2', hardStop:false,
+      hazard:'Load shifting in transit',
+      who:'Employees / Other road users', how:'Unsecured equipment moving under braking or becoming a projectile in a collision',
+      controls:[
+        'All equipment secured with straps or in a fixed rack.',
+        'Nothing loose in the load area and nothing carried on the passenger seat or in the footwell.',
+        'Ladders on a proper roof rack with both ends secured.',
+        'Load checked before setting off and again after the first stop.',
+        'Load restraint checked as part of the walk round.'
+      ] },
+    { ref:'FL-20.3', hardStop:false,
+      hazard:'Overloading the van',
+      who:'Employees / Other road users', how:'Carrying equipment, materials and samples beyond the vehicle\'s permitted weight',
+      controls:[
+        'Gross vehicle weight and payload known and displayed in the cab.',
+        'Loads planned against the payload rather than filling the space.',
+        'Waste and samples removed rather than accumulating in the van between jobs.',
+        'Tyre pressures set for the load being carried.'
+      ] },
+    { ref:'FL-20.4', hardStop:false,
+      hazard:'Reversing incident',
+      who:'Employees / Public / Occupants', how:'Reversing on a narrow residential street, a driveway or an estate road with restricted visibility',
+      controls:[
+        'Reversing avoided by parking so the vehicle can drive out forwards.',
+        'Walk round completed before reversing, checking behind and for children.',
+        'Reversing aids used but not relied on alone.',
+        'A colleague banks the vehicle where one is present, staying in view of the mirrors.',
+        'Reversing done slowly with the option to stop and get out and look again.'
+      ] }
+  ] }
+];
+
+/* ── Storage ──────────────────────────────────────────────────────────
+   Records live in localStorage under the app's own LS_PREFIX, so the
+   existing Cloud Save picks them up with the rest of the state and they
+   reach the server without a new backend route. Offline they simply sit
+   on the device until the next save. */
+const DRA_KEY = "dra.records";
+
+function draLoad(){
+  try { const v = JSON.parse(lsGet(DRA_KEY) || "[]"); return Array.isArray(v) ? v : []; }
+  catch(e){ return []; }
+}
+function draSave(recs){
+  try { lsSet(DRA_KEY, JSON.stringify(recs)); flagSaving(); return true; }
+  catch(e){
+    toast("Could not save on this device. Storage may be full.", "error");
+    return false;
+  }
+}
+function draGet(id){ return draLoad().find(r => r.id === id) || null; }
+function draPut(rec){
+  const recs = draLoad();
+  const i = recs.findIndex(r => r.id === rec.id);
+  rec.updated = Date.now();
+  rec.sent = false;
+  if(i === -1) recs.unshift(rec); else recs[i] = rec;
+  return draSave(recs);
+}
+function draNewId(){ return "dra_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,7); }
+
+/* Screen state. Not persisted: a half-finished round is held on the record
+   itself, so closing the tab loses nothing that was answered. */
+const draUI = { view: "list", recId: null, roundIdx: -1 };
+
+/* ── Question helpers ─────────────────────────────────────────────── */
+function draActsFor(rec){
+  return DRA_ACTIVITIES.filter(a => a.core || (rec.activities || []).indexOf(a.num) !== -1);
+}
+function draQuestionsFor(rec){
+  const out = DRA_PRECHECKS.map(p => ({ pre: true, act: null, q: p }));
+  draActsFor(rec).forEach(a => a.rows.forEach(q => out.push({ pre: false, act: a, q: q })));
+  return out;
+}
+function draRound(rec){ return rec.rounds[rec.rounds.length - 1]; }
+function draFindQ(ref){
+  const pre = DRA_PRECHECKS.find(p => p.ref === ref);
+  if(pre) return pre;
+  for(const a of DRA_ACTIVITIES){ const q = a.rows.find(r => r.ref === ref); if(q) return q; }
+  return null;
+}
+
+/* ── Rendering ────────────────────────────────────────────────────── */
+function draRender(){
+  const host = $("#draBody");
+  if(!host) return;
+  // Answering a question re-renders the whole check, so hold the scroll
+  // position unless the screen itself has changed. A 41 question form that
+  // jumps back to the top on every tap is unusable on a phone.
+  const sameScreen = draUI.view === draUI._lastView && draUI.recId === draUI._lastRec;
+  const keepY = window.scrollY;
+  const rec = draUI.recId ? draGet(draUI.recId) : null;
+  // "setup" is the only screen that legitimately has no record yet.
+  if(draUI.view !== "list" && draUI.view !== "setup" && !rec){ draUI.view = "list"; draUI.recId = null; }
+  if(draUI.view === "list")   host.innerHTML = draViewList();
+  else if(draUI.view === "setup")  host.innerHTML = draViewSetup(rec);
+  else if(draUI.view === "check")  host.innerHTML = draViewCheck(rec);
+  else if(draUI.view === "escalate") host.innerHTML = draViewEscalate(rec);
+  else if(draUI.view === "abort")  host.innerHTML = draViewAbort(rec);
+  else if(draUI.view === "planned") host.innerHTML = draViewPlanned(rec);
+  else if(draUI.view === "feedback") host.innerHTML = draViewFeedback(rec);
+  else host.innerHTML = draViewList();
+  draWire(host);
+  draUI._lastView = draUI.view;
+  draUI._lastRec = draUI.recId;
+  window.scrollTo(0, sameScreen ? keepY : 0);
+}
+
+function draPlaceholderNote(){
+  return '<div class="dra-note"><strong>Placeholder content.</strong> The senior manager names and '
+    + 'numbers, the lone working app name, which hazards are hard stops and which activities are '
+    + 'always asked are all waiting on Simon. Everything else is the generic survey RA word for word.</div>';
+}
+
+function draViewList(){
+  const recs = draLoad();
+  const pending = recs.filter(r => !r.sent).length;
+  let h = '<div class="dra-card">'
+    + '<h2>Go / no-go check</h2>'
+    + '<p class="dra-sub">Fill this in on site before you start, and again if anything changes while '
+    + 'you are there. It checks what is in front of you against the survey risk assessment. '
+    + 'This is not a permit to work.</p>'
+    + draPlaceholderNote()
+    + '<div class="dra-extra">'
+    + '<button type="button" class="btn btn-primary" id="draNew">Start a check</button>'
+    + '<button type="button" class="btn btn-outline" id="draPrintBlank">Print a blank form</button>';
+  if(recs.length){
+    h += '<span class="dra-spacer"></span><span class="dra-prog">'
+      + (pending ? '<b>' + pending + '</b> not yet sent to the server' : 'All sent')
+      + '</span>';
+  }
+  h += '</div></div>';
+
+  if(!recs.length){
+    h += '<div class="dra-card"><p class="dra-sub" style="margin:0;">No checks on this device yet.</p></div>';
+    return h;
+  }
+  h += '<div class="dra-card"><h2>Checks on this device</h2><p class="dra-sub">'
+    + 'Saved here first so the form keeps working with no signal. They go to the server on Cloud Save.'
+    + '</p>';
+  recs.forEach(r => {
+    const when = r.rounds && r.rounds.length ? new Date(r.rounds[0].startedAt) : new Date(r.created);
+    h += '<div class="dra-rec" data-rec="' + escapeHtml(r.id) + '">'
+      + '<div class="dra-rec-main">'
+      +   '<div class="dra-rec-t">' + escapeHtml(r.jobRef || "No job reference") + '  '
+      +     escapeHtml(r.site || "") + '</div>'
+      +   '<div class="dra-rec-s">' + escapeHtml(r.operative || "") + ' &middot; '
+      +     escapeHtml(r.company || "") + ' &middot; ' + when.toLocaleDateString("en-GB")
+      +     ' ' + when.toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"})
+      +     ' &middot; ' + (r.rounds ? r.rounds.length : 0) + ' round(s)'
+      +     (r.sent ? '' : ' &middot; not sent') + '</div>'
+      + '</div>'
+      + '<span class="dra-status ' + escapeHtml(r.status) + '">' + escapeHtml(r.status) + '</span>'
+      + '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function draViewSetup(rec){
+  const last = {
+    operative: lsGet("dra.last.operative") || "",
+    company:   lsGet("dra.last.company")   || ""
+  };
+  const r = rec || { operative: last.operative, company: last.company, site: "", jobRef: "", activities: [] };
+  let h = '<div class="dra-card"><h2>Visit details</h2>'
+    + '<p class="dra-sub">Everyone uses this same form, FAD staff and contractor surveyors alike.</p>'
+    + '<div class="dra-fields">'
+    + draField("draOperative", "Your name", r.operative)
+    + draField("draCompany", "Company (FAD or contractor name)", r.company)
+    + draField("draSite", "Site address", r.site, true)
+    + draField("draJobRef", "Job reference", r.jobRef)
+    + '</div></div>';
+
+  h += '<div class="dra-card"><h2>What does this visit involve?</h2>'
+    + '<p class="dra-sub">Tick what applies. The questions underneath follow what you tick. '
+    + 'The ones marked always asked cannot be switched off.</p><div class="dra-acts">';
+  DRA_ACTIVITIES.forEach(a => {
+    const on = a.core || (r.activities || []).indexOf(a.num) !== -1;
+    h += '<label class="dra-act-pick' + (a.core ? ' fixed' : '') + '">'
+      + '<input type="checkbox" class="dra-act" value="' + escapeHtml(a.num) + '"'
+      + (on ? ' checked' : '') + (a.core ? ' disabled' : '') + '>'
+      + '<span>' + escapeHtml(a.title)
+      + (a.core ? '<br><span class="dra-act-always">Always asked</span>' : '')
+      + '</span></label>';
+  });
+  h += '</div><div class="dra-bar">'
+    + '<button type="button" class="btn btn-ghost" id="draCancel">Back</button>'
+    + '<span class="dra-spacer"></span>'
+    + '<button type="button" class="btn btn-primary" id="draStart">Start the check</button>'
+    + '</div></div>';
+  return h;
+}
+
+function draField(id, label, val, wide){
+  return '<div class="dra-field' + (wide ? ' wide' : '') + '">'
+    + '<label for="' + id + '">' + escapeHtml(label) + '</label>'
+    + '<input type="text" id="' + id + '" value="' + escapeHtml(val || "") + '">'
+    + '</div>';
+}
+
+function draViewCheck(rec){
+  const round = draRound(rec);
+  const qs = draQuestionsFor(rec);
+  const answered = qs.filter(x => round.answers[x.q.ref]).length;
+
+  let h = '<div class="dra-card">'
+    + '<h2>' + (rec.rounds.length > 1 ? "Re-check, conditions changed" : "Check on arrival") + '</h2>'
+    + '<p class="dra-sub">' + escapeHtml(rec.jobRef || "") + ' &middot; ' + escapeHtml(rec.site || "")
+    + '<br>Answer every question. Nothing is ticked for you.</p>'
+    + '<div class="dra-note info">If a hazard is present you can only tick a control that is already '
+    + 'written in the risk assessment. If none of them fits, the answer is <strong>can\'t check or not '
+    + 'controlled</strong>, and that goes to a senior manager or stops the visit.</div>'
+    + '</div>';
+
+  h += '<div class="dra-group"><div class="dra-group-head"><span>Before you start</span></div>';
+  DRA_PRECHECKS.forEach(p => { h += draQPre(p, round.answers[p.ref]); });
+  h += '</div>';
+
+  draActsFor(rec).forEach(a => {
+    const done = a.rows.filter(q => round.answers[q.ref]).length;
+    h += '<div class="dra-group"><div class="dra-group-head"><span>' + escapeHtml(a.title) + '</span>'
+      + '<span class="dra-group-count">' + done + ' of ' + a.rows.length + '</span></div>';
+    a.rows.forEach(q => { h += draQCard(q, round.answers[q.ref]); });
+    h += '</div>';
+  });
+
+  h += '<div class="dra-card"><div class="dra-bar">'
+    + '<button type="button" class="btn btn-ghost" id="draCancel">Leave for now</button>'
+    + '<span class="dra-prog"><b>' + answered + '</b> of ' + qs.length + ' answered</span>'
+    + '<span class="dra-spacer"></span>'
+    + '<button type="button" class="btn btn-primary" id="draSubmit">Finish the check</button>'
+    + '</div></div>';
+  return h;
+}
+
+function draQPre(p, a){
+  let h = '<div class="dra-q' + (a ? (a.state === "no" ? " flag" : " answered") : "") + '" data-ref="'
+    + escapeHtml(p.ref) + '">'
+    + '<div class="dra-q-top"><div><div class="dra-q-haz">' + escapeHtml(p.hazard)
+    + '<span class="dra-hs">Stops the visit</span></div>'
+    + '<div class="dra-q-meta">' + escapeHtml(p.detail) + '</div></div>'
+    + '<div class="dra-q-ref">' + escapeHtml(p.ref) + '</div></div>'
+    + '<div class="dra-answers">'
+    + '<button type="button" class="dra-ans none" data-set="yes" aria-pressed="' + (a && a.state === "yes") + '">'
+    +   escapeHtml(p.yes) + '</button>'
+    + '<button type="button" class="dra-ans fail" data-set="no" aria-pressed="' + (a && a.state === "no") + '">'
+    +   escapeHtml(p.no) + '</button>'
+    + '</div>';
+  if(a && a.state === "no"){
+    h += '<div class="dra-note stop" style="margin:10px 0 0;">This stops the visit. There is no way past it.</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function draQCard(q, a){
+  const st = a ? a.state : "";
+  let h = '<div class="dra-q' + (st === "cantcheck" ? " flag" : (st ? " answered" : "")) + '" data-ref="'
+    + escapeHtml(q.ref) + '">'
+    + '<div class="dra-q-top"><div>'
+    +   '<div class="dra-q-haz">' + escapeHtml(q.hazard)
+    +     (q.hardStop ? '<span class="dra-hs">Hard stop</span>' : '') + '</div>'
+    +   '<div class="dra-q-meta">Who: ' + escapeHtml(q.who) + '<br>How: ' + escapeHtml(q.how) + '</div>'
+    + '</div><div class="dra-q-ref">' + escapeHtml(q.ref) + '</div></div>'
+    + '<div class="dra-answers">'
+    + '<button type="button" class="dra-ans none" data-set="none" aria-pressed="' + (st === "none") + '">Not present</button>'
+    + '<button type="button" class="dra-ans ctrl" data-set="controlled" aria-pressed="' + (st === "controlled") + '">Present, controlled</button>'
+    + '<button type="button" class="dra-ans fail" data-set="cantcheck" aria-pressed="' + (st === "cantcheck") + '">Can\'t check or not controlled</button>'
+    + '</div>';
+
+  if(st === "controlled"){
+    const picked = (a && a.controls) || [];
+    h += '<div class="dra-controls"><p>Which of these have you applied? Tick at least one.</p>';
+    q.controls.forEach((c, i) => {
+      h += '<label class="dra-ctl"><input type="checkbox" class="dra-ctlbox" data-i="' + i + '"'
+        + (picked.indexOf(i) !== -1 ? " checked" : "") + '><span>' + escapeHtml(c) + '</span></label>';
+    });
+    if(!picked.length){
+      h += '<p class="dra-ctl-warn">Nothing ticked yet. If none of these fits, the answer is '
+        + 'can\'t check or not controlled.</p>';
+    }
+    h += '</div>';
+  }
+  if(st === "cantcheck"){
+    h += '<div class="dra-note ' + (q.hardStop ? "stop" : "") + '" style="margin:10px 0 0;">'
+      + (q.hardStop
+          ? 'Hard stop. Finishing the check will stop and abort the visit.'
+          : 'This goes to a senior manager when you finish the check.')
+      + '</div>';
+  }
+  if(st){
+    h += '<div class="dra-extra">'
+      + '<input type="text" class="dra-note-in" placeholder="Note (optional)" value="'
+      +   escapeHtml((a && a.note) || "") + '">'
+      + '<button type="button" class="btn btn-outline btn-sm dra-photo-btn">'
+      +   ((a && a.photo) ? "Replace photo" : "Add photo") + '</button>'
+      + ((a && a.photo) ? '<img class="dra-thumb" src="' + a.photo + '" alt="">' : '')
+      + '</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function draViewEscalate(rec){
+  const round = draRound(rec);
+  const refs = round.escalateRefs || [];
+  let h = '<div class="dra-card"><h2>Call a senior manager</h2>'
+    + '<p class="dra-sub">You cannot write your own control. A senior manager decides whether you '
+    + 'carry on and on what terms, or whether you stop.</p>'
+    + '<div class="dra-note"><strong>' + refs.length + ' hazard' + (refs.length === 1 ? "" : "s")
+    + '</strong> could not be checked or controlled:</div><ul style="margin:0 0 14px 18px;padding:0;'
+    + 'font-size:12.5px;line-height:1.6;">';
+  refs.forEach(ref => {
+    const q = draFindQ(ref);
+    h += '<li>' + escapeHtml(ref) + '  ' + escapeHtml(q ? q.hazard : "") + '</li>';
+  });
+  h += '</ul>';
+  DRA_CONFIG.managers.forEach(m => {
+    h += '<div class="dra-mgr"><div class="dra-mgr-n">' + escapeHtml(m.name) + '</div>'
+      + '<div class="dra-mgr-p">' + escapeHtml(m.phone) + '</div></div>';
+  });
+  h += '</div>';
+
+  h += '<div class="dra-card"><h2>What did they say?</h2>'
+    + '<div class="dra-fields">'
+    + draField("draMgrName", "Who did you speak to?", (round.escalation && round.escalation.manager) || "")
+    + draField("draMgrTime", "Time of the call", (round.escalation && round.escalation.calledAt)
+        || new Date().toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"}))
+    + '<div class="dra-field wide"><label for="draMgrAuth">What did they authorise?</label>'
+    + '<textarea id="draMgrAuth" rows="3" placeholder="The control they told you to apply, in their words">'
+    + escapeHtml((round.escalation && round.escalation.authorised) || "") + '</textarea></div>'
+    + '</div>'
+    + '<div class="dra-bar">'
+    + '<button type="button" class="btn btn-danger" id="draEscAbort">They said stop</button>'
+    + '<span class="dra-spacer"></span>'
+    + '<button type="button" class="btn btn-primary" id="draEscGo">They authorised the work</button>'
+    + '</div></div>';
+  return h;
+}
+
+function draViewAbort(rec){
+  const round = draRound(rec);
+  let h = '<div class="dra-card"><h2>Visit stopped</h2>'
+    + '<div class="dra-note stop"><strong>Stop and leave.</strong> Do not start or carry on with the survey.</div>'
+    + '<p class="dra-sub">Reason recorded: ' + escapeHtml(round.abortReason || "") + '</p>'
+    + '<div class="dra-note">Close the visit in ' + escapeHtml(DRA_CONFIG.loneWorkingApp)
+    + ' as well, so nobody is left expecting you to check in.</div>'
+    + '<div class="dra-field wide"><label for="draAbortPhoto">Photo (required)</label>'
+    + '<button type="button" class="btn btn-outline" id="draAbortPhoto">'
+    + (round.abortPhoto ? "Replace photo" : "Add photo") + '</button>'
+    + (round.abortPhoto ? '<img class="dra-thumb" style="height:120px;margin-top:8px;" src="'
+        + round.abortPhoto + '" alt="">' : '')
+    + '</div>'
+    + '<div class="dra-bar">'
+    + '<span class="dra-spacer"></span>'
+    + '<button type="button" class="btn btn-primary" id="draAbortNext">Go to feedback</button>'
+    + '</div></div>';
+  return h;
+}
+
+function draViewPlanned(rec){
+  const round = draRound(rec);
+  let h = '<div class="dra-card"><h2>Work as planned</h2>'
+    + '<div class="dra-note ok">The site matches the risk assessment, or the controls that fix the '
+    + 'difference are in place. Carry on with the survey.</div>';
+  if(round.escalation && round.escalation.authorised){
+    h += '<div class="dra-note"><strong>Authorised by ' + escapeHtml(round.escalation.manager || "")
+      + '</strong> at ' + escapeHtml(round.escalation.calledAt || "") + '<br>'
+      + escapeHtml(round.escalation.authorised) + '</div>';
+  }
+  h += '<p class="dra-sub">If anything changes while you are there, come back and re-check. '
+    + 'It adds to this same record.</p>'
+    + '<div class="dra-bar">'
+    + '<button type="button" class="btn btn-outline" id="draChanged">Conditions changed, re-check</button>'
+    + '<span class="dra-spacer"></span>'
+    + '<button type="button" class="btn btn-primary" id="draComplete">Work complete</button>'
+    + '</div></div>';
+  h += draRoundHistory(rec);
+  return h;
+}
+
+function draViewFeedback(rec){
+  const aborted = rec.status === "aborted";
+  let h = '<div class="dra-card"><h2>Feedback</h2>'
+    + '<p class="dra-sub">' + (aborted
+        ? 'Every abort is reviewed. Tell head office what stopped the visit.'
+        : 'Even a clean visit goes to feedback. Anything you noticed, any near miss, anything the risk '
+          + 'assessment did not cover.') + '</p>'
+    + '<div class="dra-note info">This goes to head office and drives the review of the generic risk '
+    + 'assessment.</div>'
+    + '<div class="dra-field wide"><label for="draFeedback">What should head office know?</label>'
+    + '<textarea id="draFeedback" rows="5" placeholder="Leave blank if there is nothing to say">'
+    + escapeHtml((rec.feedback && rec.feedback.text) || "") + '</textarea></div>'
+    + '<div class="dra-bar">'
+    + '<span class="dra-spacer"></span>'
+    + '<button type="button" class="btn btn-primary" id="draFeedbackSave">Finish</button>'
+    + '</div></div>';
+  h += draRoundHistory(rec);
+  return h;
+}
+
+function draRoundHistory(rec){
+  if(!rec.rounds || !rec.rounds.length) return "";
+  let h = '<div class="dra-card"><h2>This visit so far</h2>';
+  rec.rounds.forEach((rd, i) => {
+    const t = rd.submittedAt ? new Date(rd.submittedAt) : new Date(rd.startedAt);
+    const counts = { none: 0, controlled: 0, cantcheck: 0, yes: 0, no: 0 };
+    Object.keys(rd.answers || {}).forEach(k => { counts[rd.answers[k].state] = (counts[rd.answers[k].state] || 0) + 1; });
+    h += '<div class="dra-round"><h4>Round ' + (i + 1) + '  '
+      + t.toLocaleDateString("en-GB") + ' ' + t.toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"})
+      + (rd.outcome ? '  ' + escapeHtml(rd.outcome) : '') + '</h4>'
+      + 'Not present ' + counts.none + ' &middot; present and controlled ' + counts.controlled
+      + ' &middot; not controlled ' + counts.cantcheck;
+    if(rd.location) h += '<br>Location: ' + escapeHtml(rd.location);
+    if(rd.escalation && rd.escalation.manager){
+      h += '<br>Called ' + escapeHtml(rd.escalation.manager) + ' at ' + escapeHtml(rd.escalation.calledAt || "")
+        + '. Authorised: ' + escapeHtml(rd.escalation.authorised || "nothing recorded");
+    }
+    if(rd.abortReason) h += '<br>Aborted: ' + escapeHtml(rd.abortReason);
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+/* ── Wiring ───────────────────────────────────────────────────────── */
+function draWire(host){
+  const on = (sel, ev, fn) => $$(sel, host).forEach(el => el.addEventListener(ev, fn));
+
+  on("#draNew", "click", () => { draUI.view = "setup"; draUI.recId = null; draRender(); });
+  on("#draPrintBlank", "click", printDraBlank);
+  on("#draCancel", "click", () => { draUI.view = "list"; draUI.recId = null; draRender(); });
+
+  on(".dra-rec", "click", e => {
+    const rec = draGet(e.currentTarget.dataset.rec);
+    if(!rec) return;
+    draUI.recId = rec.id;
+    draUI.view = rec.status === "aborted" || rec.status === "complete"
+      ? "feedback"
+      : (rec.status === "proceeding" ? "planned" : "check");
+    draRender();
+  });
+
+  on("#draStart", "click", () => {
+    const val = id => (($("#" + id, host) || {}).value || "").trim();
+    if(!val("draOperative") || !val("draSite")){
+      toast("Your name and the site address are needed", "error"); return;
+    }
+    const acts = $$(".dra-act:checked", host).map(c => c.value);
+    lsSet("dra.last.operative", val("draOperative"));
+    lsSet("dra.last.company", val("draCompany"));
+    const rec = {
+      id: draNewId(), created: Date.now(), updated: Date.now(), sent: false,
+      operative: val("draOperative"), company: val("draCompany"),
+      site: val("draSite"), jobRef: val("draJobRef"),
+      activities: acts, status: "open", rounds: [], feedback: null
+    };
+    rec.rounds.push({ startedAt: Date.now(), answers: {} });
+    if(draPut(rec)){ draUI.recId = rec.id; draUI.view = "check"; draRender(); }
+  });
+
+  // Answer buttons
+  on(".dra-ans", "click", e => {
+    const btn = e.currentTarget;
+    const ref = btn.closest(".dra-q").dataset.ref;
+    const rec = draGet(draUI.recId); if(!rec) return;
+    const round = draRound(rec);
+    const want = btn.dataset.set;
+    const cur = round.answers[ref];
+    if(cur && cur.state === want) return;          // already that answer, leave it alone
+    round.answers[ref] = { state: want, controls: [], note: (cur && cur.note) || "", photo: (cur && cur.photo) || null };
+    draPut(rec);
+    draRender();
+  });
+
+  // Control tick boxes
+  on(".dra-ctlbox", "change", e => {
+    const ref = e.currentTarget.closest(".dra-q").dataset.ref;
+    const rec = draGet(draUI.recId); if(!rec) return;
+    const a = draRound(rec).answers[ref]; if(!a) return;
+    a.controls = $$('.dra-q[data-ref="' + ref + '"] .dra-ctlbox:checked', host).map(c => +c.dataset.i);
+    draPut(rec);
+    const warn = e.currentTarget.closest(".dra-controls").querySelector(".dra-ctl-warn");
+    if(warn) warn.style.display = a.controls.length ? "none" : "";
+  });
+
+  // Per-question note
+  on(".dra-note-in", "change", e => {
+    const ref = e.currentTarget.closest(".dra-q").dataset.ref;
+    const rec = draGet(draUI.recId); if(!rec) return;
+    const a = draRound(rec).answers[ref]; if(!a) return;
+    a.note = e.currentTarget.value;
+    draPut(rec);
+  });
+
+  // Per-question photo
+  on(".dra-photo-btn", "click", e => {
+    const ref = e.currentTarget.closest(".dra-q").dataset.ref;
+    draPickPhoto(dataUrl => {
+      const rec = draGet(draUI.recId); if(!rec) return;
+      const a = draRound(rec).answers[ref]; if(!a) return;
+      a.photo = dataUrl;
+      draPut(rec); draRender();
+    });
+  });
+
+  on("#draSubmit", "click", draSubmitRound);
+
+  // Escalation
+  on("#draEscGo", "click", () => draFinishEscalation(host, true));
+  on("#draEscAbort", "click", () => draFinishEscalation(host, false));
+
+  // Abort
+  on("#draAbortPhoto", "click", () => {
+    draPickPhoto(dataUrl => {
+      const rec = draGet(draUI.recId); if(!rec) return;
+      draRound(rec).abortPhoto = dataUrl;
+      draPut(rec); draRender();
+    });
+  });
+  on("#draAbortNext", "click", () => {
+    const rec = draGet(draUI.recId); if(!rec) return;
+    if(!draRound(rec).abortPhoto){ toast("A photo is required on an abort", "error"); return; }
+    draUI.view = "feedback"; draRender();
+  });
+
+  // Work as planned
+  on("#draChanged", "click", () => {
+    const rec = draGet(draUI.recId); if(!rec) return;
+    rec.rounds.push({ startedAt: Date.now(), answers: {} });
+    rec.status = "open";
+    draPut(rec);
+    draUI.view = "check"; draRender();
+    toast("Re-check added to the same record");
+  });
+  on("#draComplete", "click", () => {
+    const rec = draGet(draUI.recId); if(!rec) return;
+    rec.status = "complete";
+    draPut(rec);
+    draUI.view = "feedback"; draRender();
+  });
+
+  on("#draFeedbackSave", "click", () => {
+    const rec = draGet(draUI.recId); if(!rec) return;
+    const t = (($("#draFeedback", host) || {}).value || "").trim();
+    rec.feedback = { text: t, submittedAt: Date.now() };
+    draPut(rec);
+    draUI.view = "list"; draUI.recId = null; draRender();
+    toast("Saved on this device. Use Cloud Save to send it.");
+  });
+}
+
+/* ── Photo capture. Resized hard, because these sit in localStorage
+   alongside the rest of the state and have to survive being sent up
+   inside one JSON blob. ─────────────────────────────────────────── */
+function draPickPhoto(cb){
+  const inp = document.createElement("input");
+  inp.type = "file"; inp.accept = "image/*"; inp.capture = "environment";
+  inp.addEventListener("change", () => {
+    const f = inp.files && inp.files[0]; if(!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 1280;
+        let w = img.width, h = img.height;
+        if(w > max || h > max){ const s = max / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
+        const c = document.createElement("canvas");
+        c.width = w; c.height = h;
+        c.getContext("2d").drawImage(img, 0, 0, w, h);
+        try { cb(c.toDataURL("image/jpeg", 0.6)); }
+        catch(e){ toast("Could not read that photo", "error"); }
+      };
+      img.onerror = () => toast("Could not read that photo", "error");
+      img.src = rd.result;
+    };
+    rd.readAsDataURL(f);
+  });
+  inp.click();
+}
+
+/* ── Finishing a round ────────────────────────────────────────────── */
+function draSubmitRound(){
+  const rec = draGet(draUI.recId); if(!rec) return;
+  const round = draRound(rec);
+  const qs = draQuestionsFor(rec);
+
+  // Every question needs an active answer. No defaults, no pre-ticks.
+  const missing = qs.filter(x => !round.answers[x.q.ref]);
+  if(missing.length){
+    toast(missing.length + " question" + (missing.length === 1 ? " is" : "s are") + " still unanswered", "error");
+    const el = $('.dra-q[data-ref="' + missing[0].q.ref + '"]');
+    if(el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  // "Present, controlled" means at least one listed control actually applied.
+  const noCtl = qs.filter(x => {
+    const a = round.answers[x.q.ref];
+    return a.state === "controlled" && (!a.controls || !a.controls.length);
+  });
+  if(noCtl.length){
+    toast("Tick which control you applied, or answer can't check or not controlled", "error");
+    const el = $('.dra-q[data-ref="' + noCtl[0].q.ref + '"]');
+    if(el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+
+  round.submittedAt = Date.now();
+  draStampLocation(round);
+
+  // Hard stops first. No override, whatever else is on the form.
+  const hardRefs = qs.filter(x => {
+    const a = round.answers[x.q.ref];
+    const failed = x.pre ? a.state === "no" : a.state === "cantcheck";
+    return failed && x.q.hardStop;
+  }).map(x => x.q.ref);
+
+  if(hardRefs.length){
+    round.outcome = "aborted";
+    round.hardStopRefs = hardRefs;
+    round.abortReason = hardRefs.map(r => {
+      const q = draFindQ(r); return r + " " + (q ? q.hazard : "");
+    }).join("; ");
+    rec.status = "aborted";
+    draPut(rec);
+    draUI.view = "abort"; draRender();
+    return;
+  }
+
+  const escRefs = qs.filter(x => !x.pre && round.answers[x.q.ref].state === "cantcheck").map(x => x.q.ref);
+  if(escRefs.length){
+    round.outcome = "escalated";
+    round.escalateRefs = escRefs;
+    rec.status = "escalated";
+    draPut(rec);
+    draUI.view = "escalate"; draRender();
+    return;
+  }
+
+  round.outcome = "work as planned";
+  rec.status = "proceeding";
+  draPut(rec);
+  draUI.view = "planned"; draRender();
+}
+
+function draFinishEscalation(host, authorised){
+  const rec = draGet(draUI.recId); if(!rec) return;
+  const round = draRound(rec);
+  const v = id => (($("#" + id, host) || {}).value || "").trim();
+  if(!v("draMgrName")){ toast("Record who you spoke to", "error"); return; }
+  if(authorised && !v("draMgrAuth")){
+    toast("Record what they authorised", "error"); return;
+  }
+  round.escalation = {
+    manager: v("draMgrName"),
+    calledAt: v("draMgrTime"),
+    authorised: authorised ? v("draMgrAuth") : "",
+    decision: authorised ? "continue" : "abort"
+  };
+  if(authorised){
+    round.outcome = "work as planned, authorised";
+    rec.status = "proceeding";
+    draPut(rec);
+    draUI.view = "planned";
+  } else {
+    round.outcome = "aborted";
+    round.abortReason = "Senior manager stopped the visit: " + v("draMgrName");
+    rec.status = "aborted";
+    draPut(rec);
+    draUI.view = "abort";
+  }
+  draRender();
+}
+
+/* Best effort location on submit. Never blocks the form: if the device
+   says no, the round records that instead of a position. */
+function draStampLocation(round){
+  if(round.location) return;
+  round.location = "not recorded";
+  if(!navigator.geolocation) return;
+  const recId = draUI.recId;
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const rec = draGet(recId); if(!rec) return;
+      const rd = rec.rounds[rec.rounds.length - 1]; if(!rd) return;
+      rd.location = pos.coords.latitude.toFixed(5) + ", " + pos.coords.longitude.toFixed(5)
+        + " (to within " + Math.round(pos.coords.accuracy) + "m)";
+      draPut(rec);
+    },
+    () => {},
+    { enableHighAccuracy: false, timeout: 8000, maximumAge: 120000 }
+  );
+}
+
+/* ── Blank paper version ──────────────────────────────────────────── */
+function draBlankHtml(){
+  let rows = "";
+  DRA_PRECHECKS.forEach(p => {
+    rows += '<tr><td>' + escapeHtml(p.ref) + '</td><td><strong>' + escapeHtml(p.hazard)
+      + '</strong> (stops the visit)</td><td class="dpb-tick">Y</td><td class="dpb-tick">N</td>'
+      + '<td class="dpb-tick"></td><td></td></tr>';
+  });
+  DRA_ACTIVITIES.forEach(a => {
+    rows += '<tr><th colspan="6">' + escapeHtml(a.title)
+      + (a.core ? '' : ' (only if it applies)') + '</th></tr>';
+    a.rows.forEach(q => {
+      rows += '<tr><td>' + escapeHtml(q.ref) + '</td><td>' + escapeHtml(q.hazard)
+        + (q.hardStop ? ' <strong>(hard stop)</strong>' : '')
+        + '</td><td class="dpb-tick"></td><td class="dpb-tick"></td><td class="dpb-tick"></td>'
+        + '<td></td></tr>';
+    });
+  });
+  return '<div class="dpb-head"><div><div class="dpb-title">Go / no-go check</div>'
+    + '<div class="dpb-sub">On site dynamic risk assessment. Not a permit to work.</div></div>'
+    + '<div class="dpb-sub">Photograph this and add it to the record afterwards.</div></div>'
+    + '<div class="dpb-fields"><span>Name</span><span>Company</span><span>Site</span>'
+    + '<span>Job ref</span><span>Date and time</span></div>'
+    + '<table><thead><tr><th style="width:44px;">Ref</th><th>Hazard</th>'
+    + '<th class="dpb-tick">Not<br>present</th><th class="dpb-tick">Present,<br>controlled</th>'
+    + '<th class="dpb-tick">Can\'t<br>check</th><th style="width:23%;">Which listed control did you apply?</th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table>'
+    + '<div class="dpb-foot"><strong>Can\'t check or not controlled:</strong> you cannot write your own '
+    + 'control. A hard stop means stop and leave. Anything else means call a senior manager and write '
+    + 'below who you spoke to, the time, and what they authorised.'
+    + '<br><br>Called: ______________________  Time: __________  Authorised: '
+    + '________________________________________________'
+    + '<br><br>Outcome:  work as planned / stopped and aborted &nbsp;&nbsp; Signed: ____________________</div>';
+}
+
+function printDraBlank(){
+  const host = $("#draBlank");
+  if(!host) return;
+  host.innerHTML = draBlankHtml();
+  const st = document.createElement("style");
+  st.id = "__draBlankPage";
+  st.textContent = "@page{size:A4 portrait;margin:9mm;}";
+  document.head.appendChild(st);
+  document.body.classList.add("dra-print-blank");
+  const done = () => {
+    document.body.classList.remove("dra-print-blank");
+    const s = document.getElementById("__draBlankPage");
+    if(s) s.remove();
+    window.removeEventListener("afterprint", done);
+  };
+  window.addEventListener("afterprint", done);
+  window.print();
+  setTimeout(done, 1500);   // Safari and older iPads do not always fire afterprint
+}
+
+
 document.addEventListener("DOMContentLoaded", ()=>{
   applyBrandingFromStorage();
   wireBrandPanel();
@@ -5356,6 +6942,23 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
   });
   attachPersistHandlers(document);
+  ensureSheetFooters();
+  draRender();
+  // One document, one client: typing the name in any footer fills it in on
+  // every other page of the same tab. Delegated, so it also covers footers
+  // that arrive later via a restored blob or a cloned form page.
+  document.addEventListener("input", e=>{
+    const el = e.target;
+    if(!el || !el.classList || !el.classList.contains("lh-client")) return;
+    if(!el.closest(".sheet-footer")) return;
+    const k = el.getAttribute("data-key");
+    const html = el.innerHTML;
+    $$(".sheet-footer .lh-client").forEach(other=>{
+      if(other !== el && other.getAttribute("data-key") === k && other.innerHTML !== html){
+        other.innerHTML = html;
+      }
+    });
+  });
   const lastTab = lsGet("ui.activeTab");
   if(lastTab) activateTab(lastTab);
   window.addEventListener("storage", e=>{
