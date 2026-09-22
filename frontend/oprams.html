@@ -151,11 +151,15 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .lh-client{font-size:14px;font-weight:700;color:var(--primary);}
 
 /* ── Page footer ─────────────────────────────────────────────────────
-   House footer, same shape as Compass and Site Inspection: producer mark
-   and name on the left, "Prepared for <client>" in the middle, page count
-   and date on the right, over a light hairline. One per .sheet on screen
-   and in browser Print; the PDF export stamps its own copy on every page
-   (see stampPdfFooters) and hides this one so they cannot double up.
+   House footer, same shape as Compass and Site Inspection: AHS mark, name
+   and website on the left, page count and document date on the right, over
+   a light hairline. The name is always AHS, never the client brand. One per
+   .sheet on screen and in browser Print; the PDF export stamps its own copy
+   on every page (see stampPdfFooters) and hides this one so they cannot
+   double up.
+   .sf-center is dead styling kept only so a footer saved before the client
+   line was dropped does not flash unstyled before ensureSheetFooters()
+   strips it.
    ─────────────────────────────────────────────────────────────────── */
 .sheet-footer{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;
   margin-top:20px;padding-top:8px;border-top:1px solid var(--border);
@@ -5095,10 +5099,10 @@ function applyBrandingFromStorage(){
 
 /* ════════════════════════════════════════════════════════════════════
    PAGE FOOTERS
-   Every .sheet carries a footer: producer mark + name (+ website) left,
-   "Prepared for <client>" centre, page count + document date right. The
-   client field is the one that used to sit under "Prepared for" at the top
-   of the letterhead — same data-key, so nothing already typed is lost.
+   Every .sheet carries a footer: AHS mark + AHS name + website on the left,
+   page count + document date on the right. There is no client line: the
+   client is named in the document title and the meta band, and the footer
+   exists to say who produced it.
 
    Footers are injected by JS rather than written into the markup, because
    #raForms / #msPages persist their innerHTML: a blob saved before this
