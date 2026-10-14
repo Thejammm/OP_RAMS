@@ -4997,9 +4997,18 @@ function persistField(el){
   lsSet(k, value || "");
   flagSaving();
 }
+/* The open note editor is furniture, not work. It is a <tr> inside the
+   hazards tbody, so without this it gets saved along with the rows and
+   comes back after a reload as HTML with nothing wired behind it. */
+function _htmlForSave(el){
+  if(!el.querySelector || !el.querySelector(".note-edit")) return el.innerHTML;
+  const c = el.cloneNode(true);
+  c.querySelectorAll(".note-edit").forEach(n => n.remove());
+  return c.innerHTML;
+}
 function persistContainer(el){
   const k = el.getAttribute("data-key"); if(!k) return;
-  lsSet(k, el.innerHTML);
+  lsSet(k, _htmlForSave(el));
   flagSaving();
 }
 function restoreField(el){
@@ -5018,6 +5027,9 @@ function restoreContainer(el){
   const stripped = v.replace(/<!--[\s\S]*?-->/g,'').replace(/\s+/g,'');
   if(stripped === '') return;
   el.innerHTML = v;
+  // A note editor saved while it was open comes back as dead HTML with no
+  // handlers behind it. Drop it: the notes themselves live on the row.
+  el.querySelectorAll(".note-edit").forEach(n => n.remove());
   // ── CRITICAL: strip stale wired-flags before re-attaching handlers ──
   // The saved HTML carries [data-*-wired] attributes from when the original
   // elements were wired up — but innerHTML replacement DESTROYS the actual
@@ -5029,7 +5041,7 @@ function restoreContainer(el){
     "data-persist-wired","data-risk-wired","data-ppe-wired","data-snip-wired",
     "data-form-wired","data-row-del-wired","data-seq-wired","data-date-wired",
     "data-add-row-wired","data-ppe-add-wired","data-ppe-item-wired",
-    "data-seq-del-wired","data-seq-inc-wired"
+    "data-seq-del-wired","data-seq-inc-wired","data-pin-wired"
   ];
   el.querySelectorAll("[" + wiredAttrs.join("],[") + "]").forEach(node => {
     wiredAttrs.forEach(a => node.removeAttribute(a));
@@ -5482,7 +5494,11 @@ function toggleNoteEditor(tr){
   row.querySelector(".ne-text").addEventListener("keydown", e => {
     if(e.key === "Enter"){ e.preventDefault(); addNote(); }
   });
-  row.querySelector(".ne-done").addEventListener("click", () => row.remove());
+  row.querySelector(".ne-done").addEventListener("click", () => {
+    row.remove();
+    const tb = tr.closest("tbody");
+    if(tb) persistContainer(tb);
+  });
   row.querySelector(".ne-text").focus();
 }
 
