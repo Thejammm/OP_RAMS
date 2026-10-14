@@ -4767,6 +4767,16 @@ const LS_PREFIX = "easytravel.ramsv1.";
    still says who built it. Change the wording here and it changes everywhere. */
 const AHS_PRODUCER = "AHS Ltd";
 const AHS_WEBSITE  = "www.archersafety.co.uk";
+
+/* How a rendered page is embedded in a PDF. These pages are antialiased text
+   on white, which PNG stores almost losslessly and very badly: six page
+   assessments were coming out at 90MB and more. JPEG at this quality is
+   indistinguishable on paper and roughly twenty times smaller. Every
+   html2canvas call in the export sets an opaque white background, so there
+   is no transparency to lose by moving off PNG. */
+const PDF_IMG_TYPE = "JPEG";
+const PDF_IMG_Q    = 0.85;
+const pdfImg = canvas => canvas.toDataURL("image/jpeg", PDF_IMG_Q);
 const AHS_URL      = "https://www.archersafety.co.uk";
 const AHS_TEAL = "#4bbfd6";
 const AHS_GREY = "#8b9096";
@@ -5542,7 +5552,7 @@ function raActionsSheet(items){
       const availW = W - M * 2, availH = H - M - band;
       let w = availW, h = canvas.height * (availW / canvas.width);
       if(h > availH){ h = availH; w = canvas.width * (availH / canvas.height); }
-      pdf.addImage(canvas.toDataURL("image/png"), "PNG", M, M, w, h);
+      pdf.addImage(pdfImg(canvas), PDF_IMG_TYPE, M, M, w, h);
       stampPdfFooters(pdf, $("#tab-ra"));
       const slug = (d.ref || "RA").replace(/[^A-Za-z0-9]+/g, "-").slice(0, 32);
       pdf.save("Actions-arising-" + slug + "-" + new Date().toISOString().slice(0, 10) + ".pdf");
@@ -6263,7 +6273,7 @@ window.exportPDF = async function(){
         backgroundColor: "#ffffff",
         windowWidth: node.scrollWidth
       });
-      const imgData = canvas.toDataURL("image/png");
+      const imgData = pdfImg(canvas);
       // Scale to fit BOTH width and height of the page (preserve aspect)
       const widthScale  = usableWmm / (canvas.width  / 2);  // canvas was 2x scale
       const heightScale = usableHmm / (canvas.height / 2);
@@ -6277,7 +6287,7 @@ window.exportPDF = async function(){
       const xMm = (pageWmm - finalWmm) / 2;
       const yMm = (pageHmm - finalHmm) / 2;
       if(!isFirst) pdf.addPage("a4", pdfOrientation);
-      pdf.addImage(imgData, "PNG", xMm, yMm, finalWmm, finalHmm);
+      pdf.addImage(imgData, PDF_IMG_TYPE, xMm, yMm, finalWmm, finalHmm);
     }
 
     // Helper: render a tall DOM node, slicing across multiple pages and
@@ -6311,12 +6321,12 @@ window.exportPDF = async function(){
       minorBreaks.add(canvas.height);
       const sortedMajor = Array.from(majorBreaks).sort((a, b) => a - b);
       const sortedMinor = Array.from(minorBreaks).sort((a, b) => a - b);
-      const imgData = canvas.toDataURL("image/png");
+      const imgData = pdfImg(canvas);
       const imgWmm = usableWmm;
       const imgHmm = canvas.height * (imgWmm / canvas.width);
       if(!isFirst) pdf.addPage("a4", pdfOrientation);
       if(imgHmm <= usableHmm){
-        pdf.addImage(imgData, "PNG", marginMm, marginMm, imgWmm, imgHmm);
+        pdf.addImage(imgData, PDF_IMG_TYPE, marginMm, marginMm, imgWmm, imgHmm);
       } else {
         const pxPerMm = canvas.width / imgWmm;
         function pickBreak(sortedSet, proposed, currentTop){
@@ -6351,7 +6361,7 @@ window.exportPDF = async function(){
           slice.getContext("2d").drawImage(canvas, 0, yPx, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
           if(pageIdx > 0) pdf.addPage("a4", pdfOrientation);
           const sliceHmm = sliceHeight / pxPerMm;
-          pdf.addImage(slice.toDataURL("image/png"), "PNG", marginMm, topMm, imgWmm, sliceHmm);
+          pdf.addImage(pdfImg(slice), PDF_IMG_TYPE, marginMm, topMm, imgWmm, sliceHmm);
           yPx = sliceEnd;
           pageIdx++;
         }
@@ -6452,7 +6462,7 @@ window.exportPDF = async function(){
           isFirst = false;
 
           if(imgHmm <= pageHmm - footerBandMm){
-            pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, imgWmm, imgHmm);
+            pdf.addImage(pdfImg(canvas), PDF_IMG_TYPE, 0, 0, imgWmm, imgHmm);
           } else {
             const pxPerMm = canvas.width / imgWmm;
 
@@ -6492,7 +6502,7 @@ window.exportPDF = async function(){
               slice.getContext("2d").drawImage(canvas, 0, yPx, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
               if(sliceIdx > 0) pdf.addPage("a4", pdfOrientation);
               const sliceHmm = sliceHeight / pxPerMm;
-              pdf.addImage(slice.toDataURL("image/png"), "PNG", 0, topMm, imgWmm, sliceHmm);
+              pdf.addImage(pdfImg(slice), PDF_IMG_TYPE, 0, topMm, imgWmm, sliceHmm);
               yPx = sliceEnd;
               sliceIdx++;
             }
