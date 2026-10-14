@@ -712,40 +712,6 @@ body.ras-render #raActions{left:-99999px;}
 .dra-sel{width:100%;font:inherit;font-size:13px;padding:8px 10px;border:1.5px solid var(--border);
   border-radius:6px;background:var(--surface);color:var(--text);}
 .dra-ctl-pick{margin-top:10px;}
-#draBlank .dpb-brand{display:flex;align-items:center;gap:6px;margin-top:14px;padding-top:6px;
-  border-top:1px solid #c9ced6;font-size:8px;color:#444;}
-#draBlank .dpb-brand .sf-mark{width:12px;height:12px;flex-shrink:0;}
-#draBlank .dpb-ra{border:1px solid #9aa1ab;border-radius:3px;padding:5px 7px;margin-bottom:7px;
-  font-size:9px;line-height:1.4;}
-#draBlank .dpb-haz{margin-top:2px;color:#444;}
-#draBlank .dpb-sign{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px;}
-#draBlank .dpb-sign span{border-top:1px solid #9aa1ab;padding-top:4px;font-size:8px;
-  text-transform:uppercase;letter-spacing:.07em;font-weight:700;}
-
-/* Blank paper version. Hidden on screen, printed on its own. */
-#draBlank{display:none;}
-body.dra-print-blank #draBlank{display:block;}
-body.dra-print-blank .app-header,
-body.dra-print-blank .tab-bar,
-body.dra-print-blank main{display:none!important;}
-#draBlank .dpb-head{display:flex;justify-content:space-between;align-items:flex-end;
-  border-bottom:2.5px solid var(--accent);padding-bottom:5px;margin-bottom:7px;}
-#draBlank .dpb-title{font-size:15px;font-weight:700;color:var(--primary);}
-#draBlank .dpb-sub{font-size:10.5px;color:var(--text-muted);}
-#draBlank table{width:100%;border-collapse:collapse;}
-#draBlank th,#draBlank td{border:1px solid #9aa1ab;padding:1.5px 4px;font-size:7.9px;
-  text-align:left;vertical-align:top;line-height:1.22;}
-#draBlank th{background:var(--primary);color:#fff;text-transform:uppercase;letter-spacing:.03em;font-size:7.4px;}
-#draBlank td.dpb-tick{text-align:center;width:24px;vertical-align:middle;}
-#draBlank th.dpb-tick{width:24px;}
-#draBlank td.dpb-tick::before{content:"";display:inline-block;width:10px;height:10px;
-  border:1.2px solid #333;background:#fff;}
-#draBlank .dpb-fields{display:flex;gap:10px;margin-bottom:6px;font-size:8.4px;flex-wrap:wrap;}
-#draBlank .dpb-fields span{flex:1 1 150px;border-bottom:1px solid #9aa1ab;padding-bottom:9px;}
-#draBlank .dpb-foot{margin-top:6px;font-size:8px;line-height:1.35;}
-/* The blank form prints portrait while the RA and MS print landscape. @page
-   cannot be scoped by a body class, so printDraBlank() injects the portrait
-   @page rule just for that print run and takes it out again afterwards. */
 
 </style>
 </head>
@@ -1252,9 +1218,6 @@ body.dra-print-blank main{display:none!important;}
 
 <!-- Actions arising sheet. Rendered off screen only while its PDF is built. -->
 <div id="raActions"></div>
-
-<!-- Blank paper version of the go / no-go check. Screen hidden, print only. -->
-<div id="draBlank"></div>
 
 
 <!-- Hidden file input for restore -->
@@ -6942,20 +6905,23 @@ function draViewList(){
     + 'takes with them and fills in on site: has anything changed, and does it stop the job. '
     + 'It is not a permit to work.</p>'
     + '<div class="dra-extra">'
-    + '<button type="button" class="btn btn-primary" id="draPrintBlank">Print blank sheets</button>'
+    + '<button type="button" class="btn btn-primary" id="draPrintBlank">Blank sheet, fillable PDF</button>'
     + (ra.hazards.length
-        ? '<button type="button" class="btn btn-outline" id="draPrintFor">Print for '
+        ? '<button type="button" class="btn btn-outline" id="draPrintFor">Fillable PDF for '
           + escapeHtml(ra.ref || "the open assessment") + '</button>'
         : '')
     + '<span class="dra-spacer"></span>'
     + '<button type="button" class="btn btn-ghost" id="draNew">Fill one in on this device</button>'
     + '</div>'
     + (ra.hazards.length
-        ? '<p class="dra-sub" style="margin:10px 0 0;">Printing for ' + escapeHtml(ra.ref || "the open assessment")
-          + ' puts its reference and its ' + ra.hazards.length
-          + ' hazards on the sheet, so the surveyor has the reminder in front of them.</p>'
-        : '<p class="dra-sub" style="margin:10px 0 0;">Open an assessment on the Risk Assessment tab '
-          + 'first and you can print the sheet with its reference and hazards already on it.</p>')
+        ? '<p class="dra-sub" style="margin:10px 0 0;">Both sheets are fillable PDFs: they can be typed '
+          + 'into on a phone or a tablet and sent back, or printed blank and written on. The one for '
+          + escapeHtml(ra.ref || "the open assessment") + ' arrives with its reference filled in and its '
+          + ra.hazards.length + ' hazards listed after the signature.</p>'
+        : '<p class="dra-sub" style="margin:10px 0 0;">The sheet is a fillable PDF: it can be typed '
+          + 'into on a phone or a tablet and sent back, or printed blank and written on. Open an '
+          + 'assessment on the Risk Assessment tab first and you also get one with its reference and '
+          + 'hazards already on it.</p>')
     + '</div>';
 
   if(recs.length){
@@ -7300,8 +7266,8 @@ function draWire(host){
   const on = (sel, ev, fn) => $$(sel, host).forEach(el => el.addEventListener(ev, fn));
 
   on("#draNew", "click", () => { draUI.view = "setup"; draUI.recId = null; draRender(); });
-  on("#draPrintBlank", "click", () => printDraBlank(false));
-  on("#draPrintFor", "click", () => printDraBlank(true));
+  on("#draPrintBlank", "click", () => draSaveEditablePdf(false));
+  on("#draPrintFor", "click", () => draSaveEditablePdf(true));
   on("#draCancel", "click", () => { draUI.view = "list"; draUI.recId = null; draRender(); });
 
   on(".dra-rec", "click", e => {
@@ -7590,72 +7556,266 @@ function draStampLocation(round){
 }
 
 /* ── Blank paper version ──────────────────────────────────────────── */
-function draBlankHtml(withRA){
-  const ra = withRA ? draLiveRA() : { hazards: [] };
-  const stops = DRA_STOPS.map(t =>
-    '<tr><td class="dpb-tick"></td><td>' + escapeHtml(t) + '</td></tr>').join("");
-  return '<div class="dpb-head"><div><div class="dpb-title">Check before you start</div>'
-    + '<div class="dpb-sub">A review of the risk assessment for this job. Not a permit to work.</div></div>'
-    + '<div class="dpb-sub">Photograph this and add it to the record afterwards.</div></div>'
-    + '<div class="dpb-fields"><span>Name</span><span>Company</span><span>Site</span>'
-    + '<span>Job ref</span><span>Date and time</span></div>'
-    + (ra.hazards.length
-        ? '<div class="dpb-ra"><strong>Risk assessment ' + escapeHtml(ra.ref || "") + '</strong>'
-          + (ra.task ? '  &middot;  ' + escapeHtml(ra.task) : '')
-          + '<div class="dpb-haz">What it covers: '
-          + ra.hazards.map(z => z.no + '. ' + escapeHtml(z.name)).join(' &nbsp;&middot;&nbsp; ')
-          + '</div></div>'
-        : '<div class="dpb-fields"><span>Risk assessment reference you are working to</span></div>')
-    + '<table><tbody>'
-    + '<tr><th colspan="2">1. Before you judge it</th></tr>'
-    + '<tr><td class="dpb-tick"></td><td>I have read this risk assessment and the method statement '
-    +   'for this job.</td></tr>'
-    + '<tr><th colspan="2">2. Is the assessment still valid for what is in front of you?</th></tr>'
-    + '<tr><td class="dpb-tick"></td><td><strong>Yes</strong>, it still holds. Start work. '
-    +   'Nothing else to fill in.</td></tr>'
-    + '<tr><td class="dpb-tick"></td><td><strong>No</strong>, something is different. '
-    +   'Write what, below, then answer 3.</td></tr>'
-    + '<tr><td></td><td style="height:74px;">What is different:</td></tr>'
-    + '<tr><th colspan="2">3. Does any of this apply? Any one of them stops the job.</th></tr>'
-    + stops
-    + '<tr><td class="dpb-tick"></td><td>None of these apply</td></tr>'
-    + '<tr><th colspan="2">4. If none of them apply, how are you dealing with it?</th></tr>'
-    + '<tr><td class="dpb-tick"></td><td>A control already written in this assessment covers it. '
-    +   'Write the hazard number and the control:</td></tr>'
-    + '<tr><td></td><td style="height:52px;"></td></tr>'
-    + '<tr><td class="dpb-tick"></td><td>Called a senior manager. Name, number, time, and what they '
-    +   'authorised:</td></tr>'
-    + '<tr><td></td><td style="height:62px;"></td></tr>'
-    + '<tr><td class="dpb-tick"></td><td>Stopped and left.</td></tr>'
-    + '</tbody></table>'
-    + '<div class="dpb-foot">You cannot write your own control. If nothing in the assessment covers '
-    + 'it, the only routes are a senior manager or stop. Tell the office either way, so the '
-    + 'assessment can be reviewed.'
-    + '<div class="dpb-sign"><span>Signed</span><span>Date and time</span></div>'
-    + '<div class="dpb-brand">' + AHS_FOOTER_MARK
-    +   '<span><strong>' + AHS_PRODUCER + '</strong> \u00b7 ' + AHS_WEBSITE + '</span></div>'
-    + '</div>';
+/* ════════════════════════════════════════════════════════════════════
+   THE CHECK BEFORE YOU START SHEET, AS A FILLABLE PDF
+
+   The sheet used to go out through window.print(), which can only ever
+   produce a flat page: the surveyor had to print it and write on it. This
+   draws the same sheet with real PDF form fields on top, so it can be
+   filled in on a phone or a tablet and sent back, and it still prints as a
+   blank sheet if that is what the day needs.
+
+   Drawn rather than rasterised, so the text stays sharp and selectable and
+   the file is a few tens of kilobytes rather than megabytes. Every box is
+   drawn by us and the field sitting in it is borderless, so the sheet looks
+   the same whether or not the viewer decorates form fields.
+   ──────────────────────────────────────────────────────────────────── */
+
+const DRA_PDF = {
+  pageW: 210, pageH: 297,
+  mL: 12, mR: 12, mT: 11, mB: 14,
+  ink:   [17, 24, 39],        // body text
+  mute:  [107, 114, 128],     // labels and hints
+  rule:  [209, 213, 219],     // box borders
+  panel: [243, 244, 246],     // section bands
+  teal:  [75, 191, 214],      // AHS accent
+  grey:  [117, 117, 117]      // AHS title grey
+};
+
+function _draPdfDoc(){
+  const { jsPDF } = window.jspdf || window;
+  const d = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  d.setFont("helvetica", "normal");
+  return d;
 }
 
-function printDraBlank(withRA){
-  const host = $("#draBlank");
-  if(!host) return;
-  host.innerHTML = draBlankHtml(withRA === true);
-  const st = document.createElement("style");
-  st.id = "__draBlankPage";
-  st.textContent = "@page{size:A4 portrait;margin:9mm;}";
-  document.head.appendChild(st);
-  document.body.classList.add("dra-print-blank");
-  const done = () => {
-    document.body.classList.remove("dra-print-blank");
-    const s = document.getElementById("__draBlankPage");
-    if(s) s.remove();
-    window.removeEventListener("afterprint", done);
-  };
-  window.addEventListener("afterprint", done);
-  window.print();
-  setTimeout(done, 1500);   // Safari and older iPads do not always fire afterprint
+/* The house footer, stamped on every page of the sheet. */
+function _draPdfFooter(d, page){
+  const P = DRA_PDF, y = P.pageH - P.mB + 4;
+  d.setDrawColor(P.rule[0], P.rule[1], P.rule[2]);
+  d.setLineWidth(0.2);
+  d.line(P.mL, y - 3.5, P.pageW - P.mR, y - 3.5);
+  // the ring mark, drawn so the sheet carries the brand with no image
+  d.setDrawColor(P.teal[0], P.teal[1], P.teal[2]);
+  d.setLineWidth(0.45);
+  d.circle(P.mL + 1.7, y - 0.9, 1.5);
+  d.circle(P.mL + 1.7, y - 0.9, 0.75);
+  d.setDrawColor(139, 144, 150);
+  d.line(P.mL + 1.7, y - 0.9, P.mL + 3.5, y - 2.0);
+  d.setFontSize(7.5);
+  d.setTextColor(P.ink[0], P.ink[1], P.ink[2]);
+  d.setFont("helvetica", "bold");
+  d.text(AHS_PRODUCER, P.mL + 5.4, y);
+  const w = d.getTextWidth(AHS_PRODUCER);
+  d.setFont("helvetica", "normal");
+  d.setTextColor(P.mute[0], P.mute[1], P.mute[2]);
+  d.text("· " + AHS_WEBSITE, P.mL + 6.6 + w, y);
+  d.text("Page " + page, P.pageW - P.mR, y, { align: "right" });
 }
+
+/* Draw the sheet with real form fields. Laid out top down with one cursor;
+   anything that will not fit starts a new page. */
+function draEditablePdf(withRA){
+  const ns = window.jspdf || window;
+  const AcroFormTextField = ns.AcroFormTextField, AcroFormCheckBox = ns.AcroFormCheckBox;
+  if(!ns.jsPDF || !AcroFormTextField || !AcroFormCheckBox){
+    toast("PDF library not loaded", "error");
+    return null;
+  }
+  const P = DRA_PDF;
+  const W = P.pageW - P.mL - P.mR;
+  const d = _draPdfDoc();
+  const ra = withRA === true ? draLiveRA() : { hazards: [] };
+  let y = P.mT, page = 1, nFields = 0;
+
+  const need = h => {
+    if(y + h <= P.pageH - P.mB - 6) return;
+    _draPdfFooter(d, page);
+    d.addPage(); page++; y = P.mT;
+  };
+  const ink  = () => d.setTextColor(P.ink[0], P.ink[1], P.ink[2]);
+  const mute = () => d.setTextColor(P.mute[0], P.mute[1], P.mute[2]);
+
+  // a labelled box with a borderless text field inside it
+  const field = (name, label, x, w, h, opts) => {
+    opts = opts || {};
+    d.setFontSize(6.6); mute(); d.setFont("helvetica", "bold");
+    d.text(String(label).toUpperCase(), x, y + 2.3);
+    d.setFont("helvetica", "normal");
+    const top = y + 3.4;
+    d.setDrawColor(P.rule[0], P.rule[1], P.rule[2]);
+    d.setLineWidth(0.25);
+    d.rect(x, top, w, h);
+    const f = new AcroFormTextField();
+    f.Rect = [x + 0.4, top + 0.4, w - 0.8, h - 0.8];
+    f.fieldName = name;
+    f.fontSize = opts.multiline ? 9 : 10;
+    f.value = opts.value || "";
+    if(opts.multiline) f.multiline = true;
+    f.borderWidth = 0;
+    d.addField(f); nFields++;
+  };
+
+  // a tick box with its line of text beside it
+  const tick = (name, text, opts) => {
+    opts = opts || {};
+    const bx = P.mL + 1, size = 4.0;
+    d.setFontSize(8.6);
+    const lines = d.splitTextToSize(text, W - 9);
+    const h = Math.max(size + 1.3, lines.length * 4.0 + 1.3);
+    need(h);
+    d.setDrawColor(P.ink[0], P.ink[1], P.ink[2]);
+    d.setLineWidth(0.3);
+    d.rect(bx, y + 0.5, size, size);
+    const c = new AcroFormCheckBox();
+    c.Rect = [bx, y + 0.5, size, size];
+    c.fieldName = name;
+    c.appearanceState = "Off";
+    c.caption = "4";               // ZapfDingbats tick
+    c.borderWidth = 0;
+    d.addField(c); nFields++;
+    ink();
+    if(opts.bold) d.setFont("helvetica", "bold");
+    d.text(lines, bx + size + 2.6, y + 3.5);
+    d.setFont("helvetica", "normal");
+    y += h;
+  };
+
+  const section = title => {
+    need(13);
+    d.setFillColor(P.panel[0], P.panel[1], P.panel[2]);
+    d.rect(P.mL, y, W, 6.4, "F");
+    d.setDrawColor(P.teal[0], P.teal[1], P.teal[2]);
+    d.setLineWidth(0.8);
+    d.line(P.mL, y, P.mL, y + 6.4);
+    d.setFontSize(8.8); ink(); d.setFont("helvetica", "bold");
+    d.text(title, P.mL + 2.8, y + 4.3);
+    d.setFont("helvetica", "normal");
+    y += 7.9;
+  };
+
+  /* ── header ── */
+  d.setFontSize(17); d.setFont("helvetica", "bold");
+  d.setTextColor(P.grey[0], P.grey[1], P.grey[2]);
+  d.text("Check before you start", P.mL, y + 6);
+  d.setFont("helvetica", "normal");
+  d.setFontSize(8.4); mute();
+  d.text("A review of the risk assessment for this job. Not a permit to work.", P.mL, y + 10.8);
+  d.text("Photograph this and add it to the record afterwards.",
+    P.pageW - P.mR, y + 10.8, { align: "right" });
+  y += 12.6;
+  d.setDrawColor(P.teal[0], P.teal[1], P.teal[2]);
+  d.setLineWidth(0.9);
+  d.line(P.mL, y, P.pageW - P.mR, y);
+  y += 4.2;
+
+  /* ── who and where ── */
+  const colW = (W - 5) / 2, boxH = 7;
+  const pair = (a, b) => {
+    need(12.9);
+    field(a[0], a[1], P.mL, colW, boxH);
+    if(b) field(b[0], b[1], P.mL + colW + 5, colW, boxH, { value: b[2] || "" });
+    y += 3.4 + boxH + 2.5;
+  };
+  pair(["name", "Your name"], ["company", "Company (FAD or contractor)"]);
+  pair(["site", "Site address"], ["jobref", "Job reference"]);
+  pair(["datetime", "Date and time"],
+       ["raref", "Risk assessment reference you are working to", ra.ref || ""]);
+
+  /* ── 1 ── */
+  section("1. Before you judge it");
+  tick("read_ra", "I have read this risk assessment and the method statement for this job.");
+  y += 1.8;
+
+  /* ── 2 ── */
+  section("2. Is the assessment still valid for what is in front of you?");
+  tick("valid_yes", "Yes, it still holds. Start work. Nothing else to fill in.", { bold: true });
+  tick("valid_no", "No, something is different. Write what, below, then answer 3.", { bold: true });
+  y += 1.2;
+  need(19.8);
+  field("whatdiff", "What is different", P.mL, W, 13, { multiline: true });
+  y += 3.4 + 13 + 3.4;
+
+  /* ── 3 ── */
+  section("3. Does any of this apply? Any one of them stops the job.");
+  DRA_STOPS.forEach((t, i) => tick("stop_" + (i + 1), t));
+  tick("stop_none", "None of these apply");
+  y += 1.8;
+
+  /* ── 4 ── */
+  section("4. If none of them apply, how are you dealing with it?");
+  tick("route_control", "A control already written in this assessment covers it.");
+  need(16.6);
+  field("route_control_detail", "Hazard number and the control", P.mL + 7, W - 7, 10, { multiline: true });
+  y += 3.4 + 10 + 3.2;
+  tick("route_manager", "Called a senior manager.");
+  need(17.6);
+  field("route_manager_detail", "Name, number, time, and what they authorised",
+    P.mL + 7, W - 7, 11, { multiline: true });
+  y += 3.4 + 11 + 3.2;
+  tick("route_stopped", "Stopped and left.");
+  y += 2.0;
+
+  /* ── the rule that makes the sheet mean something ── */
+  const note = "You cannot write your own control. If nothing in the assessment covers it, the "
+    + "only routes are a senior manager or stop. Tell the office either way, so the assessment "
+    + "can be reviewed.";
+  d.setFontSize(7.6);
+  const nLines = d.splitTextToSize(note, W - 6);
+  need(nLines.length * 3.6 + 8.4 + 13.6);
+  d.setFillColor(254, 252, 232);
+  d.setDrawColor(234, 179, 8);
+  d.setLineWidth(0.25);
+  d.rect(P.mL, y, W, nLines.length * 3.6 + 4, "FD");
+  d.setFontSize(7.6);
+  d.setTextColor(120, 83, 16);
+  d.text(nLines, P.mL + 3, y + 3.6);
+  y += nLines.length * 3.6 + 8.4;
+
+  /* ── sign off ── (measured with the note above, never split from it) */
+  field("signed", "Signed", P.mL, colW, boxH);
+  field("signed_datetime", "Date and time", P.mL + colW + 5, colW, boxH);
+  y += 3.4 + boxH;
+
+  /* ── what the assessment covers ──
+     Reference, not something to fill in, so it sits after the signature and
+     is free to run on. The form above it is never split. */
+  if(ra.hazards.length){
+    y += 5;
+    const title = "What this assessment covers"
+      + (ra.ref ? "  ·  " + ra.ref : "") + (ra.task ? "  ·  " + ra.task : "");
+    const list = ra.hazards.map(z => z.no + ". " + z.name).join("   ·   ");
+    d.setFontSize(7.4);
+    const lLines = d.splitTextToSize(list, W - 6);
+    need(8 + Math.min(lLines.length, 6) * 3.5);
+    d.setFontSize(8.8); ink(); d.setFont("helvetica", "bold");
+    d.text(title, P.mL, y + 3);
+    d.setFont("helvetica", "normal");
+    y += 5.4;
+    d.setDrawColor(P.rule[0], P.rule[1], P.rule[2]);
+    d.setLineWidth(0.2);
+    d.line(P.mL, y, P.pageW - P.mR, y);
+    y += 3.4;
+    d.setFontSize(7.4); mute();
+    lLines.forEach(ln => {
+      need(4);
+      d.text(ln, P.mL, y);
+      y += 3.5;
+    });
+  }
+
+  _draPdfFooter(d, page);
+  return { doc: d, pages: page, fields: nFields, ref: ra.ref || "" };
+}
+
+function draSaveEditablePdf(withRA){
+  const out = draEditablePdf(withRA);
+  if(!out) return;
+  const ref = withRA === true && out.ref ? " " + out.ref : "";
+  out.doc.save("Check before you start" + ref + ".pdf");
+  toast("Fillable PDF created", "ok");
+}
+
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
