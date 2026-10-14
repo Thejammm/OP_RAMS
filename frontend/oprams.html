@@ -1278,6 +1278,7 @@ body.dra-print-blank main{display:none!important;}
 // entries a new group constant.
 const ET_GROUP = "Vehicle workshop (Easy Travel)";
 const FL_GROUP = "Office & survey (Fineline Architects)";
+const FLRA_GROUP = "Fineline: one method statement per risk assessment";
 const LIB_GROUP = "General hazard library (any sector)";
 
 // ─── RA hazard snippets — append more entries here ─────────────────
@@ -4753,7 +4754,175 @@ const SNIPPETS_MS = [
       spill: "Not applicable.",
       contacts: "Practice Manager — TBC | Client contact — TBC | Emergency 999"
     }
+  },
+  {
+    name: "MS — SSG_NI_01 — Site Survey General, non intrusive",
+    group: FLRA_GROUP,
+    fields: {
+      title: "General survey of a property with nothing opened up",
+      equipment: "Torch and head torch with spare batteries; tape and laser measure; moisture meter; camera; notebook; disposable overshoes; hand sanitiser and wipes; first aid kit; mobile phone and power bank",
+      ppe: "Safety footwear with a protective sole; disposable gloves; overshoes in an occupied home",
+      raRef: "SSG_NI_01",
+      procedure: "**Before you travel**\nLicence, insurance for business use, MOT and tax current. Vehicle checked: tyres, lights, washers, oil. Nothing loose in the cabin.\nPlan the route and the timings. Do not plan a day that cannot be done inside normal hours.\nPhone charged and mounted. It is not touched while driving. Calls go to voicemail and are returned when parked.\nLeave the itinerary with the office: address, expected duration, finish time and the time you will call in by.\nIf you are tired, say so and move the visit. Nobody is expected to drive tired.\n\n**Before the visit**\nConfirm the appointment and who will be there. Ask the client what is known about the occupant: vulnerability, mobility, language, pets, any history of aggression at the address.\nAsk the age of the property and for any asbestos information. Anything built or altered before 2000 is presumed to contain asbestos.\nThis visit opens nothing up. Nothing is drilled, cut, lifted, unscrewed or sampled. If the job needs that, it is a different visit under SSi_01.\n\n**Arrival**\nPark clear of the drive and do not block anyone in. Show identification and wait to be invited in. If the person at the door is not expecting you, leave and ring the client.\nAsk for dogs to be put in another room and do not continue until they are.\nFit overshoes. Check in with the office.\n\n**Working through the property**\nOne room at a time. Check the floor ahead before committing weight and use the torch in every unlit room, whatever the time of day.\nSay what you are doing before you do it, and say when you are about to photograph.\nKeep a clear route to the front door. Do not let yourself be shut into a room.\nDo not move the occupant's belongings. Ask them to move anything in the way.\nRecord damp and mould by photograph and moisture meter. Do not disturb, wipe or scrape mould growth.\nPhotograph and record every presumed asbestos containing material. Do not touch, probe or tap anything to work out what it is.\n\n**If anything changes**\nSuspect material found damaged: stop, leave the area, close the door, tell the client duty holder and the practice the same day. Do not clean up.\nAnyone becomes agitated: agree with them, say you will pass it on, and leave. Ring the office from the vehicle once clear. Never return to that address alone.\n\n**Checking out**\nLeave the property as you found it and secure anything you opened.\nCall the office to confirm you are out and safe. If you miss the agreed time the office acts on it rather than waits.\nReport anything that happened, including a near miss or anything that felt wrong, the same day.",
+      training: "Asbestos awareness, in date; lone working briefing; data protection awareness; safeguarding and vulnerable persons awareness; conflict avoidance; licence and insurance checked annually",
+      risks: "Injury from unknown property condition; slips, trips and falls inside the property; working in darkness; aggressive or uncontrolled dog; injury to an occupant; allegation arising from working in an occupied home; asbestos in a pre 2000 property; mould and dust; violence or intimidation; lone worker taken ill with nobody aware; unauthorised occupants; road traffic collision and driver fatigue",
+      sequence: [
+        { step: "Travel checks", detail: "Licence, insurance, vehicle and route. Itinerary and call in time left with the office." },
+        { step: "Confirm the visit", detail: "Who will be there, occupant circumstances, property age and any asbestos information obtained." },
+        { step: "Arrive and identify", detail: "Parked for a clear exit, identification shown, invitation waited for, dogs shut away." },
+        { step: "Check in", detail: "Overshoes on, office told you are inside." },
+        { step: "Room by room", detail: "Floor checked ahead, torch in unlit rooms, route to the door kept clear, nothing moved by you." },
+        { step: "Record, do not disturb", detail: "Damp, mould and presumed asbestos photographed and recorded. Nothing touched, probed or opened." },
+        { step: "Withdraw if needed", detail: "Damaged suspect material or any agitation ends the visit. Reported the same day." },
+        { step: "Check out", detail: "Property as found, office called to confirm you are out, anything of note reported." }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle. Nearest A&E identified before travelling to an unfamiliar area.",
+      fire: "Escape route identified on entry. Leave by the nearest exit and call the occupant out with you. Do not return for equipment.",
+      spill: "Not applicable. Nothing is carried that can spill.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — SSV_01 — Site Survey Ventilation",
+    group: FLRA_GROUP,
+    fields: {
+      title: "Pre installation building inspection for a ventilation upgrade",
+      equipment: "Torch and head torch; tape and laser measure; door undercut gauge or wedge; camera; moisture meter; non contact voltage detector; pole camera or borescope; two tread step stool with a handhold; disposable overshoes; first aid kit; mobile phone",
+      ppe: "Safety footwear; disposable gloves; overshoes inside the home; FFP3 respirator (face fit tested) if visible mould is significant",
+      raRef: "SSV_01",
+      procedure: "**Before you travel**\nLicence, insurance for business use, MOT and tax current. Vehicle checked: tyres, lights, washers, oil. Nothing loose in the cabin.\nPlan the route and the timings. Do not plan a day that cannot be done inside normal hours.\nPhone charged and mounted. It is not touched while driving. Calls go to voicemail and are returned when parked.\nLeave the itinerary with the office: address, expected duration, finish time and the time you will call in by.\nIf you are tired, say so and move the visit. Nobody is expected to drive tired.\n\n**Before the visit**\nConfirm an adult will be present throughout. Ask for the property age and any asbestos information. Pre 2000 is presumed to contain asbestos.\nThis inspection is visual. Nothing is drilled, cut, lifted or opened up.\n\n**Arrival and the occupant**\nIdentification shown before entering. Explain what the inspection involves, how long it takes, that photographs are taken in every room, and who sees them.\nAgree anything out of scope and give them the chance to move belongings. Pets in another room. Overshoes on. Check in with the office.\n\n**Room by room**\nPhotograph and measure from the floor wherever the image can be got from the floor.\nThe step stool is used only on a firm level floor, with a hand free and nothing carried up. Anything out of reach from it is recorded as not reachable and flagged for the installer.\nKneel rather than stoop for door undercuts. Use a pad on hard floors.\nRecord damp and mould by photograph and meter. Do not disturb it.\n\n**Electrical items**\nPhotograph the consumer unit and sockets with covers in place. Do not remove any cover or faceplate.\nWhere a fan feed must be established, use the existing switch or pull cord, or a non contact voltage detector against the fascia. Nothing is dismantled and no test equipment touches live parts. If it cannot be settled that way it is recorded as not established and referred to the designer.\nTreat every circuit, fan and fitting as live. Anything visibly dangerous: stop, tell the occupant not to use it, report the same day.\n\n**Boiler, flue and heating**\nPhotograph and record. Do not operate, open or interfere with the boiler or any flue.\nWhere the flue is open, note it for the designer and do not run an existing fan in that room longer than it takes to confirm it works.\nWhere a solid fuel appliance is in use, do not test fans in that room at all.\nLeave immediately if anyone feels unwell, drowsy or headachy, and take the occupant with you.\n\n**Lofts, roofs and outside**\nLoft and duct information is taken from the hatch with a torch, pole camera or borescope. Head and shoulders only. Do not enter.\nRoof tile vents are photographed from ground level or recorded as not visible. No ladder, no roof access.\n\n**Checking out**\nLeave the property as you found it and secure anything you opened.\nCall the office to confirm you are out and safe. If you miss the agreed time the office acts on it rather than waits.\nReport anything that happened, including a near miss or anything that felt wrong, the same day.",
+      training: "PAS 2035 ventilation assessment familiarisation; asbestos awareness, in date; lone working briefing; data protection awareness",
+      risks: "Property condition, slips and trips and darkness; occupant, pets and allegation; entrapment or being overcome in a loft or void; oxygen deficiency or harmful gases; poor access and egress; asbestos in a pre 2000 property; mould and dust; violence or intimidation; lone worker taken ill; unauthorised occupants; road traffic collision and driver fatigue",
+      sequence: [
+        { step: "Travel checks", detail: "Licence, insurance, vehicle and route. Itinerary and call in time left with the office." },
+        { step: "Confirm the appointment", detail: "Adult present throughout, property age and asbestos information obtained." },
+        { step: "Brief the occupant", detail: "What it involves, how long, photographs in every room, out of scope agreed, pets shut away." },
+        { step: "Room by room", detail: "Measured and photographed from the floor where possible. Step stool only on firm level floor." },
+        { step: "Electrical items", detail: "Covers stay on. Fan feed by existing switch or non contact detector only. Nothing dismantled." },
+        { step: "Boiler and heating", detail: "Recorded, not operated. No fan run in a room with a solid fuel appliance in use." },
+        { step: "Loft and roof", detail: "Hatch only, head and shoulders, pole camera or borescope. Roof vents from the ground or not visible." },
+        { step: "Review the photographs", detail: "Anything capturing people or personal documents deleted before issue." },
+        { step: "Check out", detail: "Property as found, occupant told what happens next, office called to confirm you are out." }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle. Nearest A&E identified before travelling to an unfamiliar area.",
+      fire: "Escape route identified on entry. Leave by the nearest exit and call the occupant out with you.",
+      spill: "Not applicable.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — SSVo_01 — Site Survey Voids",
+    group: FLRA_GROUP,
+    fields: {
+      title: "Survey of an empty, void or part stripped property",
+      equipment: "Head torch and hand torch with spare batteries, plus a second torch in a pocket; camera; tape and laser measure; moisture meter; cable detector; pole camera or borescope; grabber or tongs; disposable coveralls and bags; first aid kit including a large dressing; mobile phone and power bank",
+      ppe: "Safety footwear with a protective sole; hard hat where the structure is damaged or anything is overhead; cut and sharps resistant gloves; eye protection; disposable coveralls in fouled or dusty areas; FFP3 respirator (face fit tested) where mould, dust or fouling is significant",
+      raRef: "SSVo_01",
+      procedure: "**Before you travel**\nLicence, insurance for business use, MOT and tax current. Vehicle checked: tyres, lights, washers, oil. Nothing loose in the cabin.\nPlan the route and the timings. Do not plan a day that cannot be done inside normal hours.\nPhone charged and mounted. It is not touched while driving. Calls go to voicemail and are returned when parked.\nLeave the itinerary with the office: address, expected duration, finish time and the time you will call in by.\nIf you are tired, say so and move the visit. Nobody is expected to drive tired.\n\n**Before the visit, in writing**\nGet from the client, in writing: whether gas, electricity and water are isolated or live; the asbestos register; any structural report; how long it has stood empty; and whether there has been unauthorised occupation, fly tipping or fire.\nIf the service position cannot be confirmed in writing, everything is treated as live.\nA long term void, a history of unauthorised occupation, or an area the client flags makes this a two person visit. Do not go alone in those cases.\nAgree a hard call in time with the office and an action if it is missed. There is no occupant here to raise the alarm.\n\n**Outside before inside**\nPark where you can leave without manoeuvring. Walk the outside first: structural movement, bulging or cracked walls, missing roof covering, fire damage, open voids, glass, needles, signs of entry.\nLook up before standing near the building. Check the phone signal and check in.\nIf it looks structurally unsafe from outside, do not enter. Photograph, leave, report.\n\n**Entering**\nKnock, announce yourself loudly and wait. Open the door fully and prop it. That door is your exit and it stays clear.\nStand at the threshold and look and smell before stepping in. Gas: operate no switch, leave, and ring the emergency number from outside.\nAny sign of current occupation, bedding, fresh food, belongings: withdraw, leave, ring the client. Do not search, clear or confront.\n\n**Moving through**\nTorch on from the moment you enter. Test every floor at the edge against a wall, never mid span. Stairs one tread at a time with weight on the outside.\nTreat every cable, socket, fitting and pipe as live, including ones that look cut.\nDo not lift or move rubbish, bedding or clothing by hand. Use the grabber and expect sharps.\nDo not enter cellars, voids, lofts or any confined space. Inspect from the access point.\nPresume asbestos. Open nothing.\n\n**Leaving**\nLeave as soon as the survey is done. A void property is not somewhere to sit and write up.\nSecure every door and window you opened. Bag coveralls before getting in the vehicle and clean footwear outside. Nothing dusty or fouled in the passenger cabin.\n\n**Checking out**\nLeave the property as you found it and secure anything you opened.\nCall the office to confirm you are out and safe. If you miss the agreed time the office acts on it rather than waits.\nReport anything that happened, including a near miss or anything that felt wrong, the same day.",
+      training: "Asbestos awareness, in date; lone working briefing; sharps and blood borne virus awareness; first aid at work (nominated person); structural awareness briefing",
+      risks: "Contact with live or damaged electrical services; structural collapse or failure of floors and stairs; sharps injury; infection from vermin and fouling; entrapment or being overcome in a confined space; oxygen deficiency or harmful gases; poor access and egress; asbestos; mould and dust; violence and unauthorised occupants; lone worker taken ill with nobody aware; road traffic collision and driver fatigue",
+      sequence: [
+        { step: "Travel checks", detail: "Licence, insurance, vehicle and route. Itinerary and a hard call in time agreed." },
+        { step: "Get the position in writing", detail: "Services isolated or live, asbestos register, structural report, history. Unconfirmed means live." },
+        { step: "One person or two", detail: "Long term void, history of occupation or a flagged area means two people." },
+        { step: "External walk round", detail: "Structure, roof, overhead, glass and signs of entry checked before approaching." },
+        { step: "Enter and assess", detail: "Announce loudly, prop the door, look and smell from the threshold." },
+        { step: "Withdraw on any sign of occupation", detail: "Leave and ring the client. No searching, clearing or confronting." },
+        { step: "Work through", detail: "Torch on, floors tested at the edge, services live, nothing lifted by hand." },
+        { step: "Voids from the access point", detail: "No entry to cellars, voids, lofts or confined spaces." },
+        { step: "Secure and check out", detail: "Property locked, coveralls bagged, office called, defects reported the same day." }
+      ],
+      firstaid: "First aid kit including a large dressing in the vehicle. A sharps injury is washed, bled, covered and taken to A&E or occupational health the same day, and reported. Nearest A&E identified before travelling.",
+      fire: "Entry door kept propped and clear as the escape route. Leave immediately on any smell of gas or smoke, operating no switch, and call from outside.",
+      spill: "Not applicable. Standing water and fouling are not disturbed.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | National Gas Emergency 0800 111 999 | Emergency 999"
+    }
+  },
+  {
+    name: "MS — SSi_01 — Site Survey, intrusive",
+    group: FLRA_GROUP,
+    fields: {
+      title: "Survey including opening up: drilling, lifting, sampling and inspection of voids",
+      equipment: "Torch and head torch; moisture meter; borescope and pole camera; cable detector; hand tools for opening up; on tool extraction or shroud; Class 1 stepladder; camera; tape and laser measure; disposable coveralls and bags; vacuum or damp wipes; first aid kit; mobile phone",
+      ppe: "Safety footwear with a protective sole; cut resistant gloves; disposable gloves; eye protection whenever anything is opened; disposable coveralls; FFP3 respirator (face fit tested) where dust or mould is significant; hard hat where anything is overhead",
+      raRef: "SSi_01",
+      procedure: "**Before you travel**\nLicence, insurance for business use, MOT and tax current. Vehicle checked: tyres, lights, washers, oil. Nothing loose in the cabin.\nPlan the route and the timings. Do not plan a day that cannot be done inside normal hours.\nPhone charged and mounted. It is not touched while driving. Calls go to voicemail and are returned when parked.\nLeave the itinerary with the office: address, expected duration, finish time and the time you will call in by.\nIf you are tired, say so and move the visit. Nobody is expected to drive tired.\n\n**The condition for this visit**\nA refurbishment and demolition asbestos survey covering every area to be opened up is in hand and has been read. No survey means no opening up, and the visit becomes SSG_NI_01.\nConfirm with the client in writing which areas are being opened and that they have told the occupant.\n\n**Non intrusive first**\nWork the property non intrusively before touching anything. Check the floor ahead, torch in unlit rooms, record condition and photograph.\nCheck every presumed asbestos material against the survey before planning where to open.\n\n**Opening up**\nOnly where the survey covers that exact location and confirms it is clear.\nUse the cable detector before drilling or cutting into any wall, floor or ceiling. Treat all services as live.\nCoveralls and eye protection on. Clear and cover the area below, and keep the occupant out of that room while it is open.\nWork slowly to limit dust. Use on tool extraction or a shroud when drilling.\nAny unexpected suspect material found or damaged: STOP. Leave, close the door, prevent access, report to the client duty holder and the practice the same day. Do not clean up.\n\n**Height and voids**\nLadders are a last resort and only where the information cannot be got from the ground, a pole camera or drawings. Stepladder on firm level floor, fully locked, nothing carried up, three points of contact, top two treads unused.\nTreat ceilings between joists and any roof light as fragile. Do not step on them.\nDo not enter a loft, cellar, underfloor void or any confined space. Head and shoulders at the hatch, then pole camera or borescope.\n\n**Making good**\nMake good or securely cover every opening before leaving that room. Clean by vacuum or damp wipe, never dry sweep.\nRemove and bag coveralls before leaving the property. Clean footwear outside.\n\n**Checking out**\nLeave the property as you found it and secure anything you opened.\nCall the office to confirm you are out and safe. If you miss the agreed time the office acts on it rather than waits.\nReport anything that happened, including a near miss or anything that felt wrong, the same day.",
+      training: "Asbestos awareness, in date; ladder and stepladder user training; working at height awareness; dust and RPE face fit testing; lone working briefing; first aid at work (nominated person)",
+      risks: "Exposure to asbestos fibres from disturbing materials and from material the survey did not identify; carrying fibres away; fall from a ladder; fall through a ceiling or fragile surface; objects falling onto people below; entrapment in a confined space; oxygen deficiency; poor access and egress; mould and dust from opening up; occupant, pets and allegation; violence and unauthorised occupants; lone working; road traffic collision and driver fatigue",
+      sequence: [
+        { step: "Travel checks", detail: "Licence, insurance, vehicle and route. Itinerary and call in time left with the office." },
+        { step: "Check the condition", detail: "Refurbishment and demolition survey in hand and read, areas agreed in writing. No survey, no opening up." },
+        { step: "Non intrusive pass", detail: "Property worked and recorded before anything is touched. Presumed materials checked against the survey." },
+        { step: "Prepare the opening", detail: "Cable detector used, area below cleared and covered, occupant kept out, coveralls and eye protection on." },
+        { step: "Open up", detail: "Only where the survey clears that exact spot. Slowly, with extraction or a shroud." },
+        { step: "Stop on the unexpected", detail: "Suspect material found or damaged ends the work in that area. Reported the same day, no clean up." },
+        { step: "Height and voids", detail: "Ladder only as a last resort. Ceilings and roof lights treated as fragile. No entry to any void." },
+        { step: "Make good", detail: "Every opening made good or covered. Vacuum or damp wipe, never dry sweep. Coveralls bagged." },
+        { step: "Check out", detail: "Property as found, office called to confirm you are out, findings reported." }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle. Any suspected asbestos exposure is reported the same day and recorded.",
+      fire: "Escape route identified on entry. Leave by the nearest exit and call the occupant out with you. Do not return for tools.",
+      spill: "Dust and debris from opening up is vacuumed or damp wiped, never dry swept, and bagged.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — DS_01 — Drone Survey",
+    group: FLRA_GROUP,
+    fields: {
+      title: "External survey by small unmanned aircraft under 250g",
+      equipment: "Aircraft under 250g with Operator ID displayed; controller and tablet or phone; spare batteries in a fire resistant bag; landing pad; airspace app; high visibility jacket; cones or tape for the take off point; first aid kit; mobile phone",
+      ppe: "Safety footwear; high visibility jacket when working near a road, a drive or a parking area; eye protection in wind",
+      raRef: "DS_01",
+      procedure: "**Before you travel**\nLicence, insurance for business use, MOT and tax current. Vehicle checked: tyres, lights, washers, oil. Nothing loose in the cabin.\nPlan the route and the timings. Do not plan a day that cannot be done inside normal hours.\nPhone charged and mounted. It is not touched while driving. Calls go to voicemail and are returned when parked.\nLeave the itinerary with the office: address, expected duration, finish time and the time you will call in by.\nIf you are tired, say so and move the visit. Nobody is expected to drive tired.\n\n**Before the flight**\nPilot holds a valid Flyer ID and the aircraft displays the practice Operator ID. The aircraft is under 250g and flown in the A1 subcategory of the Open category.\nCheck the airspace on a current drone app on the day, and again immediately before flying. No flight inside a flight restriction zone without permission from the controlling authority.\nGet landowner permission for the take off and landing point.\nCheck the weather. No flight in rain, fog, or wind beyond the manufacturer's stated limit.\nTell the occupant and the immediate neighbours what is being photographed and why, before anything leaves the ground.\n\n**Setting up**\nPre flight check: airframe, propellers, battery, firmware.\nWalk the site for overhead lines, trees, aerials, and where people will be.\nTake off and landing point kept clear, marked, and screened by the vehicle or a fence where practical.\n\n**Flying**\nThe aircraft stays within the pilot's direct line of sight throughout and never more than 120m from the closest point of the ground.\nUninvolved people are only overflown where it is necessary for the survey, and the time above anyone is kept to the minimum. Never over an assembly of people.\nPause the flight and bring the aircraft back if anyone approaches.\nCamera on the subject building. Recording stopped while repositioning over neighbouring land.\nStop the flight if a resident objects and refer it to the client.\n\n**Batteries**\nCarried and stored in a fire resistant bag, never loose in a bag or footwell and never left in direct sun in a parked vehicle.\nCharged on a hard non combustible surface, attended, never overnight. Damaged, swollen or dropped batteries are taken out of use immediately.\n\n**After the flight**\nReview the footage and delete anything capturing neighbouring private space before the survey is issued. Images stay on practice systems and are used only for the commission.\n\n**Checking out**\nLeave the property as you found it and secure anything you opened.\nCall the office to confirm you are out and safe. If you miss the agreed time the office acts on it rather than waits.\nReport anything that happened, including a near miss or anything that felt wrong, the same day.",
+      training: "Valid Flyer ID and registered Operator ID; aircraft type familiarisation; airspace and flight restriction zone awareness; lithium battery handling; data protection awareness; lone working briefing",
+      risks: "Injury from loss of control or collision; overflight of people; flight in restricted airspace; lithium battery fire; privacy complaint from camera use; violence or intimidation; lone worker taken ill with nobody aware; unauthorised occupants; road traffic collision and driver fatigue",
+      sequence: [
+        { step: "Travel checks", detail: "Licence, insurance, vehicle and route. Itinerary and call in time left with the office." },
+        { step: "Permissions and airspace", detail: "Flyer ID and Operator ID current, airspace checked on the day, landowner permission for the take off point." },
+        { step: "Weather call", detail: "No flight in rain, fog or wind beyond the manufacturer's limit." },
+        { step: "Tell people", detail: "Occupant and immediate neighbours told what is being photographed and why." },
+        { step: "Pre flight check", detail: "Airframe, propellers, battery, firmware. Site walked for lines, trees, aerials and people." },
+        { step: "Set the launch point", detail: "Clear, marked and screened where practical." },
+        { step: "Fly", detail: "Line of sight throughout, within 120m, minimum time over anyone, never over an assembly. Paused if anyone approaches." },
+        { step: "Batteries", detail: "Fire resistant bag, never loose or in sun, charged attended on a non combustible surface." },
+        { step: "Review and check out", detail: "Neighbouring private space deleted before issue, office called to confirm you are away." }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle.",
+      fire: "A battery in thermal runaway is not moved or covered. Clear the area, call 999 and let it burn out in the open.",
+      spill: "Not applicable.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — CSVe_01 — Construction Site visit, escorted",
+    group: FLRA_GROUP,
+    fields: {
+      title: "Escorted visit to an active construction site for Building Regulations compliance",
+      equipment: "Camera; notebook or tablet; tape and laser measure; torch; approved drawings and the compliance schedule; mobile phone",
+      ppe: "Safety helmet in date; high visibility jacket or vest; safety footwear with toecap and midsole; eye protection; gloves; anything further the principal contractor specifies at induction",
+      raRef: "CSVe_01",
+      procedure: "**Before you travel**\nLicence, insurance for business use, MOT and tax current. Vehicle checked: tyres, lights, washers, oil. Nothing loose in the cabin.\nPlan the route and the timings. Do not plan a day that cannot be done inside normal hours.\nPhone charged and mounted. It is not touched while driving. Calls go to voicemail and are returned when parked.\nLeave the itinerary with the office: address, expected duration, finish time and the time you will call in by.\nIf you are tired, say so and move the visit. Nobody is expected to drive tired.\n\n**Before the visit**\nArrange it with the principal contractor. Never turn up unannounced.\nConfirm the escort by name, the time, and which areas are being inspected.\nAsk what PPE the site requires beyond the standard, and whether an induction is needed or already held.\nAsk for the asbestos position where the work is in an existing building.\n\n**On arrival**\nReport to the site office and sign in. Do not walk into the working area to find anyone.\nAttend the induction on the first visit. No induction offered means no entry: leave and tell the client and the practice why.\nAn escort is never accepted in place of an induction. The escort can be called away and you must know the way out yourself.\nNote the fire assembly point, first aid arrangements and welfare. Fit all PPE before leaving the site office.\n\n**On site**\nStay with the escort at all times. Do not separate for a better view or a photograph. If the escort is called away, go back with them or wait in the site office.\nUse the designated walkways and crossings. No short cuts across a working area.\nDo not enter an exclusion zone, a scaffold, a lift shaft, an excavation or a confined space. Do not climb a ladder or step onto a temporary deck. If the inspection needs a view from height, the principal contractor arranges safe access or it is not inspected that visit and is recorded as outstanding.\nStand clear of lifting operations and moving plant. Make eye contact with operators before passing. Look up before standing anywhere.\nTouch, operate and move nothing. Ask the escort to open or expose anything you need to see.\nKeep clear of cutting, grinding and breaking out rather than walking through it.\n\n**Your role**\nYou are inspecting for Building Regulations compliance, not supervising the work.\nGive no instruction, direction or correction to any operative. Questions about method and sequence go to the principal contractor.\nRaise what you see with the escort at the time, and confirm it in writing to the principal contractor and the client the same day.\nAnything of immediate danger to life is told to the escort at once, not left to the report.\n\n**Leaving**\nLeave with the escort, do not peel off. Sign out and confirm you are off site.\n\n**Checking out**\nLeave the property as you found it and secure anything you opened.\nCall the office to confirm you are out and safe. If you miss the agreed time the office acts on it rather than waits.\nReport anything that happened, including a near miss or anything that felt wrong, the same day.",
+      training: "Site safety awareness, for example CSCS as the site requires; asbestos awareness, in date; Building Regulations compliance competence for the role; lone working briefing",
+      risks: "Struck by moving plant, vehicles or deliveries; struck by falling or dropped objects; fall from height or into an excavation; separated from the escort with no knowledge of the site; harm caused by giving instructions to the contractor's operatives; dust, noise and site conditions; asbestos disturbed during refurbishment; violence or intimidation; lone worker taken ill; road traffic collision and driver fatigue",
+      sequence: [
+        { step: "Travel checks", detail: "Licence, insurance, vehicle and route. Itinerary and call in time left with the office." },
+        { step: "Arrange with the contractor", detail: "Escort named, time and areas agreed, PPE and induction requirements confirmed, asbestos position asked for." },
+        { step: "Report and sign in", detail: "Site office only. Working areas not entered to find anyone." },
+        { step: "Attend the induction", detail: "No induction, no entry. An escort is not accepted in its place. Fire point, first aid and welfare noted." },
+        { step: "Fit PPE", detail: "Helmet, high visibility, footwear, eye protection and anything the site specifies, before leaving the office." },
+        { step: "Inspect with the escort", detail: "Kept with at all times, designated routes, nothing touched, no exclusion zone or height entered." },
+        { step: "Observe, do not instruct", detail: "No direction to any operative. Observations raised with the escort at the time." },
+        { step: "Immediate danger", detail: "Told to the escort at once, not left to the written report." },
+        { step: "Sign out and report", detail: "Left with the escort, signed out, office called, findings issued in writing the same day." }
+      ],
+      firstaid: "Site first aid arrangements apply and are noted at induction. Personal first aid kit carried in the vehicle.",
+      fire: "Site alarm and assembly point noted at induction. On the alarm, leave with the escort to the assembly point and report in. Do not return for equipment.",
+      spill: "Site arrangements apply. Nothing is carried that can spill.",
+      contacts: "Practice Manager — TBC | Principal contractor site manager — TBC | Emergency 999"
+    }
   }
+
 ];
 
 /* ════════════════════════════════════════════════════════════════════
