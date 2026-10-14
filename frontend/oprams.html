@@ -249,6 +249,37 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
   border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);}
 .note-edit input[type=text]{flex:1;min-width:220px;}
 .note-edit .ne-hint{flex-basis:100%;font-size:11px;color:var(--text-muted);}
+.note-edit .ne-list{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+.note-edit .ne-list:empty{display:none;}
+.ne-item{display:flex;gap:9px;align-items:center;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:6px;padding:5px 9px;font-size:12.5px;}
+.ne-item.todo{border-color:var(--warning-brd);background:var(--warning-bg);}
+.ne-item-kind{flex:0 0 86px;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--text-muted);}
+.ne-item-text{flex:1;min-width:0;}
+.ne-item-st{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--text-muted);white-space:nowrap;}
+.ne-item.todo .ne-item-st,.ne-item.todo .ne-item-kind{color:var(--warning);}
+.ne-flip,.ne-del{background:none;border:none;cursor:pointer;font-size:14px;line-height:1;
+  color:var(--text-muted);padding:2px 4px;}
+.ne-flip:hover{color:var(--accent-dark);} .ne-del:hover{color:var(--danger);}
+
+/* Actions arising: screen only */
+.arising-btn.has-items{border-color:var(--warning);color:var(--warning);font-weight:700;}
+.arising-panel{display:none;}
+.arising-panel.open{display:block;margin:0 0 14px;}
+.arising-inner{border:1.5px solid var(--warning-brd);border-radius:10px;overflow:hidden;
+  background:var(--warning-bg);}
+.arising-lead,.arising-empty{margin:0;padding:10px 14px;font-size:12px;line-height:1.5;
+  color:var(--warning);border-bottom:1.5px solid var(--warning-brd);}
+.arising-empty{border-bottom:none;}
+.arising-list{list-style:none;margin:0;padding:8px 14px;}
+.arising-list li{display:flex;gap:10px;align-items:center;padding:5px 0;font-size:12.5px;
+  border-top:1px dashed var(--warning-brd);}
+.arising-list li:first-child{border-top:none;}
+.arising-text{flex:1;min-width:0;color:var(--text);}
+.arising-haz{display:block;font-size:11px;color:var(--text-muted);margin-top:1px;}
+.arising-foot{padding:10px 14px;border-top:1.5px solid var(--warning-brd);display:flex;gap:8px;}
 
 .arr-wrap{margin:16px 0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
 .arr-head{background:var(--primary);color:#fff;padding:9px 14px;font-size:12px;font-weight:700;
@@ -798,6 +829,7 @@ body.dra-print-blank main{display:none!important;}
           <button type="button" class="btn btn-outline add-ra-row" title="Add a blank hazards row">+ Row</button>
           <button type="button" class="btn btn-outline add-ra-form" title="Add new RA form page">+ Form</button>
           <button type="button" class="btn btn-danger remove-ra-form" title="Remove this RA form page">&minus; Form</button>
+          <button type="button" class="btn btn-outline arising-btn" title="Everything marked still to arrange, across this assessment">Actions arising (0)</button>
           <span style="margin-left:auto;font-size:11px;color:var(--text-muted);">Pick a snippet then Insert · or use + Row to add a blank line</span>
         </div>
 
@@ -818,6 +850,9 @@ body.dra-print-blank main{display:none!important;}
             <!-- No initial row: rows are added by Insert Row / snippet / + Form -->
           </tbody>
         </table>
+
+        <!-- Still to arrange. Screen only, never printed. -->
+        <div class="arising-panel no-print" data-arising></div>
 
         <!-- What we already have in place. Rebuilt from the row pins by
              renderArrangements(); never typed into directly. -->
@@ -4809,6 +4844,11 @@ function attachPersistHandlers(scope){
     input.addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); addItem(); }});
   });
 
+  $$(".arising-btn", scope).forEach(btn=>{
+    if(btn.dataset.arisingWired) return; btn.dataset.arisingWired="1";
+    btn.addEventListener("click", ()=> toggleArisings(btn));
+  });
+
   $$(".row-pin", scope).forEach(btn=>{
     if(btn.dataset.pinWired) return; btn.dataset.pinWired="1";
     btn.addEventListener("click", ()=> toggleNoteEditor(btn.closest("tr")));
@@ -5058,85 +5098,255 @@ function _buildHazardRow(row){
    block with nothing in it does not render at all.
    ════════════════════════════════════════════════════════════════════ */
 const RA_NOTE_KINDS = ["Training", "Equipment", "Information", "Supervision", "Monitoring"];
+
+/* A row can carry as many notes as you like. They live inside .row-notes,
+   which never renders, so the hazard row itself is untouched. */
 const RA_PIN_HTML =
-    '<button type="button" class="row-pin no-print" title="Note what is already in place for this hazard">&#9679;</button>'
-  + '<span class="row-note" data-kind="Training" data-status="have"></span>';
+    '<button type="button" class="row-pin no-print" title="What we have in place for this hazard">&#9679;</button>'
+  + '<span class="row-notes"></span>';
 
-function _raNoteOf(tr){ return tr ? tr.querySelector(".row-note") : null; }
-
-/* Keep the pin's appearance in step with the note behind it. */
-function paintRowNote(tr){
-  const n = _raNoteOf(tr);
-  const has = !!(n && n.textContent.trim());
-  tr.classList.toggle("has-note", has);
-  tr.classList.toggle("note-todo", has && n.getAttribute("data-status") === "todo");
+/* Rows saved before notes could be stacked carry a bare .row-note. Wrap it so
+   the old one is kept rather than thrown away. */
+function migrateRowNotes(tr){
+  if(!tr) return;
+  let box = tr.querySelector(":scope .row-notes");
+  const loose = $$(".row-note", tr).filter(n => !n.closest(".row-notes"));
+  if(!box){
+    const cell = tr.lastElementChild;
+    if(!cell) return;
+    box = document.createElement("span");
+    box.className = "row-notes";
+    cell.appendChild(box);
+  }
+  loose.forEach(n => box.appendChild(n));
 }
 
-/* Open or close the one line editor under a row. */
+function _raNotesBox(tr){
+  if(!tr) return null;
+  migrateRowNotes(tr);
+  return tr.querySelector(".row-notes");
+}
+function _raNotes(tr){
+  const box = _raNotesBox(tr);
+  return box ? $$(".row-note", box) : [];
+}
+
+/* Pin colour follows what the row holds: teal once anything is recorded,
+   amber if any of it is still outstanding. */
+function paintRowNote(tr){
+  const notes = _raNotes(tr).filter(n => n.textContent.trim());
+  tr.classList.toggle("has-note", notes.length > 0);
+  tr.classList.toggle("note-todo", notes.some(n => n.getAttribute("data-status") === "todo"));
+  const pin = tr.querySelector(".row-pin");
+  if(pin) pin.textContent = notes.length > 1 ? String(notes.length) : "\u25cf";
+}
+
+function _raPageOf(el){ return el.closest(".form-page") || el.closest(".sheet"); }
+
+function _raNoteChanged(tr){
+  paintRowNote(tr);
+  renderArrangements(_raPageOf(tr));
+  renderArisings();
+  const tb = tr.closest("tbody");
+  if(tb) persistContainer(tb);
+}
+
+/* The strip under a row: everything already recorded, plus one add line. */
 function toggleNoteEditor(tr){
   const open = tr.nextElementSibling;
   if(open && open.classList.contains("note-edit")){ open.remove(); return; }
   $$(".note-edit", tr.closest("tbody")).forEach(r => r.remove());
-  const n = _raNoteOf(tr);
-  if(!n) return;
-  const cols = tr.children.length;
+  const box = _raNotesBox(tr);
+  if(!box) return;
   const row = document.createElement("tr");
   row.className = "note-edit no-print";
-  row.innerHTML = '<td colspan="' + cols + '"><div class="ne-wrap">'
-    + '<label>What we have</label>'
-    + '<select class="ne-kind">'
-    +   RA_NOTE_KINDS.map(k => '<option' + (k === n.getAttribute("data-kind") ? " selected" : "") + '>' + k + '</option>').join("")
-    + '</select>'
-    + '<select class="ne-status">'
-    +   '<option value="have"' + (n.getAttribute("data-status") !== "todo" ? " selected" : "") + '>Already in place</option>'
-    +   '<option value="todo"' + (n.getAttribute("data-status") === "todo" ? " selected" : "") + '>Still to arrange</option>'
-    + '</select>'
-    + '<input type="text" class="ne-text" placeholder="One line, for example: asbestos awareness refreshed annually" value="'
-    +   escapeHtml(n.textContent.trim()) + '">'
-    + '<button type="button" class="btn btn-outline btn-sm ne-done">Done</button>'
-    + '<div class="ne-hint">This is not a control. It prints under the assessment, not in the hazard row. Leave it empty to remove it.</div>'
+  row.innerHTML = '<td colspan="' + tr.children.length + '">'
+    + '<div class="ne-list"></div>'
+    + '<div class="ne-wrap">'
+    +   '<label>What we have</label>'
+    +   '<select class="ne-kind">' + RA_NOTE_KINDS.map(k => '<option>' + k + '</option>').join("") + '</select>'
+    +   '<select class="ne-status">'
+    +     '<option value="have">Already in place</option>'
+    +     '<option value="todo">Still to arrange</option>'
+    +   '</select>'
+    +   '<input type="text" class="ne-text" placeholder="One line, for example: asbestos awareness refreshed annually">'
+    +   '<button type="button" class="btn btn-primary btn-sm ne-add">Add</button>'
+    +   '<button type="button" class="btn btn-ghost btn-sm ne-done">Close</button>'
+    +   '<div class="ne-hint">Not a control. Already in place prints on the assessment. '
+    +     'Still to arrange does not: it goes to Actions arising instead.</div>'
     + '</div></td>';
   tr.after(row);
-  const save = () => {
+
+  const list = row.querySelector(".ne-list");
+  const paintList = () => {
+    const notes = _raNotes(tr).filter(n => n.textContent.trim());
+    list.innerHTML = notes.map((n, i) =>
+        '<div class="ne-item' + (n.getAttribute("data-status") === "todo" ? " todo" : "") + '" data-i="' + i + '">'
+      +   '<span class="ne-item-kind">' + escapeHtml(n.getAttribute("data-kind") || "") + '</span>'
+      +   '<span class="ne-item-text">' + escapeHtml(n.textContent.trim()) + '</span>'
+      +   '<span class="ne-item-st">' + (n.getAttribute("data-status") === "todo" ? "Still to arrange" : "In place") + '</span>'
+      +   '<button type="button" class="ne-flip" title="Swap between in place and still to arrange">&#8646;</button>'
+      +   '<button type="button" class="ne-del" title="Remove">&times;</button>'
+      + '</div>').join("");
+    $$(".ne-del", list).forEach(btn => btn.addEventListener("click", () => {
+      const n = _raNotes(tr).filter(x => x.textContent.trim())[+btn.closest(".ne-item").dataset.i];
+      if(n) n.remove();
+      _raNoteChanged(tr); paintList();
+    }));
+    $$(".ne-flip", list).forEach(btn => btn.addEventListener("click", () => {
+      const n = _raNotes(tr).filter(x => x.textContent.trim())[+btn.closest(".ne-item").dataset.i];
+      if(n) n.setAttribute("data-status", n.getAttribute("data-status") === "todo" ? "have" : "todo");
+      _raNoteChanged(tr); paintList();
+    }));
+  };
+  paintList();
+
+  const addNote = () => {
+    const txt = row.querySelector(".ne-text").value.trim();
+    if(!txt){ row.querySelector(".ne-text").focus(); return; }
+    const n = document.createElement("span");
+    n.className = "row-note";
     n.setAttribute("data-kind", row.querySelector(".ne-kind").value);
     n.setAttribute("data-status", row.querySelector(".ne-status").value);
-    n.textContent = row.querySelector(".ne-text").value.trim();
-    paintRowNote(tr);
-    const page = tr.closest(".form-page") || tr.closest(".sheet");
-    renderArrangements(page);
-    persistContainer(tr.closest("tbody"));
+    n.textContent = txt;
+    box.appendChild(n);
+    row.querySelector(".ne-text").value = "";
+    row.querySelector(".ne-text").focus();
+    _raNoteChanged(tr); paintList();
   };
-  row.querySelectorAll(".ne-kind,.ne-status").forEach(el => el.addEventListener("change", save));
-  row.querySelector(".ne-text").addEventListener("input", save);
-  row.querySelector(".ne-done").addEventListener("click", () => { save(); row.remove(); });
+  row.querySelector(".ne-add").addEventListener("click", addNote);
+  row.querySelector(".ne-text").addEventListener("keydown", e => {
+    if(e.key === "Enter"){ e.preventDefault(); addNote(); }
+  });
+  row.querySelector(".ne-done").addEventListener("click", () => row.remove());
   row.querySelector(".ne-text").focus();
 }
 
-/* Rebuild the printed blocks for one form page from that page's row notes. */
+/* Gather the notes on one form page. */
+function _raGather(page){
+  const have = [], todo = [];
+  if(!page) return { have, todo };
+  $$(".hazardsTable tbody tr", page).forEach(tr => {
+    const hazCell = tr.querySelector("td .editable");
+    const hazard = hazCell ? hazCell.textContent.trim() : "";
+    _raNotes(tr).forEach(n => {
+      const t = n.textContent.trim();
+      if(!t) return;
+      const item = { kind: n.getAttribute("data-kind") || "", text: t, hazard: hazard, el: n, tr: tr };
+      (n.getAttribute("data-status") === "todo" ? todo : have).push(item);
+    });
+  });
+  return { have, todo };
+}
+
+/* What prints on the assessment: the in place list only. Nothing outstanding
+   ever appears on the copy an operative reads. */
 function renderArrangements(page){
   if(!page) return;
   const host = page.querySelector("[data-arr]");
   if(!host) return;
-  const have = [], todo = [];
-  $$(".hazardsTable tbody tr", page).forEach(tr => {
-    const n = _raNoteOf(tr);
-    if(!n) return;
-    const t = n.textContent.trim();
-    if(!t) return;
-    (n.getAttribute("data-status") === "todo" ? todo : have)
-      .push({ kind: n.getAttribute("data-kind") || "", text: t });
-  });
-  const block = (cls, title, items) => !items.length ? "" :
-      '<div class="arr-wrap' + cls + '"><div class="arr-head">' + title + '</div><ul class="arr-list">'
-    + items.map(i => '<li><span class="arr-kind">' + escapeHtml(i.kind) + '</span><span>'
+  const { have } = _raGather(page);
+  host.innerHTML = !have.length ? "" :
+      '<div class="arr-wrap"><div class="arr-head">What we already have in place</div><ul class="arr-list">'
+    + have.map(i => '<li><span class="arr-kind">' + escapeHtml(i.kind) + '</span><span>'
         + escapeHtml(i.text) + '</span></li>').join("")
     + '</ul></div>';
-  host.innerHTML = block("", "What we already have in place", have)
-                 + block(" todo", "Still to arrange", todo);
 }
 
 function renderAllArrangements(){
   $$("#raForms .form-page").forEach(renderArrangements);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ACTIONS ARISING
+   The still to arrange notes, across the whole assessment. They are kept off
+   the printed assessment on purpose, but they are not allowed to vanish:
+   reg 3 wants the significant findings recorded, and HSG65 only works if
+   what you found gets carried into Do and chased at Check. This panel is
+   where they wait to be raised as actions in Compass, and "Now in place" is
+   the other half of the loop, moving one onto the assessment once it is done.
+   ════════════════════════════════════════════════════════════════════ */
+function _raAllTodo(){
+  const out = [];
+  $$("#raForms .form-page").forEach(page => {
+    _raGather(page).todo.forEach(i => out.push(i));
+  });
+  return out;
+}
+
+function renderArisings(){
+  const items = _raAllTodo();
+  $$(".arising-btn").forEach(btn => {
+    btn.textContent = "Actions arising (" + items.length + ")";
+    btn.classList.toggle("has-items", items.length > 0);
+  });
+  $$("[data-arising]").forEach(host => {
+    if(!host.classList.contains("open")) return;
+    host.innerHTML = _raArisingHtml(items);
+    _wireArisings(host);
+  });
+}
+
+function _raArisingHtml(items){
+  if(!items.length){
+    return '<div class="arising-inner"><p class="arising-empty">Nothing outstanding. '
+      + 'Anything you mark as still to arrange turns up here.</p></div>';
+  }
+  return '<div class="arising-inner">'
+    + '<p class="arising-lead">Kept off the printed assessment. Raise each one as an action in '
+    + 'Compass, then mark it in place here once it is done and it joins '
+    + '&ldquo;What we already have in place&rdquo;.</p>'
+    + '<ul class="arising-list">'
+    + items.map((i, n) => '<li data-n="' + n + '">'
+        + '<span class="arr-kind">' + escapeHtml(i.kind) + '</span>'
+        + '<span class="arising-text">' + escapeHtml(i.text)
+        +   (i.hazard ? '<span class="arising-haz">' + escapeHtml(i.hazard) + '</span>' : '')
+        + '</span>'
+        + '<button type="button" class="btn btn-outline btn-sm arising-done">Now in place</button>'
+        + '</li>').join("")
+    + '</ul>'
+    + '<div class="arising-foot">'
+    +   '<button type="button" class="btn btn-primary btn-sm arising-copy">Copy for Compass</button>'
+    + '</div></div>';
+}
+
+function _wireArisings(host){
+  const items = _raAllTodo();
+  $$(".arising-done", host).forEach(btn => btn.addEventListener("click", () => {
+    const it = items[+btn.closest("li").dataset.n];
+    if(!it) return;
+    it.el.setAttribute("data-status", "have");
+    _raNoteChanged(it.tr);
+    toast("Moved to what we already have in place");
+  }));
+  const copy = host.querySelector(".arising-copy");
+  if(copy) copy.addEventListener("click", () => {
+    const text = items.map(i => i.kind + ": " + i.text + (i.hazard ? "  (" + i.hazard + ")" : "")).join("\n");
+    const fallback = () => {
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("Copied, paste into Compass"); }
+      catch(e){ toast("Could not copy on this device", "error"); }
+      ta.remove();
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(() => toast("Copied, paste into Compass"), fallback);
+    } else fallback();
+  });
+}
+
+function toggleArisings(btn){
+  const page = _raPageOf(btn);
+  const host = page ? page.querySelector("[data-arising]") : null;
+  if(!host) return;
+  const nowOpen = !host.classList.contains("open");
+  $$("[data-arising]").forEach(h => { h.classList.remove("open"); h.innerHTML = ""; });
+  if(nowOpen){
+    host.classList.add("open");
+    host.innerHTML = _raArisingHtml(_raAllTodo());
+    _wireArisings(host);
+  }
 }
 
 function insertRaSnippet(btn){
@@ -7377,6 +7587,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // printed blocks and the pin states from what came back.
   $$(".hazardsTable tbody tr").forEach(paintRowNote);
   renderAllArrangements();
+  renderArisings();
   ensureSheetFooters();
   draRender();
   // One document, one client: typing the name in any footer fills it in on
