@@ -218,6 +218,48 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .swatch.med{background:var(--risk-med-fg);}
 .swatch.high{background:var(--risk-high-fg);}
 
+/* ── Arrangement notes ───────────────────────────────────────────────
+   A pin on each hazard row. Tap it while writing the assessment and record
+   the thing you have just remembered: the training, the kit, the briefing,
+   the check. It is NOT a control, so it never goes in the controls cell and
+   never shows in the hazard table. The in place ones gather into "What we
+   already have in place" under the table, which does print. The to arrange
+   ones gather into a separate block so an outstanding item is never printed
+   as something already done.
+   ─────────────────────────────────────────────────────────────────── */
+.row-pin{position:absolute;right:6px;bottom:6px;background:var(--surface);
+  border:1.5px solid var(--border);color:var(--text-muted);border-radius:50%;
+  width:22px;height:22px;font-size:12px;font-weight:700;line-height:1;cursor:pointer;
+  display:none;align-items:center;justify-content:center;padding:0;z-index:5;}
+.hazardsTable tr:hover .row-pin,
+.hazardsTable .row-pin:hover,
+.hazardsTable .row-pin:focus{display:inline-flex;}
+/* A row that already carries a note keeps its pin showing, filled in. */
+.hazardsTable tr.has-note .row-pin{display:inline-flex;background:var(--accent-light);
+  border-color:var(--accent);color:var(--accent-dark);}
+.hazardsTable tr.has-note.note-todo .row-pin{background:var(--warning-bg);
+  border-color:var(--warning-brd);color:var(--warning);}
+.row-note{display:none;}
+
+.note-edit > td{background:var(--muted-bg);padding:10px 12px;}
+.note-edit .ne-wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.note-edit label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--text-muted);font-weight:700;}
+.note-edit select,.note-edit input[type=text]{font:inherit;font-size:12.5px;padding:6px 9px;
+  border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);}
+.note-edit input[type=text]{flex:1;min-width:220px;}
+.note-edit .ne-hint{flex-basis:100%;font-size:11px;color:var(--text-muted);}
+
+.arr-wrap{margin:16px 0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
+.arr-head{background:var(--primary);color:#fff;padding:9px 14px;font-size:12px;font-weight:700;
+  letter-spacing:.04em;text-transform:uppercase;}
+.arr-list{margin:0;padding:10px 14px;list-style:none;}
+.arr-list li{display:flex;gap:10px;align-items:baseline;font-size:12.5px;line-height:1.5;padding:3px 0;}
+.arr-kind{flex:0 0 96px;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--text-muted);}
+.arr-wrap.todo .arr-head{background:var(--warning);}
+.arr-wrap.todo .arr-kind{color:var(--warning);}
+
 /* Risk pills — fixed width so LOW / MEDIUM / HIGH all sit the same size and
    the wording beside them starts on one vertical line. 64px is MEDIUM's
    natural width, so MEDIUM is unchanged and LOW / HIGH grow to match. */
@@ -776,6 +818,10 @@ body.dra-print-blank main{display:none!important;}
             <!-- No initial row: rows are added by Insert Row / snippet / + Form -->
           </tbody>
         </table>
+
+        <!-- What we already have in place. Rebuilt from the row pins by
+             renderArrangements(); never typed into directly. -->
+        <div class="arrangements" data-arr></div>
 
         <!-- PPE -->
         <section class="ppe-wrap">
@@ -4595,8 +4641,8 @@ const LS_PREFIX = "easytravel.ramsv1.";
    the footer and the ring mark stay AHS on every page so a rebranded copy
    still says who built it. Change the wording here and it changes everywhere. */
 const AHS_PRODUCER = "AHS Ltd";
-const AHS_WEBSITE  = "archerhs.co.uk";
-const AHS_URL      = "https://archerhs.co.uk";
+const AHS_WEBSITE  = "www.archersafety.co.uk";
+const AHS_URL      = "https://www.archersafety.co.uk";
 const AHS_TEAL = "#4bbfd6";
 const AHS_GREY = "#8b9096";
 
@@ -4763,6 +4809,12 @@ function attachPersistHandlers(scope){
     input.addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); addItem(); }});
   });
 
+  $$(".row-pin", scope).forEach(btn=>{
+    if(btn.dataset.pinWired) return; btn.dataset.pinWired="1";
+    btn.addEventListener("click", ()=> toggleNoteEditor(btn.closest("tr")));
+  });
+  $$(".hazardsTable tbody tr", scope).forEach(paintRowNote);
+
   $$(".date-chip", scope).forEach(chip=>{ if(!chip.dataset.dateWired){ chip.dataset.dateWired="1"; wireDateChip(chip); }});
 
   $$(".ra-snip-select", scope).forEach(populateRaSnippets);
@@ -4795,6 +4847,7 @@ function attachPersistHandlers(scope){
         + '</div></td>'
         + '<td style="position:relative;"><div class="editable" contenteditable="true"></div>'
         +   '<button type="button" class="row-del no-print" title="Remove row">&times;</button>'
+        +   RA_PIN_HTML
         + '</td>';
       tbody.appendChild(tr);
       attachPersistHandlers(tr);
@@ -4988,7 +5041,102 @@ function _buildHazardRow(row){
     + '<td style="position:relative;">'
     +   '<div class="editable" contenteditable="true">' + (row.action || "") + '</div>'
     +   '<button type="button" class="row-del no-print" title="Remove row">&times;</button>'
+    +   RA_PIN_HTML
     + '</td>';
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ARRANGEMENT NOTES ("What we already have in place")
+   A note is the supporting arrangement behind a control: the training, the
+   equipment, the briefing, the supervision, the check. It is not itself a
+   control, so it is kept out of the controls cell, where it would otherwise
+   claim something is in place before it is.
+
+   Each note carries a kind and a status. In place notes print under "What we
+   already have in place" on the assessment. To arrange notes print under
+   their own heading so an outstanding item can never read as a done one. A
+   block with nothing in it does not render at all.
+   ════════════════════════════════════════════════════════════════════ */
+const RA_NOTE_KINDS = ["Training", "Equipment", "Information", "Supervision", "Monitoring"];
+const RA_PIN_HTML =
+    '<button type="button" class="row-pin no-print" title="Note what is already in place for this hazard">&#9679;</button>'
+  + '<span class="row-note" data-kind="Training" data-status="have"></span>';
+
+function _raNoteOf(tr){ return tr ? tr.querySelector(".row-note") : null; }
+
+/* Keep the pin's appearance in step with the note behind it. */
+function paintRowNote(tr){
+  const n = _raNoteOf(tr);
+  const has = !!(n && n.textContent.trim());
+  tr.classList.toggle("has-note", has);
+  tr.classList.toggle("note-todo", has && n.getAttribute("data-status") === "todo");
+}
+
+/* Open or close the one line editor under a row. */
+function toggleNoteEditor(tr){
+  const open = tr.nextElementSibling;
+  if(open && open.classList.contains("note-edit")){ open.remove(); return; }
+  $$(".note-edit", tr.closest("tbody")).forEach(r => r.remove());
+  const n = _raNoteOf(tr);
+  if(!n) return;
+  const cols = tr.children.length;
+  const row = document.createElement("tr");
+  row.className = "note-edit no-print";
+  row.innerHTML = '<td colspan="' + cols + '"><div class="ne-wrap">'
+    + '<label>What we have</label>'
+    + '<select class="ne-kind">'
+    +   RA_NOTE_KINDS.map(k => '<option' + (k === n.getAttribute("data-kind") ? " selected" : "") + '>' + k + '</option>').join("")
+    + '</select>'
+    + '<select class="ne-status">'
+    +   '<option value="have"' + (n.getAttribute("data-status") !== "todo" ? " selected" : "") + '>Already in place</option>'
+    +   '<option value="todo"' + (n.getAttribute("data-status") === "todo" ? " selected" : "") + '>Still to arrange</option>'
+    + '</select>'
+    + '<input type="text" class="ne-text" placeholder="One line, for example: asbestos awareness refreshed annually" value="'
+    +   escapeHtml(n.textContent.trim()) + '">'
+    + '<button type="button" class="btn btn-outline btn-sm ne-done">Done</button>'
+    + '<div class="ne-hint">This is not a control. It prints under the assessment, not in the hazard row. Leave it empty to remove it.</div>'
+    + '</div></td>';
+  tr.after(row);
+  const save = () => {
+    n.setAttribute("data-kind", row.querySelector(".ne-kind").value);
+    n.setAttribute("data-status", row.querySelector(".ne-status").value);
+    n.textContent = row.querySelector(".ne-text").value.trim();
+    paintRowNote(tr);
+    const page = tr.closest(".form-page") || tr.closest(".sheet");
+    renderArrangements(page);
+    persistContainer(tr.closest("tbody"));
+  };
+  row.querySelectorAll(".ne-kind,.ne-status").forEach(el => el.addEventListener("change", save));
+  row.querySelector(".ne-text").addEventListener("input", save);
+  row.querySelector(".ne-done").addEventListener("click", () => { save(); row.remove(); });
+  row.querySelector(".ne-text").focus();
+}
+
+/* Rebuild the printed blocks for one form page from that page's row notes. */
+function renderArrangements(page){
+  if(!page) return;
+  const host = page.querySelector("[data-arr]");
+  if(!host) return;
+  const have = [], todo = [];
+  $$(".hazardsTable tbody tr", page).forEach(tr => {
+    const n = _raNoteOf(tr);
+    if(!n) return;
+    const t = n.textContent.trim();
+    if(!t) return;
+    (n.getAttribute("data-status") === "todo" ? todo : have)
+      .push({ kind: n.getAttribute("data-kind") || "", text: t });
+  });
+  const block = (cls, title, items) => !items.length ? "" :
+      '<div class="arr-wrap' + cls + '"><div class="arr-head">' + title + '</div><ul class="arr-list">'
+    + items.map(i => '<li><span class="arr-kind">' + escapeHtml(i.kind) + '</span><span>'
+        + escapeHtml(i.text) + '</span></li>').join("")
+    + '</ul></div>';
+  host.innerHTML = block("", "What we already have in place", have)
+                 + block(" todo", "Still to arrange", todo);
+}
+
+function renderAllArrangements(){
+  $$("#raForms .form-page").forEach(renderArrangements);
 }
 
 function insertRaSnippet(btn){
@@ -5041,6 +5189,7 @@ function insertRaSnippet(btn){
   }
 
   persistContainer(tbody);
+  renderArrangements(formPage);
 
   // Auto-populate the form's RA reference field if it is empty / placeholder.
   // Snippet names follow the pattern "RA — XX — Description"; extract XX.
@@ -5216,6 +5365,9 @@ function addRaForm(){
       checks.innerHTML = PPE_TEMPLATE_HTML;
     }
   });
+  // Arrangement blocks are derived from the rows, and the rows are about to
+  // be emptied, so clear them rather than carrying page 1's notes across.
+  $$("[data-arr]", clone).forEach(el => el.innerHTML = "");
   // Hazards tbody: leave EMPTY on a new page (matches no-blank-row policy)
   $$(".hazardsTable tbody", clone).forEach(tb=>{
     while(tb.firstChild) tb.removeChild(tb.firstChild);
@@ -5515,7 +5667,9 @@ function stampPdfFooters(pdf, activeTab){
         linkEnd = leftEnd + 1.6 + webW;
       }
     }
-    pdf.link(M, base - 3.2, linkEnd - M, 4.4, { url: AHS_URL });
+    // Tall enough to take in the ring mark as well as the text, so the logo
+    // itself is clickable and not just the words beside it.
+    pdf.link(M, base - 4.2, linkEnd - M, 6.0, { url: AHS_URL });
 
     // Centre — prepared for. Trimmed with an ellipsis if it would still reach
     // the producer name on the left.
@@ -7219,6 +7373,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
   });
   attachPersistHandlers(document);
+  // Rows restored from a saved blob carry their notes with them; rebuild the
+  // printed blocks and the pin states from what came back.
+  $$(".hazardsTable tbody tr").forEach(paintRowNote);
+  renderAllArrangements();
   ensureSheetFooters();
   draRender();
   // One document, one client: typing the name in any footer fills it in on
