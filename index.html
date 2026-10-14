@@ -265,21 +265,30 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .ne-flip:hover{color:var(--accent-dark);} .ne-del:hover{color:var(--danger);}
 
 /* Actions arising: screen only */
-.arising-btn.has-items{border-color:var(--warning);color:var(--warning);font-weight:700;}
-.arising-panel{display:none;}
-.arising-panel.open{display:block;margin:0 0 14px;}
-.arising-inner{border:1.5px solid var(--warning-brd);border-radius:10px;overflow:hidden;
-  background:var(--warning-bg);}
-.arising-lead,.arising-empty{margin:0;padding:10px 14px;font-size:12px;line-height:1.5;
-  color:var(--warning);border-bottom:1.5px solid var(--warning-brd);}
-.arising-empty{border-bottom:none;}
-.arising-list{list-style:none;margin:0;padding:8px 14px;}
-.arising-list li{display:flex;gap:10px;align-items:center;padding:5px 0;font-size:12.5px;
-  border-top:1px dashed var(--warning-brd);}
+/* Actions arising tab */
+.tab-count{display:none;}
+.tab-count.on{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;
+  margin-left:7px;padding:0 5px;border-radius:9px;background:var(--warning);color:#fff;
+  font-size:10.5px;font-weight:700;line-height:1;vertical-align:middle;}
+.actions-wrap{max-width:900px;margin:0 auto;}
+.act-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 14px;background:var(--muted-bg);
+  border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:14px;}
+@media(max-width:700px){.act-meta{grid-template-columns:1fr 1fr;}}
+.act-meta-i{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.act-meta-i span{font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--text-muted);font-weight:700;}
+.act-meta-i strong{font-size:12.5px;font-weight:600;}
+.act-haz{flex:0 0 76px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--warning);}
+.arising-list{list-style:none;margin:0;padding:0;}
+.arising-list li{display:flex;gap:12px;align-items:center;padding:10px 0;font-size:13px;
+  border-top:1.5px solid var(--border);}
 .arising-list li:first-child{border-top:none;}
-.arising-text{flex:1;min-width:0;color:var(--text);}
-.arising-haz{display:block;font-size:11px;color:var(--text-muted);margin-top:1px;}
-.arising-foot{padding:10px 14px;border-top:1.5px solid var(--warning-brd);display:flex;gap:8px;flex-wrap:wrap;}
+.arising-text{flex:1;min-width:0;color:var(--text);line-height:1.45;}
+.arising-text .arr-kind{display:block;margin-bottom:1px;}
+.arising-haz{display:block;font-size:11.5px;color:var(--text-muted);margin-top:2px;}
+.arising-foot{padding-top:12px;margin-top:4px;border-top:2px solid var(--accent);
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 
 /* The line on the assessment that points at the actions sheet. Prints. */
 .arr-pointer{margin:0;padding:9px 14px;border-top:1.5px solid var(--border);
@@ -759,6 +768,7 @@ body.dra-print-blank main{display:none!important;}
   <div class="tab-bar-inner">
     <button class="tab-btn active" data-tab="ra">Risk Assessment</button>
     <button class="tab-btn" data-tab="ms">Method Statement</button>
+    <button class="tab-btn" data-tab="actions">Actions arising<span class="tab-count" id="actionsCount"></span></button>
     <button class="tab-btn" data-tab="dra">Dynamic Risk Assessment</button>
   </div>
 </nav>
@@ -869,7 +879,6 @@ body.dra-print-blank main{display:none!important;}
           <button type="button" class="btn btn-outline add-ra-row" title="Add a blank hazards row">+ Row</button>
           <button type="button" class="btn btn-outline add-ra-form" title="Add new RA form page">+ Form</button>
           <button type="button" class="btn btn-danger remove-ra-form" title="Remove this RA form page">&minus; Form</button>
-          <button type="button" class="btn btn-outline arising-btn" title="Everything marked still to arrange, across this assessment">Actions arising (0)</button>
           <span style="margin-left:auto;font-size:11px;color:var(--text-muted);">Pick a snippet then Insert · or use + Row to add a blank line</span>
         </div>
 
@@ -890,9 +899,6 @@ body.dra-print-blank main{display:none!important;}
             <!-- No initial row: rows are added by Insert Row / snippet / + Form -->
           </tbody>
         </table>
-
-        <!-- Still to arrange. Screen only, never printed. -->
-        <div class="arising-panel no-print" data-arising></div>
 
         <!-- What we already have in place. Rebuilt from the row pins by
              renderArrangements(); never typed into directly. -->
@@ -1197,6 +1203,16 @@ body.dra-print-blank main{display:none!important;}
        TAB: DYNAMIC RISK ASSESSMENT
        On site go / no-go check. The body is rendered by draRender().
        ════════════════════════════════════════════════════════ -->
+  <!-- ════════════════════════════════════════════════════════
+       TAB: ACTIONS ARISING
+       Everything marked still to arrange on the risk assessment. Kept off
+       the assessment the operative reads, but not allowed to disappear: the
+       PDF button on this tab issues the one sheet record.
+       ════════════════════════════════════════════════════════ -->
+  <div id="tab-actions" class="tab-panel">
+    <div class="actions-wrap" id="actionsBody"></div>
+  </div>
+
   <div id="tab-dra" class="tab-panel">
     <div class="dra-wrap" id="draBody"></div>
   </div>
@@ -4887,11 +4903,6 @@ function attachPersistHandlers(scope){
     input.addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); addItem(); }});
   });
 
-  $$(".arising-btn", scope).forEach(btn=>{
-    if(btn.dataset.arisingWired) return; btn.dataset.arisingWired="1";
-    btn.addEventListener("click", ()=> toggleArisings(btn));
-  });
-
   $$(".row-pin", scope).forEach(btn=>{
     if(btn.dataset.pinWired) return; btn.dataset.pinWired="1";
     btn.addEventListener("click", ()=> toggleNoteEditor(btn.closest("tr")));
@@ -5360,39 +5371,59 @@ function _raAllTodo(){
 }
 
 function renderArisings(){
+  renderActionsTab();
+}
+
+/* Paint the tab, and the count on the tab button. */
+function renderActionsTab(){
   const items = _raAllTodo();
-  $$(".arising-btn").forEach(btn => {
-    btn.textContent = "Actions arising (" + items.length + ")";
-    btn.classList.toggle("has-items", items.length > 0);
-  });
-  $$("[data-arising]").forEach(host => {
-    if(!host.classList.contains("open")) return;
-    host.innerHTML = _raArisingHtml(items);
-    _wireArisings(host);
-  });
+  const badge = $("#actionsCount");
+  if(badge){
+    badge.textContent = items.length ? String(items.length) : "";
+    badge.classList.toggle("on", items.length > 0);
+  }
+  const host = $("#actionsBody");
+  if(!host) return;
+  host.innerHTML = _raArisingHtml(items);
+  _wireArisings(host);
 }
 
 function _raArisingHtml(items){
+  const d = _raDocRef();
+  const head = '<div class="dra-card"><h2>Actions arising</h2>'
+    + '<p class="dra-sub">Everything marked <strong>still to arrange</strong> while writing the risk '
+    + 'assessment. These are not controls, they are not in place, and they are deliberately kept off '
+    + 'the assessment the operative reads. Issue the sheet from here whenever you need it.</p></div>';
+
   if(!items.length){
-    return '<div class="arising-inner"><p class="arising-empty">Nothing outstanding. '
-      + 'Anything you mark as still to arrange turns up here.</p></div>';
+    return head + '<div class="dra-card"><p class="dra-sub" style="margin:0;">Nothing outstanding. '
+      + 'Anything you mark as still to arrange on a hazard row turns up here.</p></div>';
   }
-  return '<div class="arising-inner">'
-    + '<p class="arising-lead">Kept off the printed assessment. Raise each one as an action in '
-    + 'Compass, then mark it in place here once it is done and it joins '
-    + '&ldquo;What we already have in place&rdquo;.</p>'
+
+  const meta = [["Risk assessment", d.ref], ["Task or activity", d.task],
+                ["Location", d.location], ["Assessment date", d.date]]
+    .filter(x => x[1])
+    .map(x => '<div class="act-meta-i"><span>' + escapeHtml(x[0]) + '</span><strong>'
+              + escapeHtml(x[1]) + '</strong></div>').join("");
+
+  return head
+    + '<div class="dra-card">'
+    + (meta ? '<div class="act-meta">' + meta + '</div>' : '')
     + '<ul class="arising-list">'
     + items.map((i, n) => '<li data-n="' + n + '">'
-        + '<span class="arr-kind">' + escapeHtml(i.kind) + '</span>'
-        + '<span class="arising-text">' + escapeHtml(i.text)
+        + '<span class="act-haz">Hazard ' + i.hazardNo + '</span>'
+        + '<span class="arising-text"><span class="arr-kind">' + escapeHtml(i.kind) + '</span>'
+        +   escapeHtml(i.text)
         +   (i.hazard ? '<span class="arising-haz">' + escapeHtml(i.hazard) + '</span>' : '')
         + '</span>'
-        + '<button type="button" class="btn btn-outline btn-sm arising-done">Now in place</button>'
+        + '<button type="button" class="btn btn-outline btn-sm arising-done" '
+        +   'title="It is done. Move it onto the assessment as something now in place.">Now in place</button>'
         + '</li>').join("")
     + '</ul>'
     + '<div class="arising-foot">'
-    +   '<button type="button" class="btn btn-primary btn-sm arising-pdf">Actions sheet PDF</button>'
-    +   '<button type="button" class="btn btn-outline btn-sm arising-copy">Copy to clipboard</button>'
+    +   '<button type="button" class="btn btn-primary arising-pdf">Actions sheet PDF</button>'
+    +   '<button type="button" class="btn btn-outline arising-copy">Copy to clipboard</button>'
+    +   '<span class="dra-prog" style="margin-left:auto;">' + items.length + ' outstanding</span>'
     + '</div></div>';
 }
 
@@ -5488,19 +5519,6 @@ function raActionsSheet(items){
     })
     .catch(err => { console.error(err); toast("Could not build the sheet: " + err.message, "error"); })
     .then(() => { document.body.classList.remove("ras-render"); });
-}
-
-function toggleArisings(btn){
-  const page = _raPageOf(btn);
-  const host = page ? page.querySelector("[data-arising]") : null;
-  if(!host) return;
-  const nowOpen = !host.classList.contains("open");
-  $$("[data-arising]").forEach(h => { h.classList.remove("open"); h.innerHTML = ""; });
-  if(nowOpen){
-    host.classList.add("open");
-    host.innerHTML = _raArisingHtml(_raAllTodo());
-    _wireArisings(host);
-  }
 }
 
 function insertRaSnippet(btn){
@@ -6149,6 +6167,9 @@ window.exportPDF = async function(){
   const activeTab = document.querySelector(".tab-panel.active");
   if(!activeTab){ toast("No active tab", "error"); return; }
 
+  // Actions arising has no sheets of its own: its PDF is the one page record.
+  if(activeTab.id === "tab-actions"){ raActionsSheet(); return; }
+
   // Inject a CSS rule that mirrors @media print onto a marker class so
   // html2canvas (which ignores @media print) sees the same layout
   const styleId = "__pdfPrintMirror";
@@ -6477,7 +6498,20 @@ window.exportPDF = async function(){
    RESTORE PASS
    ════════════════════════════════════════════════════════════════════ */
 function restoreAll(){
-  $$("[data-persist-container]").forEach(restoreContainer);
+  // Containers nest: #raForms holds the hazards tbody, #msPages holds the
+  // sequence tbodies. Restoring a parent replaces its innerHTML, which
+  // DETACHES any child container node captured beforehand, so a snapshot
+  // taken up front would then restore the child into an orphan and its rows
+  // would silently disappear. Re-query after every restore, keyed on
+  // data-key so each container is done exactly once, parents first.
+  const done = new Set();
+  for(let guard = 0; guard < 200; guard++){
+    const next = $$("[data-persist-container]")
+      .find(el => { const k = el.getAttribute("data-key"); return k && !done.has(k); });
+    if(!next) break;
+    done.add(next.getAttribute("data-key"));
+    restoreContainer(next);
+  }
   $$("[data-persist]").forEach(restoreField);
   $$(".risk-select").forEach(paintRiskBadge);
 }
