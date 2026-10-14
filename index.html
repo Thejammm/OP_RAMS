@@ -279,7 +279,39 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .arising-list li:first-child{border-top:none;}
 .arising-text{flex:1;min-width:0;color:var(--text);}
 .arising-haz{display:block;font-size:11px;color:var(--text-muted);margin-top:1px;}
-.arising-foot{padding:10px 14px;border-top:1.5px solid var(--warning-brd);display:flex;gap:8px;}
+.arising-foot{padding:10px 14px;border-top:1.5px solid var(--warning-brd);display:flex;gap:8px;flex-wrap:wrap;}
+
+/* The line on the assessment that points at the actions sheet. Prints. */
+.arr-pointer{margin:0;padding:9px 14px;border-top:1.5px solid var(--border);
+  background:var(--muted-bg);font-size:11.5px;line-height:1.5;color:var(--text);}
+.arr-wrap > .arr-pointer:first-child{border-top:none;}
+
+/* Actions arising sheet: off screen, only ever rendered into a PDF. */
+#raActions{position:absolute;left:-99999px;top:0;width:760px;background:#fff;
+  padding:4px 2px;box-sizing:border-box;font-family:'Inter',sans-serif;color:var(--text);}
+body.ras-render #raActions{left:-99999px;}
+#raActions .ras-head{border-bottom:3px solid var(--accent);padding-bottom:8px;margin-bottom:10px;}
+#raActions .ras-title{font-size:19px;font-weight:700;color:var(--primary);}
+#raActions .ras-sub{font-size:11.5px;color:var(--text-muted);margin-top:3px;}
+#raActions .ras-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px 14px;
+  background:var(--muted-bg);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;margin-bottom:12px;}
+#raActions .ras-meta-i{display:flex;flex-direction:column;gap:1px;}
+#raActions .ras-meta-i span{font-size:9px;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--text-muted);font-weight:700;}
+#raActions .ras-meta-i strong{font-size:11.5px;font-weight:600;}
+#raActions .ras-table{width:100%;border-collapse:collapse;}
+#raActions .ras-table th,#raActions .ras-table td{border:1px solid var(--border);
+  padding:6px 8px;font-size:10.5px;text-align:left;vertical-align:top;line-height:1.4;}
+#raActions .ras-table th{background:var(--primary);color:#fff;text-transform:uppercase;
+  letter-spacing:.04em;font-size:9.5px;font-weight:700;}
+#raActions .ras-table td.ras-n{text-align:center;font-weight:700;}
+#raActions .ras-kind{font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--text-muted);}
+#raActions .ras-foot{margin-top:10px;font-size:10px;line-height:1.5;color:var(--text-muted);}
+#raActions .ras-sign{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:22px;}
+#raActions .ras-sign span{border-top:1px solid var(--text-muted);padding-top:4px;
+  font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;}
 
 .arr-wrap{margin:16px 0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
 .arr-head{background:var(--primary);color:#fff;padding:9px 14px;font-size:12px;font-weight:700;
@@ -325,6 +357,14 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 
 /* Hazards table — risk cell */
 .hazardsTable td{vertical-align:top;}
+/* Hazard numbers. A counter rather than a column, so the table is no wider,
+   but every row has the number the actions sheet traces back to. */
+.hazardsTable tbody{counter-reset:haz;}
+.hazardsTable tbody tr:not(.note-edit){counter-increment:haz;}
+.hazardsTable tbody tr:not(.note-edit) > td:first-child{position:relative;padding-left:26px;}
+.hazardsTable tbody tr:not(.note-edit) > td:first-child::before{
+  content:counter(haz);position:absolute;left:7px;top:8px;font-size:10px;font-weight:700;
+  color:var(--text-muted);letter-spacing:.04em;}
 .hazardsTable .editable{min-height:60px;outline:none;}
 .risk-cell{display:flex;flex-direction:column;gap:6px;align-items:stretch;}
 .risk-cell select.risk-select{font-family:'Inter',sans-serif;font-size:12px;background:var(--input-bg);border:1.5px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);width:100%;}
@@ -1162,6 +1202,9 @@ body.dra-print-blank main{display:none!important;}
   </div>
 
 </main>
+
+<!-- Actions arising sheet. Rendered off screen only while its PDF is built. -->
+<div id="raActions"></div>
 
 <!-- Blank paper version of the go / no-go check. Screen hidden, print only. -->
 <div id="draBlank"></div>
@@ -4853,7 +4896,7 @@ function attachPersistHandlers(scope){
     if(btn.dataset.pinWired) return; btn.dataset.pinWired="1";
     btn.addEventListener("click", ()=> toggleNoteEditor(btn.closest("tr")));
   });
-  $$(".hazardsTable tbody tr", scope).forEach(paintRowNote);
+  $$(".hazardsTable tbody tr", scope).filter(tr => !tr.classList.contains("note-edit")).forEach(paintRowNote);
 
   $$(".date-chip", scope).forEach(chip=>{ if(!chip.dataset.dateWired){ chip.dataset.dateWired="1"; wireDateChip(chip); }});
 
@@ -5145,7 +5188,7 @@ function _raPageOf(el){ return el.closest(".form-page") || el.closest(".sheet");
 
 function _raNoteChanged(tr){
   paintRowNote(tr);
-  renderArrangements(_raPageOf(tr));
+  renderAllArrangements();   // the pointer line depends on the whole-RA count
   renderArisings();
   const tb = tr.closest("tbody");
   if(tb) persistContainer(tb);
@@ -5226,13 +5269,15 @@ function toggleNoteEditor(tr){
 function _raGather(page){
   const have = [], todo = [];
   if(!page) return { have, todo };
-  $$(".hazardsTable tbody tr", page).forEach(tr => {
+  $$(".hazardsTable tbody tr", page).filter(tr => !tr.classList.contains("note-edit")).forEach((tr, idx) => {
+    const rowNo = idx + 1;
     const hazCell = tr.querySelector("td .editable");
     const hazard = hazCell ? hazCell.textContent.trim() : "";
     _raNotes(tr).forEach(n => {
       const t = n.textContent.trim();
       if(!t) return;
-      const item = { kind: n.getAttribute("data-kind") || "", text: t, hazard: hazard, el: n, tr: tr };
+      const item = { kind: n.getAttribute("data-kind") || "", text: t, hazard: hazard,
+                     hazardNo: rowNo, el: n, tr: tr };
       (n.getAttribute("data-status") === "todo" ? todo : have).push(item);
     });
   });
@@ -5246,15 +5291,55 @@ function renderArrangements(page){
   const host = page.querySelector("[data-arr]");
   if(!host) return;
   const { have } = _raGather(page);
-  host.innerHTML = !have.length ? "" :
-      '<div class="arr-wrap"><div class="arr-head">What we already have in place</div><ul class="arr-list">'
-    + have.map(i => '<li><span class="arr-kind">' + escapeHtml(i.kind) + '</span><span>'
-        + escapeHtml(i.text) + '</span></li>').join("")
-    + '</ul></div>';
+  const outstanding = _raAllTodo().length;
+  const d = _raDocRef();
+  // One line, so an auditor reading the assessment on its own can see that
+  // actions were raised and knows which document to ask for. Without it the
+  // outstanding findings are invisible and the assessment does not stand up.
+  const pointer = !outstanding ? "" :
+      '<p class="arr-pointer"><strong>' + outstanding + ' action'
+    + (outstanding === 1 ? "" : "s") + ' arising from this assessment</strong> '
+    + 'recorded separately on &ldquo;Actions arising from ' + escapeHtml(d.ref)
+    + '&rdquo;. Additional controls to be agreed before those items are relied on.</p>';
+  host.innerHTML = (!have.length && !outstanding) ? "" :
+      '<div class="arr-wrap">'
+    + (have.length
+        ? '<div class="arr-head">What we already have in place</div><ul class="arr-list">'
+          + have.map(i => '<li><span class="arr-kind">' + escapeHtml(i.kind) + '</span><span>'
+              + escapeHtml(i.text) + '</span></li>').join("")
+          + '</ul>'
+        : '')
+    + pointer
+    + '</div>';
 }
 
 function renderAllArrangements(){
   $$("#raForms .form-page").forEach(renderArrangements);
+}
+
+/* The identifying details of the assessment, used on both documents so an
+   auditor can tie the actions sheet back to the assessment it came from. */
+function _raDocRef(){
+  const txt = k => {
+    const el = $('[data-key="' + k + '"]');
+    const v = el ? (el.value !== undefined ? el.value : el.textContent) : "";
+    const t = (v || "").trim();
+    return (!t || /^Add /i.test(t)) ? "" : t;
+  };
+  let date = "";
+  const di = $('#tab-ra .lh-date-input');
+  if(di && di.value){
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(di.value);
+    date = m ? (m[3] + "/" + m[2] + "/" + m[1]) : di.value;
+  }
+  return {
+    ref:      txt("ra.meta.reference") || "no reference set",
+    task:     txt("ra.meta.task"),
+    location: txt("ra.meta.location"),
+    project:  txt("ra.meta.project"),
+    assessor: txt("ra.sig.assessor.1"),
+    date:     date
+  };
 }
 
 /* ════════════════════════════════════════════════════════════════════
@@ -5306,7 +5391,8 @@ function _raArisingHtml(items){
         + '</li>').join("")
     + '</ul>'
     + '<div class="arising-foot">'
-    +   '<button type="button" class="btn btn-primary btn-sm arising-copy">Copy for Compass</button>'
+    +   '<button type="button" class="btn btn-primary btn-sm arising-pdf">Actions sheet PDF</button>'
+    +   '<button type="button" class="btn btn-outline btn-sm arising-copy">Copy to clipboard</button>'
     + '</div></div>';
 }
 
@@ -5319,6 +5405,8 @@ function _wireArisings(host){
     _raNoteChanged(it.tr);
     toast("Moved to what we already have in place");
   }));
+  const pdf = host.querySelector(".arising-pdf");
+  if(pdf) pdf.addEventListener("click", () => raActionsSheet(items));
   const copy = host.querySelector(".arising-copy");
   if(copy) copy.addEventListener("click", () => {
     const text = items.map(i => i.kind + ": " + i.text + (i.hazard ? "  (" + i.hazard + ")" : "")).join("\n");
@@ -5334,6 +5422,72 @@ function _wireArisings(host){
       navigator.clipboard.writeText(text).then(() => toast("Copied, paste into Compass"), fallback);
     } else fallback();
   });
+}
+
+/* One A4 side, its own PDF, nothing to do with the assessment the operative
+   reads. Every line carries the hazard number and wording it came from, so
+   the two documents tie together. */
+function _raActionsHtml(items, d){
+  const rows = items.map((i, n) =>
+      '<tr>'
+    +   '<td class="ras-n">' + (n + 1) + '</td>'
+    +   '<td><strong>Hazard ' + i.hazardNo + '</strong><br>' + escapeHtml(i.hazard || "not recorded") + '</td>'
+    +   '<td><span class="ras-kind">' + escapeHtml(i.kind) + '</span><br>' + escapeHtml(i.text) + '</td>'
+    +   '<td></td><td></td><td></td>'
+    + '</tr>').join("");
+  const meta = [
+    ["Risk assessment reference", d.ref],
+    ["Task or activity", d.task],
+    ["Location", d.location],
+    ["Project", d.project],
+    ["Assessment date", d.date],
+    ["Assessed by", d.assessor]
+  ].filter(x => x[1]).map(x =>
+    '<div class="ras-meta-i"><span>' + escapeHtml(x[0]) + '</span><strong>' + escapeHtml(x[1]) + '</strong></div>').join("");
+
+  return '<div class="ras-head">'
+    + '<div><div class="ras-title">Actions arising from ' + escapeHtml(d.ref) + '</div>'
+    + '<div class="ras-sub">Additional controls identified while assessing. '
+    +   'These are not yet in place and the assessment does not rely on them.</div></div></div>'
+    + '<div class="ras-meta">' + meta + '</div>'
+    + '<table class="ras-table"><thead><tr>'
+    +   '<th style="width:26px;">#</th><th style="width:28%;">Identified against</th>'
+    +   '<th>Action needed</th><th style="width:16%;">Owner</th>'
+    +   '<th style="width:13%;">Target date</th><th style="width:11%;">Done</th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table>'
+    + '<div class="ras-foot">Each action traces to the numbered hazard on the risk assessment above. '
+    + 'Once an action is complete, record it on the assessment as something now in place and review '
+    + 'the residual rating for that hazard.'
+    + '<div class="ras-sign"><span>Raised by</span><span>Agreed by</span><span>Date</span></div></div>';
+}
+
+function raActionsSheet(items){
+  items = items || _raAllTodo();
+  if(!items.length){ toast("Nothing outstanding to put on a sheet"); return; }
+  const d = _raDocRef();
+  const host = $("#raActions");
+  if(!host) return;
+  host.innerHTML = _raActionsHtml(items, d);
+
+  const { jsPDF } = window.jspdf || window;
+  if(!jsPDF || typeof html2canvas !== "function"){ toast("PDF library not loaded", "error"); return; }
+  document.body.classList.add("ras-render");
+  html2canvas(host, { scale: 2, useCORS: true, backgroundColor: "#ffffff", windowWidth: host.scrollWidth })
+    .then(canvas => {
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const W = pdf.internal.pageSize.getWidth(), H = pdf.internal.pageSize.getHeight();
+      const M = 10, band = 13;
+      const availW = W - M * 2, availH = H - M - band;
+      let w = availW, h = canvas.height * (availW / canvas.width);
+      if(h > availH){ h = availH; w = canvas.width * (availH / canvas.height); }
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", M, M, w, h);
+      stampPdfFooters(pdf, $("#tab-ra"));
+      const slug = (d.ref || "RA").replace(/[^A-Za-z0-9]+/g, "-").slice(0, 32);
+      pdf.save("Actions-arising-" + slug + "-" + new Date().toISOString().slice(0, 10) + ".pdf");
+      toast("Actions sheet saved");
+    })
+    .catch(err => { console.error(err); toast("Could not build the sheet: " + err.message, "error"); })
+    .then(() => { document.body.classList.remove("ras-render"); });
 }
 
 function toggleArisings(btn){
@@ -7585,7 +7739,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   attachPersistHandlers(document);
   // Rows restored from a saved blob carry their notes with them; rebuild the
   // printed blocks and the pin states from what came back.
-  $$(".hazardsTable tbody tr").forEach(paintRowNote);
+  $$(".hazardsTable tbody tr").filter(tr => !tr.classList.contains("note-edit")).forEach(paintRowNote);
   renderAllArrangements();
   renderArisings();
   ensureSheetFooters();
