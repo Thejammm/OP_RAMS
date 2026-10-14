@@ -712,6 +712,12 @@ body.ras-render #raActions{left:-99999px;}
 .dra-sel{width:100%;font:inherit;font-size:13px;padding:8px 10px;border:1.5px solid var(--border);
   border-radius:6px;background:var(--surface);color:var(--text);}
 .dra-ctl-pick{margin-top:10px;}
+#draBlank .dpb-brand{display:flex;align-items:center;gap:6px;margin-top:14px;padding-top:6px;
+  border-top:1px solid #c9ced6;font-size:8px;color:#444;}
+#draBlank .dpb-brand .sf-mark{width:12px;height:12px;flex-shrink:0;}
+#draBlank .dpb-ra{border:1px solid #9aa1ab;border-radius:3px;padding:5px 7px;margin-bottom:7px;
+  font-size:9px;line-height:1.4;}
+#draBlank .dpb-haz{margin-top:2px;color:#444;}
 #draBlank .dpb-sign{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px;}
 #draBlank .dpb-sign span{border-top:1px solid #9aa1ab;padding-top:4px;font-size:8px;
   text-transform:uppercase;letter-spacing:.07em;font-weight:700;}
@@ -730,8 +736,10 @@ body.dra-print-blank main{display:none!important;}
 #draBlank th,#draBlank td{border:1px solid #9aa1ab;padding:1.5px 4px;font-size:7.9px;
   text-align:left;vertical-align:top;line-height:1.22;}
 #draBlank th{background:var(--primary);color:#fff;text-transform:uppercase;letter-spacing:.03em;font-size:7.4px;}
-#draBlank td.dpb-tick{text-align:center;width:26px;}
-#draBlank th.dpb-tick{width:26px;}
+#draBlank td.dpb-tick{text-align:center;width:24px;vertical-align:middle;}
+#draBlank th.dpb-tick{width:24px;}
+#draBlank td.dpb-tick::before{content:"";display:inline-block;width:10px;height:10px;
+  border:1.2px solid #333;background:#fff;}
 #draBlank .dpb-fields{display:flex;gap:10px;margin-bottom:6px;font-size:8.4px;flex-wrap:wrap;}
 #draBlank .dpb-fields span{flex:1 1 150px;border-bottom:1px solid #9aa1ab;padding-bottom:9px;}
 #draBlank .dpb-foot{margin-top:6px;font-size:8px;line-height:1.35;}
@@ -6608,11 +6616,9 @@ function purgeStaleStructureIfNeeded(){
    the risk assessment wording, so editing an assessment can never change
    what stops a job. */
 const DRA_CONFIG = {
-  managers: [
-    { name: "[Senior manager 1 - name to be supplied]", phone: "[phone number]" },
-    { name: "[Senior manager 2 - name to be supplied]", phone: "[phone number]" }
-  ],
-  loneWorkingApp: "[lone working app name to be supplied]"
+  // Left blank on purpose. Simon: filled in on site, not pre-printed.
+  managers: [],
+  loneWorking: "lone working procedure"
 };
 
 const DRA_STOPS = [
@@ -6728,29 +6734,40 @@ function draRender(){
 }
 
 function draPlaceholderNote(){
-  return '<div class="dra-note"><strong>Placeholder content.</strong> The senior manager names and '
-    + 'numbers, the lone working app name and the list of things that stop a job are all waiting on '
-    + 'Simon. Everything else is read live from the risk assessment loaded in this app.</div>';
+  return '';   // nothing outstanding on this tab any more
 }
 
 function draViewList(){
   const recs = draLoad();
   const pending = recs.filter(r => !r.sent).length;
+  const ra = draLiveRA();
   let h = '<div class="dra-card">'
-    + '<h2>Go / no-go check</h2>'
-    + '<p class="dra-sub">Fill this in on site before you start, and again if anything changes while '
-    + 'you are there. It checks what is in front of you against the survey risk assessment. '
-    + 'This is not a permit to work.</p>'
-    + draPlaceholderNote()
+    + '<h2>Check before you start</h2>'
+    + '<p class="dra-sub">The risk assessment is held in the office. This is the sheet the surveyor '
+    + 'takes with them and fills in on site: has anything changed, and does it stop the job. '
+    + 'It is not a permit to work.</p>'
     + '<div class="dra-extra">'
-    + '<button type="button" class="btn btn-primary" id="draNew">Start a check</button>'
-    + '<button type="button" class="btn btn-outline" id="draPrintBlank">Print a blank form</button>';
+    + '<button type="button" class="btn btn-primary" id="draPrintBlank">Print blank sheets</button>'
+    + (ra.hazards.length
+        ? '<button type="button" class="btn btn-outline" id="draPrintFor">Print for '
+          + escapeHtml(ra.ref || "the open assessment") + '</button>'
+        : '')
+    + '<span class="dra-spacer"></span>'
+    + '<button type="button" class="btn btn-ghost" id="draNew">Fill one in on this device</button>'
+    + '</div>'
+    + (ra.hazards.length
+        ? '<p class="dra-sub" style="margin:10px 0 0;">Printing for ' + escapeHtml(ra.ref || "the open assessment")
+          + ' puts its reference and its ' + ra.hazards.length
+          + ' hazards on the sheet, so the surveyor has the reminder in front of them.</p>'
+        : '<p class="dra-sub" style="margin:10px 0 0;">Open an assessment on the Risk Assessment tab '
+          + 'first and you can print the sheet with its reference and hazards already on it.</p>')
+    + '</div>';
+
   if(recs.length){
-    h += '<span class="dra-spacer"></span><span class="dra-prog">'
+    h += '<div class="dra-card"><div class="dra-extra"><span class="dra-prog">'
       + (pending ? '<b>' + pending + '</b> not yet sent to the server' : 'All sent')
-      + '</span>';
+      + '</span></div></div>';
   }
-  h += '</div></div>';
 
   if(!recs.length){
     h += '<div class="dra-card"><p class="dra-sub" style="margin:0;">No checks on this device yet.</p></div>';
@@ -6802,8 +6819,8 @@ function draViewSetup(rec){
             + escapeHtml(ra.task) + '</strong></div>' : '')
           + '<div class="dra-ra-i"><span>Hazards assessed</span><strong>'
           + ra.hazards.length + '</strong></div></div>'
-        : '<div class="dra-note stop">No risk assessment is loaded. Open one on the Risk Assessment '
-          + 'tab before starting a check, or there is nothing to check against.</div>')
+        : '<p class="dra-sub" style="margin:0;">No assessment is open in this app, which is normal: '
+          + 'it is held in the office. You will be asked for its reference on the next screen.</p>')
     + '<div class="dra-bar">'
     + '<button type="button" class="btn btn-ghost" id="draCancel">Back</button>'
     + '<span class="dra-spacer"></span>'
@@ -6841,15 +6858,15 @@ function draViewCheck(rec){
     + '<p class="dra-sub">' + escapeHtml(rec.jobRef || "") + (rec.jobRef && rec.site ? " &middot; " : "")
     + escapeHtml(rec.site || "") + '</p>';
 
-  if(!ra.hazards.length){
-    h += '<div class="dra-note stop">No risk assessment is loaded in this app, so there is nothing to '
-      + 'check against. Open the assessment on the Risk Assessment tab first.</div></div>';
-    h += '<div class="dra-card"><div class="dra-bar">'
-      + '<button type="button" class="btn btn-ghost" id="draCancel">Back</button></div></div>';
-    return h;
-  }
-
-  h += '<div class="dra-ra-ref">'
+  // The assessment normally lives in the office, not in this app. If one
+  // happens to be loaded its details and hazards are shown; if not, the
+  // surveyor writes the reference they were issued with and carries on.
+  h += ra.hazards.length ? '<div class="dra-ra-ref">'
+    : '<div class="dra-field wide" style="margin-top:6px;"><label for="draRaRef">'
+      + 'Risk assessment reference you were issued with</label>'
+      + '<input type="text" id="draRaRef" value="' + escapeHtml(round.raRefTyped || "")
+      + '" placeholder="For example RA-FL-12"></div><div style="display:none;">';
+  h += ''
     + '<div class="dra-ra-i"><span>Assessment</span><strong>'
     +   escapeHtml(ra.ref || "no reference set") + '</strong></div>'
     + (ra.task ? '<div class="dra-ra-i"><span>Task or activity</span><strong>'
@@ -6858,12 +6875,14 @@ function draViewCheck(rec){
     +   escapeHtml(ra.site) + '</strong></div>' : '')
     + '</div></div>';
 
-  // The prompt. Read only: these are not questions.
-  h += '<div class="dra-card"><h2>What this assessment covers</h2>'
-    + '<p class="dra-sub">A reminder, not a checklist. Read it, then make one judgement below.</p>'
-    + '<ol class="dra-haz-list">'
-    + ra.hazards.map(z => '<li>' + escapeHtml(z.name) + '</li>').join("")
-    + '</ol></div>';
+  // The prompt, only where the assessment is actually to hand.
+  if(ra.hazards.length){
+    h += '<div class="dra-card"><h2>What this assessment covers</h2>'
+      + '<p class="dra-sub">A reminder, not a checklist. Read it, then make one judgement below.</p>'
+      + '<ol class="dra-haz-list">'
+      + ra.hazards.map(z => '<li>' + escapeHtml(z.name) + '</li>').join("")
+      + '</ol></div>';
+  }
 
   // reg 10
   h += '<div class="dra-card"><h2>Before you judge it</h2>'
@@ -6913,8 +6932,10 @@ function draViewCheck(rec){
     if(round.noStops && !(round.stops || []).length){
       h += '<div class="dra-card"><h2>How are you dealing with it?</h2>'
         + '<div class="dra-answers">'
-        + '<button type="button" class="dra-ans ctrl" data-route="control" aria-pressed="'
-        +   (round.route === "control") + '">A control in this assessment covers it</button>'
+        + (ra.hazards.length
+            ? '<button type="button" class="dra-ans ctrl" data-route="control" aria-pressed="'
+              + (round.route === "control") + '">A control in this assessment covers it</button>'
+            : '')
         + '<button type="button" class="dra-ans" data-route="escalate" aria-pressed="'
         +   (round.route === "escalate") + '">Call a senior manager</button>'
         + '<button type="button" class="dra-ans fail" data-route="stop" aria-pressed="'
@@ -6966,10 +6987,12 @@ function draViewEscalate(rec){
     + escapeHtml(round.difference || "not recorded")
     + (round.raRef ? '<br><br>Checked against ' + escapeHtml(round.raRef) : '')
     + '</div>';
-  DRA_CONFIG.managers.forEach(m => {
-    h += '<div class="dra-mgr"><div class="dra-mgr-n">' + escapeHtml(m.name) + '</div>'
-      + '<div class="dra-mgr-p">' + escapeHtml(m.phone) + '</div></div>';
-  });
+  if(DRA_CONFIG.managers.length){
+    DRA_CONFIG.managers.forEach(m => {
+      h += '<div class="dra-mgr"><div class="dra-mgr-n">' + escapeHtml(m.name) + '</div>'
+        + '<div class="dra-mgr-p">' + escapeHtml(m.phone) + '</div></div>';
+    });
+  }
   h += '</div>';
 
   h += '<div class="dra-card"><h2>What did they say?</h2>'
@@ -6994,7 +7017,7 @@ function draViewAbort(rec){
   let h = '<div class="dra-card"><h2>Visit stopped</h2>'
     + '<div class="dra-note stop"><strong>Stop and leave.</strong> Do not start or carry on with the survey.</div>'
     + '<p class="dra-sub">Reason recorded: ' + escapeHtml(round.abortReason || "") + '</p>'
-    + '<div class="dra-note">Close the visit in ' + escapeHtml(DRA_CONFIG.loneWorkingApp)
+    + '<div class="dra-note">Close the visit under the ' + escapeHtml(DRA_CONFIG.loneWorking)
     + ' as well, so nobody is left expecting you to check in.</div>'
     + '<div class="dra-field wide"><label for="draAbortPhoto">Photo (required)</label>'
     + '<button type="button" class="btn btn-outline" id="draAbortPhoto">'
@@ -7082,7 +7105,8 @@ function draWire(host){
   const on = (sel, ev, fn) => $$(sel, host).forEach(el => el.addEventListener(ev, fn));
 
   on("#draNew", "click", () => { draUI.view = "setup"; draUI.recId = null; draRender(); });
-  on("#draPrintBlank", "click", printDraBlank);
+  on("#draPrintBlank", "click", () => printDraBlank(false));
+  on("#draPrintFor", "click", () => printDraBlank(true));
   on("#draCancel", "click", () => { draUI.view = "list"; draUI.recId = null; draRender(); });
 
   on(".dra-rec", "click", e => {
@@ -7266,10 +7290,12 @@ function draSubmitRound(){
   const ra = draLiveRA();
 
   if(!round.read){ toast("Confirm you have read the assessment first", "error"); return; }
+  const typed = $("#draRaRef");
+  if(typed) round.raRefTyped = typed.value.trim();
   if(!round.valid){ toast("Answer whether the assessment still holds", "error"); return; }
 
   round.submittedAt = Date.now();
-  round.raRef = ra.ref;
+  round.raRef = ra.ref || round.raRefTyped || "";
   round.raTask = ra.task;
   round.hazardCount = ra.hazards.length;
   draStampLocation(round);
@@ -7369,7 +7395,8 @@ function draStampLocation(round){
 }
 
 /* ── Blank paper version ──────────────────────────────────────────── */
-function draBlankHtml(){
+function draBlankHtml(withRA){
+  const ra = withRA ? draLiveRA() : { hazards: [] };
   const stops = DRA_STOPS.map(t =>
     '<tr><td class="dpb-tick"></td><td>' + escapeHtml(t) + '</td></tr>').join("");
   return '<div class="dpb-head"><div><div class="dpb-title">Check before you start</div>'
@@ -7377,7 +7404,13 @@ function draBlankHtml(){
     + '<div class="dpb-sub">Photograph this and add it to the record afterwards.</div></div>'
     + '<div class="dpb-fields"><span>Name</span><span>Company</span><span>Site</span>'
     + '<span>Job ref</span><span>Date and time</span></div>'
-    + '<div class="dpb-fields"><span>Risk assessment reference you are working to</span></div>'
+    + (ra.hazards.length
+        ? '<div class="dpb-ra"><strong>Risk assessment ' + escapeHtml(ra.ref || "") + '</strong>'
+          + (ra.task ? '  &middot;  ' + escapeHtml(ra.task) : '')
+          + '<div class="dpb-haz">What it covers: '
+          + ra.hazards.map(z => z.no + '. ' + escapeHtml(z.name)).join(' &nbsp;&middot;&nbsp; ')
+          + '</div></div>'
+        : '<div class="dpb-fields"><span>Risk assessment reference you are working to</span></div>')
     + '<table><tbody>'
     + '<tr><th colspan="2">1. Before you judge it</th></tr>'
     + '<tr><td class="dpb-tick"></td><td>I have read this risk assessment and the method statement '
@@ -7387,29 +7420,32 @@ function draBlankHtml(){
     +   'Nothing else to fill in.</td></tr>'
     + '<tr><td class="dpb-tick"></td><td><strong>No</strong>, something is different. '
     +   'Write what, below, then answer 3.</td></tr>'
-    + '<tr><td></td><td style="height:38px;">What is different:</td></tr>'
+    + '<tr><td></td><td style="height:74px;">What is different:</td></tr>'
     + '<tr><th colspan="2">3. Does any of this apply? Any one of them stops the job.</th></tr>'
     + stops
     + '<tr><td class="dpb-tick"></td><td>None of these apply</td></tr>'
     + '<tr><th colspan="2">4. If none of them apply, how are you dealing with it?</th></tr>'
     + '<tr><td class="dpb-tick"></td><td>A control already written in this assessment covers it. '
     +   'Write the hazard number and the control:</td></tr>'
-    + '<tr><td></td><td style="height:30px;"></td></tr>'
-    + '<tr><td class="dpb-tick"></td><td>Called a senior manager. Who, when, and what they '
+    + '<tr><td></td><td style="height:52px;"></td></tr>'
+    + '<tr><td class="dpb-tick"></td><td>Called a senior manager. Name, number, time, and what they '
     +   'authorised:</td></tr>'
-    + '<tr><td></td><td style="height:30px;"></td></tr>'
+    + '<tr><td></td><td style="height:62px;"></td></tr>'
     + '<tr><td class="dpb-tick"></td><td>Stopped and left.</td></tr>'
     + '</tbody></table>'
     + '<div class="dpb-foot">You cannot write your own control. If nothing in the assessment covers '
     + 'it, the only routes are a senior manager or stop. Tell the office either way, so the '
     + 'assessment can be reviewed.'
-    + '<div class="dpb-sign"><span>Signed</span><span>Date and time</span></div></div>';
+    + '<div class="dpb-sign"><span>Signed</span><span>Date and time</span></div>'
+    + '<div class="dpb-brand">' + AHS_FOOTER_MARK
+    +   '<span><strong>' + AHS_PRODUCER + '</strong> \u00b7 ' + AHS_WEBSITE + '</span></div>'
+    + '</div>';
 }
 
-function printDraBlank(){
+function printDraBlank(withRA){
   const host = $("#draBlank");
   if(!host) return;
-  host.innerHTML = draBlankHtml();
+  host.innerHTML = draBlankHtml(withRA === true);
   const st = document.createElement("style");
   st.id = "__draBlankPage";
   st.textContent = "@page{size:A4 portrait;margin:9mm;}";
