@@ -4909,6 +4909,38 @@ const AHS_WEBSITE  = "www.archersafety.co.uk";
 const PDF_IMG_TYPE = "JPEG";
 const PDF_IMG_Q    = 0.85;
 const pdfImg = canvas => canvas.toDataURL("image/jpeg", PDF_IMG_Q);
+
+/* Where to cut a rendered page.
+   MAJOR break points are the gaps between whole sections and tables, MINOR
+   ones the gaps between table rows. A major break is the nicer place to cut,
+   but on a METHOD STATEMENT only when it actually fills the page: taking one
+   unconditionally left the first page 29% full, because the only major break
+   in range was the top of a table that was itself taller than a page while a
+   row boundary 98% of the way down was sitting right there.
+   The risk assessment passes minFill 0 and paginates exactly as before. */
+const PDF_MIN_PAGE_FILL = 0.55;
+function pdfPickBreak(sortedSet, proposed, currentTop){
+  let best = -1;
+  for(let i = 0; i < sortedSet.length; i++){
+    const b = sortedSet[i];
+    if(b > currentTop && b <= proposed) best = b;
+    if(b > proposed) break;
+  }
+  return best > currentTop ? best : -1;
+}
+function pdfFindSafeBreak(sortedMajor, sortedMinor, proposed, currentTop, minFill){
+  // minFill 0 means "take any major break", which is how the risk
+  // assessment has always paginated and still does.
+  const fills = currentTop + (proposed - currentTop) * (minFill || 0);
+  const major = pdfPickBreak(sortedMajor, proposed, currentTop);
+  if(major >= fills) return major;
+  const minor = pdfPickBreak(sortedMinor, proposed, currentTop);
+  if(minor >= fills) return minor;
+  // Nothing fills the page. Take whichever boundary gets furthest down
+  // rather than cutting straight through a line of text.
+  const best = Math.max(major, minor);
+  return best > currentTop ? best : proposed;
+}
 const AHS_URL      = "https://www.archersafety.co.uk";
 const AHS_TEAL = "#4bbfd6";
 const AHS_GREY = "#8b9096";
@@ -6477,22 +6509,9 @@ window.exportPDF = async function(){
         pdf.addImage(imgData, PDF_IMG_TYPE, marginMm, marginMm, imgWmm, imgHmm);
       } else {
         const pxPerMm = canvas.width / imgWmm;
-        function pickBreak(sortedSet, proposed, currentTop){
-          let best = -1;
-          for(let i = 0; i < sortedSet.length; i++){
-            const b = sortedSet[i];
-            if(b > currentTop && b <= proposed) best = b;
-            if(b > proposed) break;
-          }
-          return best > currentTop ? best : -1;
-        }
-        function findSafeBreak(proposed, currentTop){
-          const major = pickBreak(sortedMajor, proposed, currentTop);
-          if(major > 0) return major;
-          const minor = pickBreak(sortedMinor, proposed, currentTop);
-          if(minor > 0) return minor;
-          return proposed;
-        }
+        // RA pagination is unchanged: any major break is good enough.
+        const findSafeBreak = (proposed, currentTop) =>
+          pdfFindSafeBreak(sortedMajor, sortedMinor, proposed, currentTop, 0);
         const continuationExtraMm = 6; // extra breathing room on continuation pages
         let yPx = 0, pageIdx = 0;
         while(yPx < canvas.height){
@@ -6616,22 +6635,10 @@ window.exportPDF = async function(){
 
             // Try MAJOR break first. If none fits (section taller than a page),
             // fall back to MINOR (tr boundary). If still none, use proposed.
-            function pickBreak(sortedSet, proposed, currentTop){
-              let best = -1;
-              for(let i = 0; i < sortedSet.length; i++){
-                const b = sortedSet[i];
-                if(b > currentTop && b <= proposed) best = b;
-                if(b > proposed) break;
-              }
-              return best > currentTop ? best : -1;
-            }
-            function findSafeBreak(proposed, currentTop){
-              const major = pickBreak(sortedMajor, proposed, currentTop);
-              if(major > 0) return major;
-              const minor = pickBreak(sortedMinor, proposed, currentTop);
-              if(minor > 0) return minor;
-              return proposed;
-            }
+            // MS only: a major break has to fill the page to be worth taking.
+            const findSafeBreak = (proposed, currentTop) =>
+              pdfFindSafeBreak(sortedMajor, sortedMinor, proposed, currentTop,
+                               PDF_MIN_PAGE_FILL);
 
             const continuationTopMm = 8; // breathing room above continuation tables
             let yPx = 0, sliceIdx = 0;
