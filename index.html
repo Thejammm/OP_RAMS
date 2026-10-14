@@ -629,7 +629,6 @@ body.dra-print-blank main{display:none!important;}
     <div class="row"><label>Logo</label><input type="file" accept="image/*" id="brandLogoFile"></div>
     <div class="row"><label>Name</label><input type="text" id="brandNameIn" placeholder="Your company name"></div>
     <div class="row"><label>Tagline</label><input type="text" id="brandTaglineIn" placeholder="Tagline"></div>
-    <div class="row"><label>Website</label><input type="text" id="brandWebsiteIn" placeholder="archerhs.co.uk"></div>
     <div class="row"><label>Primary</label><input type="color" id="brandPrimaryIn" value="#757575"></div>
     <div class="row"><label>Accent</label><input type="color" id="brandAccentIn" value="#4bbfd6"></div>
     <div class="row"><label>Text</label><input type="color" id="brandTextIn" value="#111827"></div>
@@ -669,7 +668,7 @@ body.dra-print-blank main{display:none!important;}
             <img class="lh-logo brand-letterhead-logo" src="" alt="" style="display:none;">
             <div class="lh-produced">
               <span class="lh-muted">Produced by</span>
-              <span class="lh-strong lh-producer">ARCHER HEALTH AND SAFETY</span>
+              <span class="lh-strong lh-producer">AHS Ltd</span>
             </div>
           </div>
           <div class="lh-center">
@@ -882,7 +881,7 @@ body.dra-print-blank main{display:none!important;}
           <img class="lh-logo brand-letterhead-logo" src="" alt="" style="display:none;">
           <div class="lh-produced">
             <span class="lh-muted">Produced by</span>
-            <span class="lh-strong lh-producer">ARCHER HEALTH AND SAFETY</span>
+            <span class="lh-strong lh-producer">AHS Ltd</span>
           </div>
         </div>
         <div class="lh-center">
@@ -3178,6 +3177,75 @@ const SNIPPETS_RA = [
         action: "Project Architect"
       }
     ]
+  },
+  {
+    name: "FL — 21 — Construction site visit (escorted, Building Regulations compliance)",
+    group: FL_GROUP,
+    rows: [
+      {
+        hazard: "Struck by moving plant, vehicles or deliveries",
+        who: "Employees",
+        how: "Walking an active site where excavators, dumpers, telehandlers and delivery vehicles are working",
+        initial: "high",
+        controls: "Visit arranged with the principal contractor in advance and never made unannounced. Site induction attended before any entry, and no entry at all where no induction is offered. High visibility jacket, safety helmet and safety footwear worn from the site office onwards. Designated pedestrian walkways and crossings used throughout, with no short cuts across working areas. Eye contact made with any plant operator before passing, and a wide berth given to anything moving or slewing. Escort kept with at all times so the visitor is never alone in a traffic area.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Struck by falling or dropped objects",
+        who: "Employees",
+        how: "Working beneath scaffolds, lifting operations, loading bays and partly built structures",
+        initial: "high",
+        controls: "Safety helmet worn at all times on site. Exclusion zones and barriered areas observed and never crossed to get a view or a photograph. Position kept clear of any lifting operation, and the visit paused and moved if lifting starts nearby. Overhead condition looked at before standing anywhere, including beneath scaffold lifts and open edges. Escort asked to find a safe viewing position rather than the visitor finding their own.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Fall from height, or fall into an excavation or opening",
+        who: "Employees",
+        how: "Scaffolds, temporary stairs and decks, open edges, floor voids, lift shafts and excavations on a site that changes daily",
+        initial: "high",
+        controls: "No ladder is climbed, no scaffold platform is stepped onto and no temporary deck is crossed. No excavation, lift shaft, confined space or exclusion zone is entered. Where the inspection needs a view from height or inside a zone, the principal contractor arranges safe access and a competent person accompanies, or that element is not inspected on that visit and is recorded as outstanding. Ground watched when walking and the camera not used while moving.",
+        residual: "medium",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Separated from the escort with no knowledge of the site",
+        who: "Employees",
+        how: "Escort called away, visitor follows a detail into another area, or the route changes between visits",
+        initial: "medium",
+        controls: "An escort is never accepted in place of an induction, because an escort can be called away and the visitor must know the way out alone. Fire assembly point, first aid arrangements and welfare noted at induction. Visitor stays with the escort and does not separate to look at a detail. If the escort is called away, the visitor returns with them or waits in the site office, and does not continue alone. Signing in and signing out at the site office on every visit so the site knows who is on it.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Harm caused by giving instructions to the contractor's operatives",
+        who: "Employees / Contractors / Others",
+        how: "A designer on site being drawn into directing how or when work is carried out",
+        initial: "medium",
+        controls: "The visit is to inspect for Building Regulations compliance, not to supervise or direct the work. No instruction, direction or correction is given to any operative. Questions about method and sequence are referred to the principal contractor. Observations, whether compliance or safety, are raised with the escort at the time and confirmed in writing to the principal contractor and the client the same day. Anything of immediate danger to life is told to the escort at once rather than left to the written report.",
+        residual: "low",
+        action: "Director"
+      },
+      {
+        hazard: "Exposure to dust, noise and site conditions",
+        who: "Employees",
+        how: "Cutting, grinding, breaking out and general site activity near the inspection route",
+        initial: "medium",
+        controls: "Route planned with the escort to keep clear of cutting, grinding and breaking out. Visit paused or rerouted where dusty or noisy work starts nearby rather than walking through it. Eye protection worn on site. Any additional personal protective equipment the site specifies at induction is worn. Time on site kept to what the inspection needs.",
+        residual: "low",
+        action: "Project Architect"
+      },
+      {
+        hazard: "Asbestos disturbed during refurbishment work on an existing building",
+        who: "Employees / Contractors / Others",
+        how: "Inspecting compliance work in a pre 2000 building where the contractor is opening up",
+        initial: "high",
+        controls: "The asbestos position for the building is asked for before the visit and read. Any area where suspect material has been found or disturbed is not entered. Nothing is touched, lifted, moved or sampled by the visitor at any time. If suspect material appears to have been disturbed and the site has not acted on it, the escort and the principal contractor are told at once and the practice and the client are told in writing the same day.",
+        residual: "medium",
+        action: "Director"
+      }
+    ]
   }
 ];
 
@@ -4321,6 +4389,199 @@ const SNIPPETS_MS = [
       spill: "Absorbent material carried for fuel or fluid spillage from equipment. Spilled material contained and disposed of properly, not washed into a drain.",
       contacts: "Practice Manager — TBC | Emergency 999"
     }
+  },
+  {
+    name: "MS — FL S1 — Ventilation assessment PIBI (DMEV and other minor surveys)",
+    group: FL_GROUP,
+    fields: {
+      title: "Pre installation building inspection for a ventilation upgrade in an occupied dwelling",
+      equipment: "Torch and head torch; tape measure and laser measure; door undercut gauge or wedge; camera or phone; moisture meter; non contact voltage detector; two tread step stool with a handhold; disposable overshoes; hand sanitiser and wipes; first aid kit; mobile phone",
+      ppe: "Safety footwear; disposable gloves; disposable overshoes inside the home; FFP3 respirator (face fit tested) if visible mould is significant",
+      raRef: "FL-09, FL-10, FL-11, FL-15, FL-18",
+      procedure: "**Before the visit**\nConfirm the appointment with the occupant and that an adult will be present throughout.\nAsk the client for the age of the property, the asbestos register and anything known about the occupant, pets, aggression or vulnerability.\nTreat any property built or altered before 2000 as containing asbestos. This inspection is visual and non intrusive, so nothing is drilled, cut, lifted or opened up.\nLeave the itinerary with the office: address, expected duration, finish time and check in arrangements.\n\n**Arrival and the occupant**\nPark clear of the drive and do not block the occupant in.\nShow identification before entering. Confirm who is in the property.\nExplain what the inspection involves, how long it takes, that photographs are taken in every room, and who sees them. Agree any room or item that is out of scope and give them the chance to move personal belongings.\nAsk the occupant to keep pets in another room for the duration.\nFit overshoes. Check in with the office.\n\n**Working through the property**\nWork one room at a time. Check the floor ahead before committing weight, and use the torch in any unlit space.\nPhotograph and measure from the floor wherever the image can be got from the floor.\nUse the step stool only on a firm level floor, with a hand free and nothing carried up. Anything that cannot be reached from the step stool is recorded as not reachable, photographed from the best available position, and flagged for the installer.\nKneel rather than stoop for door undercut measurements. Use a kneeling pad or a folded cloth on hard floors.\nRecord damp and mould by photograph and moisture meter. Do not disturb, wipe or scrape mould growth.\n\n**Electrical items**\nPhotograph the consumer unit and the nearest socket with the covers in place. Do not remove any cover, faceplate or enclosure.\nWhere the form asks whether a fan has a live feed, establish it by operating the existing switch or pull cord only, or by a non contact voltage detector held against the fascia. No test equipment is applied to live parts and nothing is dismantled. If it cannot be settled that way, record it as not established and refer it to the designer.\nTreat every circuit, fan and fitting as live.\nIf an installation is visibly dangerous, such as exposed conductors, burning or scorch marks, stop, tell the occupant not to use it, and report it to the client the same day.\n\n**The boiler and secondary heating**\nPhotograph the boiler and record whether the flue is open or closed. Do not operate, open or interfere with the boiler or any flue.\nWhere the flue is open, note it for the designer because an extract fan can affect it, and do not run any existing fan while in that room for longer than needed to confirm it works.\nWhere a solid fuel fire or stove is in use, do not test fans in that room. Photograph the chimney breast and record it for the designer.\nLeave the room and the property immediately if anyone feels unwell, drowsy or has a headache, and tell the occupant to do the same.\n\n**Lofts, roofs and outside**\nLoft and roof void information is taken from the hatch using a torch, pole camera or borescope. Do not enter.\nRoof tile vent images are taken from ground level. If they cannot be seen from the ground they are recorded as not visible. No ladder is used and no roof is accessed on this inspection.\nExternal fan and wall images are taken from ground level on firm ground, with an eye on traffic, neighbours and uneven paths.\n\n**Finishing**\nPut everything back as found, close doors you opened and leave nothing behind.\nReview the photographs before leaving and delete anything that captures personal documents, people or belongings that are not part of the inspection.\nConfirm with the occupant what happens next and answer their questions about disruption.\nRemove overshoes at the door. Check out with the office.",
+      training: "PAS 2035 ventilation assessment familiarisation; asbestos awareness, in date; lone working briefing; data protection awareness; first aid at work (nominated person)",
+      risks: "Slips, trips and falls in an occupied home; falls from a step stool; electric shock from existing fans, fittings and the consumer unit; products of combustion where an open flue or solid fuel appliance is present; asbestos in a pre 2000 property; mould spores and damp; aggression, pets and vulnerable occupants; lone working; capture of personal information in photographs",
+      sequence: [
+        { step: "Confirm the appointment", detail: "Adult present throughout. Property age, asbestos register and anything known about the occupant obtained from the client." },
+        { step: "Tell the office", detail: "Address, expected duration, finish time and check in arrangements left before travelling." },
+        { step: "Arrive and introduce", detail: "Identification shown. Who is in the property confirmed. Pets put in another room." },
+        { step: "Brief the occupant", detail: "What the inspection involves, how long, that photographs are taken in every room and who sees them. Out of scope rooms and items agreed." },
+        { step: "Room by room survey", detail: "One room at a time, floor checked ahead, torch in unlit spaces, measurements and photographs taken from the floor wherever possible." },
+        { step: "Electrical items", detail: "Covers stay on. Fan feed established by the existing switch or a non contact detector only. Nothing dismantled, nothing tested on live parts." },
+        { step: "Boiler and heating", detail: "Photographed and recorded. Not operated or opened. Fans not run in a room with a solid fuel appliance in use." },
+        { step: "Loft, roof and outside", detail: "Loft viewed from the hatch only. Roof vents photographed from ground level or recorded as not visible. No ladders, no roof access." },
+        { step: "Review and leave", detail: "Property left as found, photographs reviewed and personal material deleted, occupant told what happens next, office checked out." }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle. Nearest A&E identified before travelling to an unfamiliar area.",
+      fire: "Escape route identified on entry. Leave by the nearest exit and call the occupant out with you. Do not return for equipment.",
+      spill: "Not applicable. Nothing is carried that can spill.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — FL S2 — Occupied residential property survey (general)",
+    group: FL_GROUP,
+    fields: {
+      title: "Survey or inspection of an occupied home with the residents in place",
+      equipment: "Torch and head torch with spare batteries; tape measure and laser measure; moisture meter; camera; notebook; disposable overshoes; hand sanitiser and wipes; first aid kit; mobile phone",
+      ppe: "Safety footwear; disposable gloves; disposable overshoes inside the home",
+      raRef: "FL-09, FL-10, FL-15, FL-18",
+      procedure: "**Before the visit**\nConfirm the appointment and that an adult will be present for the whole visit. Do not survey an occupied home with only a child present.\nAsk the client what is known about the occupant: vulnerability, mobility, language, mental health, pets, and any history of aggression or complaint at the address.\nAsk the age of the property. Treat anything built or altered before 2000 as containing asbestos, and do not open anything up on this visit.\nLeave the itinerary with the office: address, expected duration, finish time and check in arrangements.\n\n**Arrival**\nPark clear of the drive and do not block the occupant in.\nShow identification and wait to be invited in. If the person at the door is not expecting you, do not enter. Leave and ring the client.\nConfirm who else is in the property. Ask for dogs to be put in another room and do not continue until they are.\nFit overshoes. Check in with the office.\n\n**Working in someone's home**\nExplain what you are doing before you do it, room by room, and say when you are about to photograph.\nAgree any room or item that is out of scope and give the occupant the chance to move belongings.\nKeep a clear route to the front door. Do not let yourself be shut into a room.\nDo not move the occupant's furniture or possessions. Ask them to move anything in the way.\nDo not use the toilet, accept food or drink beyond a glass of water, or discuss costs, timescales or whether works will be approved.\nWork one room at a time, checking the floor ahead and using the torch in unlit spaces.\nRecord damp and mould by photograph and moisture meter. Do not disturb, wipe or scrape mould growth.\n\n**If the mood changes**\nIf anyone becomes agitated, do not argue, defend the client or stand your ground. Agree with them, say you will pass it on, and leave.\nLeave by the nearest exit, ring the office from the vehicle once clear, and report it the same day.\nNever return to that address alone.\n\n**Finishing**\nPut everything back as found and close any door or hatch you opened.\nReview the photographs and delete anything capturing people, personal documents or belongings not part of the survey.\nTell the occupant what happens next and who will contact them.\nRemove overshoes at the door. Check out with the office.",
+      training: "Lone working briefing; asbestos awareness, in date; data protection awareness; safeguarding and vulnerable persons awareness; conflict avoidance",
+      risks: "Slips, trips and falls on unfamiliar floors and stairs; aggression or intimidation; uncontrolled dogs; allegation arising from working alone in an occupied home; asbestos in a pre 2000 property; damp and mould; lone working; capture of personal information in photographs",
+      sequence: [
+        { step: "Confirm the appointment", detail: "Adult present throughout. Occupant circumstances, pets and any history of aggression obtained from the client." },
+        { step: "Tell the office", detail: "Address, expected duration, finish time and check in arrangements left before travelling." },
+        { step: "Arrive and identify", detail: "Identification shown, invitation waited for. Not entered if the occupant is not expecting the visit." },
+        { step: "Settle the property", detail: "Who else is in, dogs shut away, overshoes on, office checked in." },
+        { step: "Brief the occupant", detail: "What the survey involves, what is photographed, rooms out of scope agreed, belongings moved by the occupant not the surveyor." },
+        { step: "Room by room", detail: "One room at a time, floor checked ahead, torch in unlit spaces, route to the front door kept clear." },
+        { step: "Withdraw if needed", detail: "Any agitation and the visit ends. Agree, leave, ring the office from the vehicle, report the same day." },
+        { step: "Review and leave", detail: "Property as found, photographs reviewed and personal material deleted, occupant told what happens next, office checked out." }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle. Nearest A&E identified before travelling to an unfamiliar area.",
+      fire: "Escape route identified on entry. Leave by the nearest exit and call the occupant out with you. Do not return for equipment.",
+      spill: "Not applicable. Nothing is carried that can spill.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — FL S3 — Void property survey",
+    group: FL_GROUP,
+    fields: {
+      title: "Survey of an empty, void or part stripped property",
+      equipment: "Torch and head torch with spare batteries; second torch kept in a pocket; camera; tape and laser measure; moisture meter; cable detector; pole camera or borescope; sharps resistant gloves; grabber or tongs; disposable coveralls and bags; hand sanitiser and wipes; first aid kit including a large dressing; mobile phone and power bank",
+      ppe: "Safety footwear with a protective sole; hard hat where the structure is damaged or work is overhead; cut and sharps resistant gloves; eye protection; disposable coveralls in fouled or dusty areas; FFP3 respirator (face fit tested) where mould, dust or fouling is significant",
+      raRef: "FL-09, FL-10, FL-11, FL-13, FL-14, FL-15",
+      procedure: "**Before the visit, in writing**\nGet from the client, in writing and before travelling: whether gas, electricity and water are isolated or live; the asbestos register; any structural report; how long the property has stood empty; and whether there has been unauthorised occupation, fly tipping or fire.\nIf the service position cannot be confirmed in writing, treat everything as live.\nAgree who holds the keys, how access works, and who is told when you are out.\nVoid property is a two person visit where the property has stood empty for a long period, has a history of unauthorised occupation, or is in an area the client flags. Do not go alone in those cases.\nLeave the itinerary with the office and agree a hard call in time with an action if you miss it.\n\n**Outside before inside**\nPark where you can leave without reversing or manoeuvring.\nWalk the outside first. Look for structural movement, bulging or cracked walls, missing roof covering, fire damage, open voids, broken glass, needles, and signs of entry or occupation.\nLook up. Check for loose slates, render, flashing and anything overhead before standing near the building.\nCheck the phone signal and check in with the office before entering.\nIf the property looks structurally unsafe from outside, do not enter. Photograph, leave and report.\n\n**Entering**\nKnock, announce yourself loudly and wait. Do not enter silently.\nOpen the door fully and prop it. Keep the entry door as your exit and keep it clear.\nStand at the threshold and look before stepping in. Smell for gas, sewage and decomposition. If you smell gas, do not operate any switch, leave, and ring the emergency gas number from outside.\nIf there is any sign of current occupation, bedding, fresh food or personal belongings, withdraw immediately, leave the property and ring the client. Do not search, do not clear and do not confront.\n\n**Moving through the property**\nTorch on from the moment you enter, whatever the time of day.\nTest every floor at the edge against a wall before committing weight. Never test mid span. Stairs: hand on the string not the handrail, one tread at a time, weight on the outside of the tread.\nKeep your route out in mind in every room. Do not go beyond a point you cannot retrace in the dark.\nTreat every cable, socket, fitting and pipe as live, including ones that look cut.\nDo not touch, lift or move rubbish, bedding or clothing. Use the grabber if something must be moved to see beneath it, and expect sharps.\nDo not enter cellars, voids or any confined space. Inspect from the access point with a torch, pole camera or borescope.\nDo not go into a loft. Inspect from the hatch.\nPresume asbestos and do not open anything up unless a refurbishment and demolition survey covers that exact location.\n\n**Leaving**\nLeave as soon as the survey is done. A void property is not somewhere to sit and write up.\nSecure every door and window you opened and confirm the property is locked.\nBag coveralls before getting in the vehicle. Clean footwear outside. Nothing dusty or fouled in the passenger cabin.\nCheck out with the office and report any defect, hazard or sign of occupation to the client the same day.",
+      training: "Lone working briefing; asbestos awareness, in date; sharps and blood borne virus awareness; first aid at work (nominated person); structural awareness briefing",
+      risks: "Structural collapse and failure of floors and stairs; falls in darkness; contact with live or damaged services; sharps injury and blood borne viruses; infection from vermin, fouling and standing water; unauthorised occupants and aggression; asbestos in a pre 2000 property; mould, dust and spores; entrapment in cellars and voids; lone working with no occupant to raise the alarm",
+      sequence: [
+        { step: "Get the position in writing", detail: "Services isolated or live, asbestos register, structural report, how long void, history of occupation or fire. Unconfirmed means treat as live." },
+        { step: "Decide one person or two", detail: "Long term void, history of unauthorised occupation or a client flagged area means a two person visit." },
+        { step: "Tell the office", detail: "Itinerary left and a hard call in time agreed, with an action if it is missed." },
+        { step: "External walk round", detail: "Structure, roof, overhead hazards, glass, sharps and signs of entry checked before going near the building." },
+        { step: "Enter and assess", detail: "Announce loudly, prop the door, look and smell from the threshold before stepping in." },
+        { step: "Withdraw on any sign of occupation", detail: "Bedding, fresh food or belongings means leave and ring the client. No searching, clearing or confronting." },
+        { step: "Work through the property", detail: "Torch on throughout, floors tested at the edge, route out kept in mind, services treated as live, nothing lifted by hand." },
+        { step: "Voids and lofts from the access point", detail: "No entry to cellars, voids, lofts or confined spaces. Torch, pole camera or borescope only." },
+        { step: "Secure and leave", detail: "Property locked, coveralls bagged, footwear cleaned, office checked out, defects reported the same day." }
+      ],
+      firstaid: "First aid kit including a large dressing carried in the vehicle. A sharps injury is washed, bled, covered and taken to A&E or occupational health the same day, and reported. Nearest A&E identified before travelling.",
+      fire: "Entry door kept clear as the escape route and propped open. Leave immediately on any smell of gas or smoke, operating no switch, and call from outside.",
+      spill: "Not applicable. Nothing is carried that can spill. Standing water and fouling is not disturbed.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | National Gas Emergency 0800 111 999 | Emergency 999"
+    }
+  },
+  {
+    name: "MS — FL S4 — Construction site visit, escorted, Building Regulations compliance",
+    group: FL_GROUP,
+    fields: {
+      title: "Escorted visit to an active construction site to inspect for Building Regulations compliance",
+      equipment: "Camera; notebook or tablet; tape and laser measure; torch; approved drawings and the compliance schedule; mobile phone",
+      ppe: "Safety helmet in date; high visibility jacket or vest; safety footwear with toecap and midsole; eye protection; gloves; any additional PPE the principal contractor specifies at induction",
+      raRef: "FL-21, FL-09, FL-10",
+      procedure: "**Before the visit**\nArrange the visit with the principal contractor. Do not turn up unannounced.\nConfirm the escort by name, the time, and what areas are being inspected.\nAsk what PPE the site requires beyond the standard, and whether an induction is needed or already held.\nLeave the itinerary with the office: site, escort name, expected duration and finish time.\n\n**On arrival**\nReport to the site office and sign in. Do not enter the working area to find anyone.\nAttend the site induction on the first visit. If no induction is offered, do not go on site. Leave and tell the client and the practice why.\nDo not accept an escort in place of an induction. The escort may be called away and you need to know the way out yourself.\nNote the fire assembly point, the first aid arrangements and the welfare facilities at induction.\nFit all PPE before leaving the site office.\n\n**On site**\nStay with the escort at all times. Do not separate to get a better view or a photograph.\nUse the designated walkways, stairs and crossings. Do not take a short cut across a working area.\nDo not enter an exclusion zone, a scaffold, a lift shaft, an excavation or a confined space. If the inspection needs a view from height or within a zone, the principal contractor arranges safe access or it is not inspected on that visit.\nDo not climb a ladder, step onto a scaffold platform or cross a temporary deck.\nStand clear of lifting operations, moving plant and anything overhead. Make eye contact with plant operators before passing.\nDo not touch, operate, move or test anything. Ask the escort to open, lift or expose anything you need to see.\nStop and withdraw if an operation starts near you, and let the escort find a safe position.\n\n**Your role on site**\nYou are there to inspect for Building Regulations compliance, not to supervise the work.\nDo not instruct, direct or correct any operative. Do not tell anyone how or when to do their work.\nRaise anything you see, compliance or safety, with the escort at the time and with the principal contractor and the client in writing the same day.\nIf you see something of immediate danger to life, tell the escort at once and do not leave it to the written report.\n\n**Leaving**\nLeave with the escort, do not peel off.\nSign out. Confirm you are off site.\nCheck out with the office.\nIssue the compliance findings in writing to the client and the principal contractor, and keep the record with the project file.",
+      training: "Site safety awareness, for example CSCS or SMSTS as the site requires; asbestos awareness, in date; lone working briefing; Building Regulations compliance competence for the role",
+      risks: "Struck by moving plant, vehicles or lifting operations; falling objects; falls on uneven and changing ground; falls from height if access is attempted; live construction operations around an escorted visitor; noise and dust; being separated from the escort with no knowledge of the route out",
+      sequence: [
+        { step: "Arrange with the principal contractor", detail: "Escort named, time agreed, areas to be inspected agreed, PPE and induction requirements confirmed." },
+        { step: "Tell the office", detail: "Site, escort name, expected duration and finish time left before travelling." },
+        { step: "Report and sign in", detail: "Site office only. Working areas not entered to find anyone." },
+        { step: "Attend the induction", detail: "No induction means no entry. An escort is not accepted in its place. Fire point, first aid and welfare noted." },
+        { step: "Fit PPE", detail: "Helmet, high visibility, footwear, eye protection and anything else the site specifies, all on before leaving the site office." },
+        { step: "Inspect with the escort", detail: "Escort kept with at all times, designated routes used, nothing touched or operated, exclusion zones and height not entered." },
+        { step: "Observe, do not instruct", detail: "No direction given to any operative. Observations raised with the escort at the time." },
+        { step: "Immediate danger", detail: "Anything of immediate danger to life told to the escort at once, not left to the written report." },
+        { step: "Sign out and report", detail: "Left with the escort, signed out, office checked out, findings issued in writing to the client and the principal contractor the same day." }
+      ],
+      firstaid: "Site first aid arrangements apply and are noted at induction. Personal first aid kit carried in the vehicle.",
+      fire: "Site alarm and assembly point noted at induction. On the alarm, leave with the escort by the nearest route to the assembly point and report in. Do not return for equipment.",
+      spill: "Site arrangements apply. Nothing is carried that can spill.",
+      contacts: "Practice Manager — TBC | Principal contractor site manager — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — FL S5 — Retrofit survey, non intrusive only (no asbestos survey held)",
+    group: FL_GROUP,
+    fields: {
+      title: "Retrofit survey limited to visual inspection because no refurbishment and demolition asbestos survey is held",
+      equipment: "Torch and head torch with spare batteries; moisture meter; camera; tape and laser measure; pole camera or borescope; disposable overshoes for an occupied home; hand sanitiser and wipes; first aid kit; mobile phone",
+      ppe: "Safety footwear with a protective sole; disposable gloves; overshoes in an occupied home; eye protection where overhead condition is poor",
+      raRef: "FL-09, FL-10, FL-11, FL-13, FL-15, FL-18",
+      procedure: "**What this visit is**\nThis is the survey carried out when the client has not provided a refurbishment and demolition asbestos survey covering the areas of interest, and the property was built or altered before 2000.\nNothing is drilled, cut, lifted, unscrewed, opened or sampled. Not a single hatch cover, not a single skirting, not a single ceiling tile.\nThe limitation is agreed with the client in writing before the visit, so nobody expects information the survey cannot produce.\n\n**Before the visit**\nPut the limitation to the client in writing: what you will inspect, what you will not be able to establish, and that a refurbishment and demolition survey is needed before anything is opened up.\nAsk for whatever asbestos information does exist, even a management survey or a register, and read it.\nConfirm whether the property is occupied or void, and whether services are live.\nLeave the itinerary with the office.\n\n**On site**\nFollow the occupied or void method statement for the property type. This statement adds the asbestos limitation on top, it does not replace them.\nPresume asbestos in every material of the right age: textured coatings, ceiling and floor tiles, panels, soffits, rainwater goods, flue and duct insulation, cistern and tank material, bitumen and adhesives.\nInspect by eye, by torch, and through any opening that already exists. Use the pole camera or borescope through an existing gap, never a new one.\nDo not lift a loft hatch cover that is sealed, taped or coated. Do not move a ceiling tile. Do not pull back carpet or lino.\nPhotograph every presumed asbestos containing material and record its location and condition against the information you hold.\nDo not brush, probe, poke, scrape or tap anything to see what it is made of.\n\n**If something is already damaged**\nWork stops the moment damaged suspect material is found. Leave the area, close the door and prevent access.\nDo not clean up, sweep or move anything.\nTell the client duty holder and the practice the same day, in writing.\nWhere there is any chance of contact, bag outer clothing and wash hands before leaving.\nNothing resumes in that area until a licensed contractor or analyst confirms it is safe.\n\n**Reporting**\nState plainly in the report what could not be established and why.\nList every presumed asbestos containing material and its location.\nRecommend the refurbishment and demolition survey needed before design is finalised or anything is opened up.\nDo not fill the gaps with assumptions about build up or construction. An unknown is recorded as unknown.",
+      training: "Asbestos awareness, in date; lone working briefing; retrofit assessment competence for the role; data protection awareness",
+      risks: "Exposure to asbestos fibres from material already damaged; pressure to open up or confirm a build up that cannot be confirmed; incomplete information being read as a complete survey; property condition hazards as per the occupied or void statement",
+      sequence: [
+        { step: "Agree the limitation in writing", detail: "Client told before the visit what will and will not be established, and that a refurbishment and demolition survey is needed before any opening up." },
+        { step: "Read what does exist", detail: "Any register or management survey obtained and read before travelling." },
+        { step: "Apply the property statement", detail: "Occupied or void method statement followed for the property type. This one adds the asbestos limitation on top." },
+        { step: "Presume and photograph", detail: "Every material of the right age presumed to contain asbestos, photographed, located and recorded." },
+        { step: "Nothing opened, nothing disturbed", detail: "No drilling, cutting, lifting, unscrewing, sampling, probing, scraping or tapping. Existing openings only." },
+        { step: "Stop on damage", detail: "Damaged suspect material means leave, close the door, prevent access, no clean up, tell the duty holder and the practice the same day." },
+        { step: "Report the unknowns", detail: "What could not be established stated plainly. Presumed materials listed. Refurbishment and demolition survey recommended. No assumed build ups." }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle.",
+      fire: "Escape route identified on entry. Leave by the nearest exit. Do not return for equipment.",
+      spill: "Not applicable.",
+      contacts: "Practice Manager — TBC | Client duty holder — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — FL S6 — Loft and roof void inspection",
+    group: FL_GROUP,
+    fields: {
+      title: "Inspection of a loft or roof void from the access point for insulation, ventilation and construction build up",
+      equipment: "Head torch and hand torch with spare batteries; pole camera or borescope with a screen; telescopic inspection mirror; tape and laser measure; depth probe for insulation measured from the hatch; camera; dust mask; disposable gloves; first aid kit; mobile phone",
+      ppe: "Safety footwear; disposable gloves; eye protection when looking up into a dusty void; FFP3 respirator (face fit tested) where the void is dusty, fouled or shows mould",
+      raRef: "FL-09, FL-11, FL-12, FL-13, FL-15",
+      procedure: "**The rule for this survey**\nPractice staff do not enter a loft or roof void. The inspection is carried out from the access point.\nThere is no exception for a short look, a small void, or a loft that has a boarded walkway. If the information genuinely cannot be obtained from the hatch, it is obtained by a specialist contractor equipped and trained to enter, or it is recorded as not established.\n\n**Before opening the hatch**\nEstablish the age of the property and read whatever asbestos information is held. Loft hatches, flue insulation, tank material, soffits and textured coatings are all candidates.\nDo not open a hatch that is sealed, taped, painted shut or coated with a textured finish. Record it as not accessible and say why.\nCheck what is below the hatch. Clear the floor underneath and move the occupant's belongings out of the way, or ask them to.\nLook at the ceiling around the hatch for staining, sagging or cracking that suggests a water leak or a failing ceiling.\n\n**Access equipment**\nUse a loft ladder only where it is a fixed, purpose made loft ladder in good condition that deploys properly and seats correctly.\nOtherwise use a stepladder with a platform and a handhold, set on a firm level floor, fully opened and locked, not on a landing edge, not on a stair, and not on carpet over an unknown floor.\nSomeone foots the ladder or the stepladder is tied, unless the floor is firm, level and the ladder is self supporting with a handhold.\nDo not stand on the top two treads. Do not carry anything up. Equipment goes up in a bag on a lanyard or is handed up.\nKeep three points of contact going up and down.\n\n**At the hatch**\nHead and shoulders may go through the hatch opening. The body does not.\nDo not kneel, crawl or step onto joists, boarding or any part of the void.\nTreat the ceiling between the joists as fragile and as something you can fall through.\nLight the void fully before looking. Use the pole camera or borescope for anything beyond arm's length and the mirror for the area immediately around the hatch.\nMeasure insulation depth with the probe from the hatch. Where depth varies across the void, record the range and say it was measured from the access point.\nPhotograph the void, the insulation, any ventilation path at the eaves, any tank, flue or duct, and anything that looks like asbestos.\nDo not disturb insulation, lift boards, move stored items or pull at anything.\nWatch for wasp and bee nests, bats and nesting birds. If any are present, stop, close the hatch, and take advice before anything else happens in that void.\n\n**Closing up**\nClose the hatch properly and leave it as you found it.\nCome down facing the ladder, three points of contact, nothing in your hands.\nPut the occupant's belongings back if you moved them.\nRecord plainly what could be seen from the hatch and what could not, and recommend specialist entry where it matters.",
+      training: "Asbestos awareness, in date; ladder and stepladder user training; working at height awareness; protected species awareness; lone working briefing",
+      risks: "Fall from a ladder or stepladder; fall through the ceiling between joists; disturbing asbestos at the hatch, in flue insulation or in tank material; dust, fibres and mould spores in a closed void; stings and bites from wasps, bees and vermin; disturbing bats or nesting birds; entrapment if the rule against entry is broken",
+      sequence: [
+        { step: "Check the asbestos position", detail: "Property age established and any asbestos information read. Hatch not opened if sealed, taped, painted shut or textured." },
+        { step: "Prepare below", detail: "Floor under the hatch cleared, belongings moved by the occupant, ceiling checked for staining, sagging or cracking." },
+        { step: "Set the access", detail: "Fixed loft ladder if sound and properly seated, otherwise a platform stepladder on firm level floor, fully locked, footed or tied as needed." },
+        { step: "Go up empty handed", detail: "Three points of contact, nothing carried, equipment handed up or raised in a bag. Top two treads not used." },
+        { step: "Head and shoulders only", detail: "Body does not go through the hatch. No kneeling, crawling or stepping onto joists or boards. Ceiling treated as fragile." },
+        { step: "Light and inspect", detail: "Void lit fully, pole camera or borescope beyond arm's length, mirror around the hatch, insulation depth probed from the access point." },
+        { step: "Photograph and record", detail: "Void, insulation, eaves ventilation, tank, flue, duct and anything suspected to contain asbestos. Nothing disturbed or moved." },
+        { step: "Stop for wildlife", detail: "Wasps, bees, bats or nesting birds means close the hatch and take advice before anything else happens in that void." },
+        { step: "Close and report", detail: "Hatch closed as found, descent facing the ladder, belongings replaced, what could and could not be seen recorded plainly." }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle. Any sting with a history of allergy is treated as an emergency and 999 called.",
+      fire: "Escape route identified on entry. Come down and leave by the nearest exit. Do not return for equipment.",
+      spill: "Not applicable.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | Emergency 999"
+    }
+  },
+  {
+    name: "MS — FL S7 — External fabric survey",
+    group: FL_GROUP,
+    fields: {
+      title: "External inspection of elevations, roof covering and wall construction from ground level",
+      equipment: "Camera with a zoom or a telephoto lens; binoculars; tape and laser measure; wall thickness measurement taken at an existing opening; moisture meter; pole camera; notebook; high visibility jacket; first aid kit; mobile phone",
+      ppe: "Safety footwear; high visibility jacket when working near a road, a drive or a parking area; gloves; eye protection in wind or where render is spalling; hard hat where the building is damaged or anything is loose overhead",
+      raRef: "FL-09, FL-10, FL-12, FL-17",
+      procedure: "**The rule for this survey**\nThis survey is carried out from the ground. No ladder is used, no roof is accessed, no scaffold is climbed.\nAnything that cannot be seen from the ground is obtained by zoom lens, binoculars, pole camera or a drone flight under the separate drone statement, or it is recorded as not established.\n\n**Before starting**\nTell the occupant or the neighbour what you are doing before you start photographing a building, especially where you will be near their boundary or pointing a camera towards their windows.\nCheck whether any part of the inspection needs you to stand on land that is not the client's. Get permission first.\nCheck the weather. Do not survey an elevation in high wind where render, slates, flashing or aerials could come down, and do not use a pole camera in wind.\nLeave the itinerary with the office.\n\n**Looking up safely**\nBefore standing close to any elevation, stand back and look up. Check for loose or slipped slates and tiles, cracked or bulging render, failing flashing, loose aerials and satellite dishes, overhanging branches and failing rainwater goods.\nDo not stand directly beneath anything loose. Photograph it from an angle instead.\nKeep out from the wall by at least the height of anything that could fall, wherever the ground allows.\nWear the hard hat where the building is visibly damaged, where render is spalling, or where anything overhead is loose.\n\n**Ground conditions and the public**\nWatch the ground, not the viewfinder. Stop walking before you look up or through the camera.\nExpect uneven paving, soft ground, open gullies, unguarded drops into basement areas, manhole covers, garden debris and ice.\nDo not step over or onto a low wall, a fence, a flat roof, a bay roof, a wheelie bin or any garden structure to get a view.\nWhere you are working on or beside a road or a drive, wear the high visibility jacket, face oncoming traffic, and do not stand in the carriageway. If a view needs the carriageway, it is not taken.\nKeep clear of the occupant's and the neighbour's vehicles and do not block access.\n\n**Measurements and wall construction**\nTake the wall thickness at an existing opening, a reveal, a vent or an open window. Do not drill, core or probe anything on this survey.\nWhere the construction cannot be established without opening up, record it as not established and recommend the intrusive survey separately.\nRecord moisture readings externally where it is safe to reach without equipment.\n\n**Finishing**\nReview the photographs and remove anything that captures a neighbour's window, garden or occupants.\nLeave gates and access as you found them.\nCheck out with the office.\nRecord plainly which elevations and which roof slopes could not be seen, and from what position each was inspected.",
+      training: "Lone working briefing; working at height awareness including the rule against ladders on this survey; data protection awareness; drone competence where a flight is used",
+      risks: "Falling slates, tiles, render and flashing; falls on uneven ground, into basement areas and over garden obstacles; being struck by a vehicle on a road or a drive; falls if access is attempted onto a wall, a bay roof or a structure; wind catching a pole camera; neighbour complaint and privacy objection",
+      sequence: [
+        { step: "Tell people what you are doing", detail: "Occupant and affected neighbours told before photography starts. Permission obtained for any position on land that is not the client's." },
+        { step: "Check the weather", detail: "No survey of an elevation in high wind. No pole camera in wind." },
+        { step: "Stand back and look up", detail: "Loose slates, cracked or bulging render, failing flashing, aerials, branches and rainwater goods identified before approaching the wall." },
+        { step: "Keep your distance", detail: "Out from the wall by the height of anything that could fall where the ground allows. Hard hat where the building is damaged or anything is loose." },
+        { step: "Mind the ground", detail: "Stop walking before looking up or through the camera. Uneven paving, open gullies, basement drops and debris expected." },
+        { step: "Stay off structures", detail: "Nothing climbed, stepped onto or over. No ladders, no roofs, no scaffolds, no bay roofs, no bins." },
+        { step: "Traffic", detail: "High visibility jacket near a road or a drive, facing oncoming traffic, never standing in the carriageway. A view needing the carriageway is not taken." },
+        { step: "Measure at existing openings", detail: "Wall thickness taken at a reveal, vent or open window. No drilling, coring or probing." },
+        { step: "Review and record", detail: "Neighbour privacy removed from the photographs, access left as found, office checked out, every elevation and slope recorded with the position it was inspected from and anything not established said plainly." }
+      ],
+      firstaid: "Personal first aid kit carried in the vehicle.",
+      fire: "Not applicable to an external survey. Move away from the building and call 999 if a fire is discovered, and alert the occupant.",
+      spill: "Not applicable.",
+      contacts: "Practice Manager — TBC | Client contact — TBC | Emergency 999"
+    }
   }
 ];
 
@@ -4333,7 +4594,9 @@ const LS_PREFIX = "easytravel.ramsv1.";
    the brand name renames the app for a client, but the produced-by line,
    the footer and the ring mark stay AHS on every page so a rebranded copy
    still says who built it. Change the wording here and it changes everywhere. */
-const AHS_PRODUCER = "ARCHER HEALTH AND SAFETY";
+const AHS_PRODUCER = "AHS Ltd";
+const AHS_WEBSITE  = "archerhs.co.uk";
+const AHS_URL      = "https://archerhs.co.uk";
 const AHS_TEAL = "#4bbfd6";
 const AHS_GREY = "#8b9096";
 
@@ -5094,7 +5357,6 @@ function applyBrandingFromStorage(){
   if($("#brandTextIn") && text) $("#brandTextIn").value = text;
   if($("#brandNameIn")) $("#brandNameIn").value = localStorage.getItem("brand.name") || "";
   if($("#brandTaglineIn")) $("#brandTaglineIn").value = localStorage.getItem("brand.tagline") || "";
-  if($("#brandWebsiteIn")) $("#brandWebsiteIn").value = localStorage.getItem("brand.website") || "";
 }
 
 /* ════════════════════════════════════════════════════════════════════
@@ -5122,7 +5384,7 @@ function buildSheetFooter(){
   f.innerHTML =
       '<div class="sf-left">' + AHS_FOOTER_MARK
     +   '<span><span class="sf-producer">' + AHS_PRODUCER + '</span>'
-    +   '<span class="sf-contact" data-brand="website">archerhs.co.uk</span></span>'
+    +   '<span class="sf-contact">' + AHS_WEBSITE + '</span></span>'
     + '</div>'
     + '<div class="sf-right"><span class="sf-page"></span><span class="sf-date"></span></div>';
   return f;
@@ -5140,6 +5402,8 @@ function ensureSheetFooters(){
         if(mid) mid.remove();
         const pr = had.querySelector(".sf-producer");
         if(pr){ pr.removeAttribute("data-brand"); pr.textContent = AHS_PRODUCER; }
+        const wb = had.querySelector(".sf-contact");
+        if(wb){ wb.removeAttribute("data-brand"); wb.textContent = AHS_WEBSITE; }
         return;
       }
       const f = buildSheetFooter();
@@ -5198,7 +5462,7 @@ function stampPdfFooters(pdf, activeTab){
     return el ? (el.textContent || "").trim() : "";
   };
   const producer = AHS_PRODUCER;
-  const website  = txt(".sf-contact");
+  const website  = AHS_WEBSITE;
   const date     = footerDateStr(activeTab);
 
   const W = pdf.internal.pageSize.getWidth();
@@ -5238,6 +5502,9 @@ function stampPdfFooters(pdf, activeTab){
     let centreW = centreText ? pdf.getTextWidth(centreText) : 0;
     const centreStart = W / 2 - centreW / 2;
 
+    // The producer name is always a link to the site. The website text is
+    // added next to it when there is room, and is part of the same link.
+    let linkEnd = leftEnd;
     if(website){
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(7);
@@ -5245,8 +5512,10 @@ function stampPdfFooters(pdf, activeTab){
       if(!centreText || leftEnd + 1.6 + webW + 3 <= centreStart){
         pdf.setTextColor(107, 114, 128);
         pdf.text("· " + website, leftEnd + 1.6, base);
+        linkEnd = leftEnd + 1.6 + webW;
       }
     }
+    pdf.link(M, base - 3.2, linkEnd - M, 4.4, { url: AHS_URL });
 
     // Centre — prepared for. Trimmed with an ellipsis if it would still reach
     // the producer name on the left.
@@ -5293,7 +5562,6 @@ function wireBrandPanel(){
   $("#brandTextIn").addEventListener("input", e=> set("text", e.target.value));
   $("#brandNameIn").addEventListener("input", e=> set("name", e.target.value));
   $("#brandTaglineIn").addEventListener("input", e=> set("tagline", e.target.value));
-  $("#brandWebsiteIn").addEventListener("input", e=> set("website", e.target.value));
   $("#brandLogoFile").addEventListener("change", e=>{
     const f = e.target.files[0]; if(!f) return;
     const r = new FileReader();
@@ -5409,8 +5677,12 @@ window.exportPDF = async function(){
     const pageWmm = pdf.internal.pageSize.getWidth();
     const pageHmm = pdf.internal.pageSize.getHeight();
     const marginMm = 10;
+    // The footer is stamped by stampPdfFooters at pageH-9.4 (rule) and
+    // pageH-5.2 (text). Content must stop above that band or the tables bleed
+    // into it. Everything that places an image works to this number.
+    const footerBandMm = 13;
     const usableWmm = pageWmm - marginMm*2;
-    const usableHmm = pageHmm - marginMm*2;
+    const usableHmm = pageHmm - marginMm - footerBandMm;
 
     // Helper: render one DOM node to PNG and add it as a single PDF page,
     // scaling DOWN to fit within usable area. One DOM node = one PDF page.
@@ -5477,7 +5749,6 @@ window.exportPDF = async function(){
         pdf.addImage(imgData, "PNG", marginMm, marginMm, imgWmm, imgHmm);
       } else {
         const pxPerMm = canvas.width / imgWmm;
-        const sliceHpx = Math.floor(usableHmm * pxPerMm);
         function pickBreak(sortedSet, proposed, currentTop){
           let best = -1;
           for(let i = 0; i < sortedSet.length; i++){
@@ -5497,6 +5768,9 @@ window.exportPDF = async function(){
         const continuationExtraMm = 6; // extra breathing room on continuation pages
         let yPx = 0, pageIdx = 0;
         while(yPx < canvas.height){
+          // Height left on THIS page: the continuation offset eats into it.
+          const topMm = pageIdx > 0 ? marginMm + continuationExtraMm : marginMm;
+          const sliceHpx = Math.floor((pageHmm - footerBandMm - topMm) * pxPerMm);
           const proposed = Math.min(yPx + sliceHpx, canvas.height);
           const sliceEnd = (proposed >= canvas.height) ? canvas.height : findSafeBreak(proposed, yPx);
           const sliceHeight = sliceEnd - yPx;
@@ -5507,8 +5781,7 @@ window.exportPDF = async function(){
           slice.getContext("2d").drawImage(canvas, 0, yPx, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
           if(pageIdx > 0) pdf.addPage("a4", pdfOrientation);
           const sliceHmm = sliceHeight / pxPerMm;
-          const yMm = pageIdx > 0 ? marginMm + continuationExtraMm : marginMm;
-          pdf.addImage(slice.toDataURL("image/png"), "PNG", marginMm, yMm, imgWmm, sliceHmm);
+          pdf.addImage(slice.toDataURL("image/png"), "PNG", marginMm, topMm, imgWmm, sliceHmm);
           yPx = sliceEnd;
           pageIdx++;
         }
@@ -5608,11 +5881,10 @@ window.exportPDF = async function(){
           if(!isFirst) pdf.addPage("a4", pdfOrientation);
           isFirst = false;
 
-          if(imgHmm <= pageHmm){
+          if(imgHmm <= pageHmm - footerBandMm){
             pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, imgWmm, imgHmm);
           } else {
             const pxPerMm = canvas.width / imgWmm;
-            const sliceHpx = Math.floor(pageHmm * pxPerMm);
 
             // Try MAJOR break first. If none fits (section taller than a page),
             // fall back to MINOR (tr boundary). If still none, use proposed.
@@ -5636,6 +5908,8 @@ window.exportPDF = async function(){
             const continuationTopMm = 8; // breathing room above continuation tables
             let yPx = 0, sliceIdx = 0;
             while(yPx < canvas.height){
+              const topMm = sliceIdx > 0 ? continuationTopMm : 0;
+              const sliceHpx = Math.floor((pageHmm - footerBandMm - topMm) * pxPerMm);
               const proposed = Math.min(yPx + sliceHpx, canvas.height);
               const sliceEnd = (proposed >= canvas.height)
                 ? canvas.height
@@ -5648,8 +5922,7 @@ window.exportPDF = async function(){
               slice.getContext("2d").drawImage(canvas, 0, yPx, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
               if(sliceIdx > 0) pdf.addPage("a4", pdfOrientation);
               const sliceHmm = sliceHeight / pxPerMm;
-              const yOffsetMm = sliceIdx > 0 ? continuationTopMm : 0;
-              pdf.addImage(slice.toDataURL("image/png"), "PNG", 0, yOffsetMm, imgWmm, sliceHmm);
+              pdf.addImage(slice.toDataURL("image/png"), "PNG", 0, topMm, imgWmm, sliceHmm);
               yPx = sliceEnd;
               sliceIdx++;
             }
