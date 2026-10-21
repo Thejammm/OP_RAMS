@@ -5778,12 +5778,34 @@ function paintRiskBadge(sel){
   const cell = sel.parentElement;
   const badge = cell.querySelector(".badge");
   if(!badge) return;
+  let v = sel.value;
+
+  /* A hazard row is saved as HTML, and a <select> only carries its choice
+     into HTML through the selected ATTRIBUTE — which picking an option
+     does NOT set. So a restored row came back with an empty select while
+     the badge still read LOW, MEDIUM or HIGH, and this function then
+     blanked the badge to match. Every reload silently threw away every
+     risk rating on the sheet, and the exported PDF printed empty boxes.
+
+     Two halves to the fix. Read the badge back when the select has lost
+     its value, because the badge is the rating the assessor gave. And
+     write the attribute every time, so the next save actually carries it.
+     The first half heals assessments and backups saved before this. */
+  if(!v){
+    const t = (badge.textContent || "").trim().toLowerCase();
+    if(t === "low" || t === "medium" || t === "high"){ v = t; sel.value = t; }
+  }
+
   badge.classList.remove("low","med","high");
   badge.textContent = "";
-  const v = sel.value;
   if(v==="low"){ badge.classList.add("low"); badge.textContent="LOW"; }
   else if(v==="medium"){ badge.classList.add("med"); badge.textContent="MEDIUM"; }
   else if(v==="high"){ badge.classList.add("high"); badge.textContent="HIGH"; }
+
+  Array.prototype.forEach.call(sel.options, o => {
+    if(v && o.value === v) o.setAttribute("selected", "selected");
+    else o.removeAttribute("selected");
+  });
 }
 
 /* ════════════════════════════════════════════════════════════════════
