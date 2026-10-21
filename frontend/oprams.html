@@ -3388,42 +3388,32 @@ const SNIPPETS_RA = [
     group: ATT_GROUP,
     rows: [
       {
-        hazard: "01 Combustion fumes and carbon monoxide",
-        who: "Residents, neighbours and testers",
-        how: "Pressure changes draw combustion products into the home or adjacent dwellings, causing poisoning or fire.",
+        hazard: "01 Occupants and pets contained by the sealed doorway",
+        who: "Residents, children, visitors, carers and pets",
+        how: "The fan seals the door the household normally uses, so anyone who needs to get out, or a pet that panics, cannot simply walk out.",
         initial: "high",
-        controls: "Confirm appliances are safely off, cannot restart and are cool, with no embers or smouldering fuel. Use only authorised user controls, within competence. Do not disconnect gas, interfere with flues or rely on a thermostat alone. Obtain competent gas or combustion advice where arrangements are uncertain.<br><br>Hold point: Stop for any combustion uncertainty, fumes, CO alarm, gas smell or symptoms. Do not test with a live fire, embers or an appliance that may operate.",
+        controls: "Occupants and pets in an agreed designated room, unlocked, for the duration of the test.<br><br>An agreed signal stops the fan and reopens the doorway, immediately and without question.<br><br>Hold point: Stop and reopen the doorway the moment anyone asks, or if any occupant cannot safely remain in the agreed room.",
         residual: "medium",
-        action: "Lead tester and supervisor",
+        action: "Lead tester",
         notes: [
-          { kind: "Equipment", text: "Personal CO monitor maintained and checked as its manufacturer requires.", status: "have" },
-          { kind: "Training", text: "Combustion appliance awareness held. Gas work is referred to a Gas Safe registered engineer.", status: "have" }
+          { kind: "Information", text: "The designated room is agreed with the resident at booking, not on the doorstep.", status: "have" }
         ]
       },
       {
-        hazard: "02 Resident needs and interruption of essential services",
-        who: "Residents, carers, children and visitors",
-        how: "Noise, temporary service changes or restricted access cause distress, illness or loss of essential support.",
-        initial: "high",
-        controls: "Do not interrupt oxygen, ventilation support, essential heating or medical power. Keep oxygen away from ignition sources. Postpone if a safe arrangement is unavailable.<br><br>Hold point: Stop if a resident withdraws agreement, becomes distressed or cannot safely tolerate the test.",
-        residual: "low",
-        action: "Landlord liaison and lead tester"
-      },
-      {
-        hazard: "03 Restricted escape and fire precautions",
+        hazard: "02 Restricted escape and fire precautions",
         who: "Everyone in the dwelling and shared access areas",
         how: "Fan equipment blocks the sole exit or compromises communal escape during an emergency.",
         initial: "high",
-        controls: "Check escape before installing the fan. Keep stairs and communal routes clear and fire doors functional. Where the fan occupies the only exit, the assembly must come out without keys or tools. Keep immediate access to the release and remain at the controls. If prompt escape cannot be assured for every occupant, relocate occupants safely or change the arrangement before testing. Never disable smoke or CO alarms. No smoking or naked flames.<br><br>Hold point: Stop if any escape route becomes unsafe or a fire alarm activates. Life safety takes priority over results.",
+        controls: "Every occupant has a usable escape route for the whole test.<br><br>The fan assembly comes out without keys or tools, with the release within reach.<br><br>Smoke and CO alarms stay live. No smoking, no naked flames.<br><br>Hold point: Stop if any escape route becomes unsafe or a fire alarm activates. Life safety takes priority over results.",
         residual: "medium",
         action: "Lead tester"
       },
       {
-        hazard: "04 Fan blades and unstable equipment",
+        hazard: "03 Contact with the operating fan, or an unstable frame",
         who: "Testers, residents, children and pets",
         how: "Contact with rotating blades, intake suction or falling frame causes injury.",
         initial: "high",
-        controls: "Correct frame and secured panel, with the manufacturer guards fitted. Establish a supervised exclusion area on both sides of the fan, including any public-facing doorway. Keep hair, clothing, fingers and objects away from intake and outlet. Switch off, isolate and wait for complete stop before adjustments or removal.<br><br>Hold point: Stop for failed guards, movement, vibration or uncontrolled access to the fan.",
+        controls: "Manufacturer guards fitted, and a supervised exclusion zone both sides of the fan while it turns.<br><br>The fan is isolated and fully stopped before anyone touches it.<br><br>Hold point: Stop for failed guards, movement, vibration or uncontrolled access to the fan.",
         residual: "low",
         action: "Lead tester",
         notes: [
@@ -3431,11 +3421,11 @@ const SNIPPETS_RA = [
         ]
       },
       {
-        hazard: "05 Electric shock and fire",
+        hazard: "04 Electric shock and fire from the equipment",
         who: "Testers and occupants",
         how: "Faulty equipment, unsafe sockets, wet connections or overloaded leads cause shock, burns or fire.",
         initial: "high",
-        controls: "Plugs, leads, casing and supply checked before use. Use suitable RCD protection as a secondary precaution, keep connections dry and follow manufacturer extension-lead limits. Do not daisy-chain leads or use damaged sockets. Do not unplug essential resident equipment or improvise electrical repairs. Isolate defective equipment and label it out of service.<br><br>Hold point: Stop for damaged equipment, unsafe supply, overheating, water ingress or repeated tripping.",
+        controls: "Only inspected, maintained equipment, on a sound supply, through suitable RCD protection.<br><br>Defective equipment isolated and labelled out of service.<br><br>The resident’s own essential equipment stays plugged in.<br><br>Hold point: Stop for damaged equipment, unsafe supply, overheating, water ingress or repeated tripping.",
         residual: "medium",
         action: "Lead tester and supervisor",
         notes: [
@@ -3443,20 +3433,20 @@ const SNIPPETS_RA = [
         ]
       },
       {
-        hazard: "06 Trips, moving doors and fragile materials",
+        hazard: "05 Trips, moving doors and fragile materials",
         who: "Residents, visitors and testers",
         how: "Leads and hoses cause falls. Pressure changes slam doors or dislodge loose components.",
         initial: "medium",
-        controls: "Keep lighting adequate and avoid trailing leads across escape paths. Survey loose glazing, unstable hatches, lightweight panels and damaged doors before testing. Control pressure gradually and stay within approved equipment and property limits. Do not use the resident to hold a door or panel.<br><br>Hold point: Stop for slamming doors, unexpected movement, breakage or inability to keep circulation safe.",
+        controls: "Clear, lit routes with nothing trailing across an escape path.<br><br>Pressure raised gradually and kept within the equipment and property limits.<br><br>No person holds a door or panel by hand.<br><br>Hold point: Stop for slamming doors, unexpected movement, breakage or inability to keep circulation safe.",
         residual: "low",
         action: "Lead tester"
       },
       {
-        hazard: "07 Manual handling and access",
+        hazard: "06 Manual handling the fan, frame and cases",
         who: "Testers and anyone near moving equipment",
         how: "Carrying fans, frames and cases over steps or stairs causes strain, falls or impact injury.",
         initial: "medium",
-        controls: "Separate loads into manageable components and use a trolley on suitable surfaces. Assess weight, grip, individual ability, stairs and carrying distances. Use two trained operatives where handling cannot be managed safely by one. Do not ask residents to carry equipment. Keep vision clear, avoid lifting over furniture and use safe footwear. No access onto chairs or improvised platforms.<br><br>Hold point: Stop for unsafe stairs, excessive loads or an unavailable handling assistant.",
+        controls: "Nothing is lifted that one person cannot handle safely: loads split, trolley or second operative.<br><br>Residents never handle equipment.<br><br>No standing on furniture or improvised platforms.<br><br>Hold point: Stop for unsafe stairs, excessive loads or an unavailable handling assistant.",
         residual: "low",
         action: "Supervisor and test team",
         notes: [
@@ -3464,70 +3454,16 @@ const SNIPPETS_RA = [
         ]
       },
       {
-        hazard: "08 Dust, mould, asbestos and contaminated air",
-        who: "Residents, neighbours and testers",
-        how: "Pressure-induced air movement or preparation disturbs contaminated or suspect materials.",
-        initial: "high",
-        controls: "Review available property hazard and asbestos information. Visually check test locations without disturbing materials. Avoid applying tape to suspect coatings or pulling away fragile finishes. No drilling, scraping, sweeping debris or opening inaccessible voids. Defer for damaged suspect asbestos, significant loose contamination, sewage, sharps or uncontrolled infestation. Arrange specialist assessment or cleaning. PPE alone does not make the test acceptable.<br><br>Hold point: Stop if suspect material is disturbed or contaminated air enters the occupied space.",
-        residual: "low",
-        action: "Lead tester and landlord",
-        notes: [
-          { kind: "Training", text: "Asbestos awareness training current.", status: "have" }
-        ]
-      },
-      {
-        hazard: "09 Lone working, violence and safeguarding",
+        hazard: "07 Lone working, violent occupants and safeguarding",
         who: "Testers and residents",
         how: "An operative becomes isolated, threatened or unable to summon help. Inadequate supervision creates safeguarding concerns.",
         initial: "high",
-        controls: "Maintain communication and a safe withdrawal route. Use two-person attendance where assessed necessary. Do not enter if threatening behaviour, intoxication or uncontrolled animals makes work unsafe. Do not work with a child alone as the only person present.<br><br>Hold point: Withdraw for threats, unsafe access, loss of required communications or unmet supervision arrangements.",
+        controls: "Check in, check out and an overdue escalation running for every visit.<br><br>No entry, and withdrawal, where behaviour, intoxication or loose animals make it unsafe.<br><br>Never the only person present with a child.<br><br>Hold point: Withdraw for threats, unsafe access, loss of required communications or unmet supervision arrangements.",
         residual: "low",
         action: "Supervisor and landlord liaison",
         notes: [
           { kind: "Monitoring", text: "Lone worker check in and out with a named monitor and an overdue escalation process.", status: "have" },
           { kind: "Information", text: "Safeguarding concerns go through the employer and landlord procedure. Reported, not investigated.", status: "have" }
-        ]
-      },
-      {
-        hazard: "10 Noise, weather and exposure",
-        who: "Residents, neighbours and test team",
-        how: "Fan noise masks warnings or causes harm or distress. Rain, wind and cold create unsafe conditions.",
-        initial: "medium",
-        controls: "Keep people away from the fan and minimise running time. Maintain audible emergency communication. Check wind, rain and temperature against method and equipment limits. Protect electrical equipment from weather. Avoid prolonged loss of heating or ventilation for vulnerable residents.<br><br>Hold point: Stop for distress, unsafe weather, loss of communication or unacceptable thermal conditions.",
-        residual: "low",
-        action: "Lead tester",
-        notes: [
-          { kind: "Equipment", text: "Noise assessment held for the fan in use. Hearing protection provided where it is required.", status: "have" }
-        ]
-      },
-      {
-        hazard: "11 Temporary sealing and service reinstatement",
-        who: "Residents, neighbours and landlord",
-        how: "Temporary seals or altered controls remain in place, leaving inadequate ventilation or unsafe appliances.",
-        initial: "high",
-        controls: "A numbered preparation and reinstatement log, started before any setting is changed. Only prepare openings allowed by the approved method after resolving combustion safety. Do not seal shared systems or life-safety equipment. Every seal removed and accounted for before leaving. Competent recommissioning arranged where it is needed.<br><br>Hold point: Do not leave with unresolved safety-critical changes. Notify the landlord, keep unsafe equipment out of use and arrange a safe alternative for residents.",
-        residual: "medium",
-        action: "Lead tester with independent check where required"
-      },
-      {
-        hazard: "12 Pressure transfer and neighbouring dwellings",
-        who: "Residents, neighbours and test team",
-        how: "Pressure transfers via ducts, risers or openings, affecting neighbouring combustion or air quality.",
-        initial: "high",
-        controls: "Confirm the dwelling boundary and identify shared ducts, flues, service risers, corridors and communicating spaces. Obtain landlord coordination and specialist advice when needed. Do not tape communal ventilation or fire/smoke control equipment. If an effect on a neighbouring home cannot be safely excluded or controlled, defer the test. A guarded or multi-zone test needs its own agreed method and assessment.<br><br>Hold point: Stop for unexpected smells, smoke, pressure effects or complaints from adjoining homes.",
-        residual: "medium",
-        action: "Supervisor, lead tester and landlord"
-      },
-      {
-        hazard: "13 Occupants and pets contained by the sealed doorway",
-        who: "Residents, children, visitors, carers and pets",
-        how: "The fan seals the door the household normally uses, so anyone who needs to get out, or a pet that panics, cannot simply walk out.",
-        initial: "high",
-        controls: "A designated room agreed before the fan goes in: away from the test zone, suitable for whoever is in it, and never locked. An agreed way for the occupant to call the tester, and an agreed signal that stops the test. On that signal the fan stops and the doorway is reopened. No discussion, no finishing the run. Pets in the designated room or off the property. Never loose in the test zone. The room has to suit children, anyone with mobility needs and anyone who cannot settle in one place. If no such room exists, do not test.<br><br>Hold point: Stop and reopen the doorway the moment anyone asks, or if any occupant cannot safely remain in the agreed room.",
-        residual: "medium",
-        action: "Lead tester",
-        notes: [
-          { kind: "Information", text: "The designated room is agreed with the resident at booking, not on the doorstep.", status: "have" }
         ]
       }
     ]
@@ -5040,13 +4976,11 @@ const SNIPPETS_MS = [
     name: "MS — ATT RA 01 — Air tightness testing, occupied social housing",
     group: ATT_GROUP,
     fields: {
-      title: "Air tightness testing in occupied social housing, non-intrusive blower door test of one dwelling",
-      equipment: "Provide a suitable fan with guards, frame/panel, calibrated pressure and airflow instruments, hoses, software, environmental measuring equipment required by the method, maintained leads and suitable RCD protection, removable seals, a seal log, communication device, first-aid kit and maintained personal CO monitor. Check the monitor as its manufacturer requires.",
-      ppe: "Use suitable footwear and handling gloves. Select hearing protection from the noise assessment. Any RPE requires proper selection, instruction and face-fit testing where applicable. PPE does not authorise testing in uncontrolled contamination.",
-      raRef: "ATT RA 01 v1.1",
+      title: "Air tightness testing in occupied social housing, non-intrusive blower door test of one dwelling", equipment: "Provide a suitable fan with guards, frame/panel, calibrated pressure and airflow instruments, hoses, software, environmental measuring equipment required by the method, maintained leads and suitable RCD protection, removable seals, a seal log, communication device, first-aid kit and maintained personal CO monitor. Check the monitor as its manufacturer requires.",
+      ppe: "Use suitable footwear and handling gloves. Select hearing protection from the noise assessment. Any RPE requires proper selection, instruction and face-fit testing where applicable. PPE does not authorise testing in uncontrolled contamination.", raRef: "ATT RA 01 v1.1",
       procedure: "**1 PLANNING AND ARRIVAL**\n**Before the visit**\nConfirm the work order, address, test purpose, property boundaries, relevant drawings and agreed reporting requirements. Check equipment suitability and calibration status.\nPlan parking, delivery and handling routes before unloading.\nBook the appointment through the landlord. Explain likely noise, temporary changes and access needs without promising a fixed test duration. Ask about pets, care routines and communication or mobility needs.\nReview available asbestos and property hazard information, combustion and ventilation systems, shared flues or ducts, and proportionate access or violence alerts. Resolve uncertainty with the supervisor.\nArrange two-person attendance where handling, resident support, safeguarding, public access or lone-working risks require it. Confirm check-in times and escalation with a named monitor.\n\n**Equipment and PPE**\nProvide a suitable fan with guards, frame/panel, calibrated pressure and airflow instruments, hoses, software, environmental measuring equipment required by the method, maintained leads and suitable RCD protection, removable seals, a seal log, communication device, first-aid kit and maintained personal CO monitor. Check the monitor as its manufacturer requires.\nUse suitable footwear and handling gloves. Select hearing protection from the noise assessment. Any RPE requires proper selection, instruction and face-fit testing where applicable. PPE does not authorise testing in uncontrolled contamination.\n\n**Arrival and resident briefing**\nPark and unload safely. Use planned handling routes and aids. Show identification, confirm permission to enter and explain the work in plain language.\nArrange a carer, interpreter or second operative where the resident needs one.\nConfirm everyone present, including visitors and carers. Agree where residents and pets will remain, how they can contact the tester and how they will escape. Children remain with a responsible adult.\nCheck essential medical power, oxygen, ventilation support, heating and care needs. Do not interrupt essential support. Arrange safe alternatives with the landlord and carer before proceeding.\nAgree permission for necessary photographs and avoid personal items or identifying information. Record only the resident information needed to control the work.\nHOLD POINT 1: do not begin preparation if consent, communication, supervision, safe escape or essential support arrangements are unresolved. Postpone and notify the landlord. Record refusal or no access without pressuring the resident.\n\n**The designated room**\nAgree the designated room before the fan goes anywhere near the door. It must be away from the test zone, comfortable for however long the test takes, and it is never locked.\nWalk the occupant through it: where they will be, how they call you, and the signal that stops the test. Check they have understood, not just heard.\nPut pets in that room with them, or arrange for the pets to be off the property. A pet loose in the test zone stops the test.\nSatisfy yourself the room suits everyone who will be in it, including children, anyone with mobility needs and anyone who will not settle. Where no such room exists, the test does not go ahead.\nOn the agreed signal, stop the fan and reopen the doorway before anything else. The run can be repeated; being shut in cannot be undone.\n\n**2 PROPERTY CHECKS AND TEST PREPARATION**\n**Combustion and neighbouring spaces**\nIdentify gas, oil, solid-fuel and other combustion appliances, pilots, open fires and shared or adjoining flue arrangements. Confirm they are safely off, cannot restart and are cool, with no embers or smouldering fuel. Use only authorised user controls within competence. Do not rely on a thermostat alone, disconnect gas, alter flues or undertake gas work.\nRefer uncertain appliance or shared-system arrangements to the supervisor and a competent specialist, such as an appropriately qualified Gas Safe registered engineer for gas work. Confirm pressure transfer cannot endanger adjacent homes. A CO monitor is additional warning only and does not replace these precautions.\n\n**Condition, equipment location and escape**\nInspect the work area for damage, loose glazing or panels, soot, mould, suspect asbestos, unsafe wiring, sharps or other contamination. Do not disturb fabric or tape suspect materials.\nConfirm the supply voltage and rating suit the equipment before connecting it.\nConfirm a safe electrical supply and inspect equipment and leads. Do not use damaged sockets, daisy-chain extensions or unplug essential resident equipment.\nChoose the fan location and maintain clear circulation and communal routes. Establish control of both sides of the fan, including any public-facing side.\nIf the fan uses the only exit, demonstrate rapid stopping, isolation and removal without tools or keys. Keep the release accessible. Where prompt escape cannot be assured, change the arrangement or relocate occupants safely before testing.\n\n**Recorded preparation**\nRecord the original position or setting of each ventilation control, opening and appliance control before making changes. Prepare only the openings permitted by the approved test method. Log each temporary seal and its location. Do not seal shared systems or fire/smoke control equipment. Keep smoke and CO alarms operational.\nSet internal doors and external openings as required by the approved method, controlling slamming and pinch hazards. Fit the frame and fan securely, retain guards, protect finishes, secure hoses and route leads away from feet and exits. Keep children, pets, clothing and loose objects clear.\nHOLD POINT 2: tester and, where required, supervisor verify all critical controls in ATT RA 01. Confirm no combustion appliance can fire, no live fire or embers remain, escape is immediately available and the resident arrangement remains safe. Record approval before energising the fan.\n\n**3 TEST OPERATION AND MEASUREMENT**\n**Instrument setup**\nConfirm the test boundary and check envelope-area or volume information used in calculations. Record relevant site conditions and equipment identifiers.\nPosition pressure reference tubes and environmental instruments according to the approved procedure. Check for kinks, leaks, blocked tubes and unsuitable reference locations.\nComplete baseline and zero-pressure measurements required by the procedure. Verify wind and temperature conditions meet the applicable acceptance criteria.\n\n**Controlled testing**\nTell residents the fan is about to start. Start at a low setting, confirm stable fixing and increase pressure gradually within the approved method and safe limits.\nRemain at the controls throughout operation. Monitor people, equipment movement, noise, pressure, fumes and the CO monitor. Maintain clear communication with any assistant.\nAcquire the prescribed pressure and airflow readings in the agreed direction or directions. Use the required pressure range, number of points and stability criteria from the applicable procedure.\nStop before adjusting fan ranges or physical components where equipment instructions require it. Isolate and wait for the fan to stop before reaching near blades or removing guards.\nPause for anyone needing access, distress or changing conditions. Allow pressure to equalise and restore safe passage. Recheck preparation and baseline conditions before a restart.\n\n**Validity and diagnostics**\nComplete final baseline checks and assess the data against the approved standard, including stability, environmental and curve-fit criteria where applicable. Do not issue an invalid test as compliant. Record aborted tests, limitations, deviations and their reasons.\nInvestigate leakage only within the agreed non-intrusive scope. No naked flames. Smoke pencils, tracer smoke or aerosols require separate approval, product/COSHH assessment and arrangements for sensitive residents and alarms. Do not disable detectors to enable diagnostics.\nHOLD POINT 3: immediately stop for CO warning, gas smell, fumes, live combustion, slamming or moving components, unsafe electrical supply, uncontrolled fan access, loss of escape, distress, withdrawal of agreement or unexpected effects in neighbouring properties. Safety takes priority over completing the data set.\n\n**Completion of measurements**\nReduce fan output, stop and isolate safely, and allow pressure to equalise before dismantling. Save raw data and observations against the correct address and test ID. Do not change the dwelling condition merely to obtain a better result unless the client authorises separately assessed remedial work and any retest is clearly identified.\n\n**4 REINSTATEMENT AND RESIDENT HANDOVER**\n**Safe removal and restoration**\nWait for all rotating parts to stop. Remove the fan and frame safely, keeping the door and escape route available. Use planned lifting arrangements.\nUse the preparation log to remove every temporary seal and restore each permitted opening, ventilation setting and authorised appliance control to its original condition.\nCheck accessible systems return to normal operation within competence. If reinstatement needs specialist work, arrange the appropriate competent person. Do not relight or recommission equipment outside your competence.\nReconcile materials and inspect for damage, loose tape or trailing equipment. Confirm smoke and CO alarms remain operational and essential services and safe access are available.\nHOLD POINT 4: do not leave with unresolved safety-critical changes. Notify the landlord and supervisor, prevent use of unsafe equipment and arrange a safe interim plan for the resident. Record who accepts responsibility and the repair reference. A resident signature does not transfer safety duties.\n\n**Resident and landlord briefing**\nExplain completion, any interruption and what has been restored. Give the resident a contact for questions and report defects or outstanding work to the landlord. Explain that the test measures air leakage and does not itself certify ventilation adequacy, gas safety or absence of damp and mould. Do not advise residents to permanently block vents.\n\n**Records to complete**\nRecord the approved method and building preparation, property and test IDs, tester and equipment details, calibration, conditions, raw readings, calculations and results with units and reference pressure. Identify the applicable target only where the project specifies one. Record limitations, deviations, aborted work, defects and reinstatement. Issue or lodge results through the required project/scheme process without claiming approval where none exists.\nStore data and photographs securely through approved systems. Retain only necessary personal information in accordance with the employer’s retention arrangements. Complete lone-worker check-out and inform the office of any follow-up.\nContinuation log reference: __________________  Final check by / time: __________________\nLandlord repair / incident reference: __________________  Resident handover by / time: __________________",
       training: "Supervisor: approve arrangements, competence and resources; verify critical controls for residual risks rated 5–9 in ATT RA 01. Tester: complete checks, control the equipment, stop unsafe work and record reinstatement. Landlord: provide relevant property information and coordinate resident support and shared systems. Any assistant must receive the briefing. Residents must not act as handling assistants or safety monitors.",
-      risks: "01 Combustion fumes and carbon monoxide; 02 Resident needs and interruption of essential services; 03 Restricted escape and fire precautions; 04 Fan blades and unstable equipment; 05 Electric shock and fire; 06 Trips, moving doors and fragile materials; 07 Manual handling and access; 08 Dust, mould, asbestos and contaminated air; 09 Lone working, violence and safeguarding; 10 Noise, weather and exposure; 11 Temporary sealing and service reinstatement; 12 Pressure transfer and neighbouring dwellings; 13 Occupants and pets contained by the sealed doorway",
+      risks: "01 Occupants and pets contained by the sealed doorway; 02 Restricted escape and fire precautions; 03 Contact with the operating fan, or an unstable frame; 04 Electric shock and fire from the equipment; 05 Trips, moving doors and fragile materials; 06 Manual handling the fan, frame and cases; 07 Lone working, violent occupants and safeguarding",
       sequence: [
           { step: "Planning and arrival", detail: "Before the visit; Equipment and PPE; Arrival and resident briefing" },
           { step: "Agree the designated room", detail: "Room agreed and shown before the fan goes near the door; how to call the tester and the signal that stops the test agreed with it; pets in there or off site." },
@@ -5058,10 +4992,8 @@ const SNIPPETS_MS = [
           { step: "Reinstatement and resident handover", detail: "Safe removal and restoration; Resident and landlord briefing; Records to complete" },
           { step: "Hold point 4", detail: "do not leave with unresolved safety-critical changes. Notify the landlord and supervisor, prevent use of unsafe equipment and arrange a safe interim plan for the resident. Record who accepts responsibility and the repair reference. A resident signature does not transfer safety duties." }
       ],
-      firstaid: "First aid kit carried with the test equipment. First aider, kit location and emergency access to be completed in the local arrangements before the visit.\nOther failure, damage or distress: stop the fan, equalise pressure and isolate if safe. Make the area safe, inform the supervisor and landlord and record the incident. Reassess before any restart. Report injuries and dangerous occurrences through employer procedures for assessment of any statutory reporting duty.",
-      fire: "Fire, suspected CO exposure, collapse or serious illness: warn people and leave by a safe route. Stop the fan only if safe. Call 999 for immediate danger or serious symptoms. Do not re-enter or restart until the relevant competent authority confirms safety.\nGas smell: do not operate switches, unplug equipment or create ignition sources. Leave and call the National Gas Emergency Service on 0800 111 999 from safety (Great Britain). Follow advice and notify the landlord. The normal equipment shutdown sequence must not expose anyone to ignition risk.",
-      spill: "To be completed before issue. The source drafts set no spill or environmental arrangement for this activity.",
-      contacts: "Supervisor — TBC | Landlord emergency repairs — TBC | Lone worker monitor — TBC | National Gas Emergency 0800 111 999 | Emergency 999"
+      firstaid: "First aid kit carried with the test equipment. First aider, kit location and emergency access to be completed in the local arrangements before the visit.\nOther failure, damage or distress: stop the fan, equalise pressure and isolate if safe. Make the area safe, inform the supervisor and landlord and record the incident. Reassess before any restart. Report injuries and dangerous occurrences through employer procedures for assessment of any statutory reporting duty.", fire: "Fire, suspected CO exposure, collapse or serious illness: warn people and leave by a safe route. Stop the fan only if safe. Call 999 for immediate danger or serious symptoms. Do not re-enter or restart until the relevant competent authority confirms safety.\nGas smell: do not operate switches, unplug equipment or create ignition sources. Leave and call the National Gas Emergency Service on 0800 111 999 from safety (Great Britain). Follow advice and notify the landlord. The normal equipment shutdown sequence must not expose anyone to ignition risk.",
+      spill: "To be completed before issue. The source drafts set no spill or environmental arrangement for this activity.", contacts: "Supervisor — TBC | Landlord emergency repairs — TBC | Lone worker monitor — TBC | National Gas Emergency 0800 111 999 | Emergency 999"
     }
   }
 
@@ -5108,6 +5040,43 @@ function pdfPickBreak(sortedSet, proposed, currentTop){
   }
   return best > currentTop ? best : -1;
 }
+/* Break points inside a method statement procedure list. A bold item is a
+   section heading and is a good place to break; an ordinary item is the
+   fallback that stops a page ending a third of the way down. */
+/* Keep-with-next. Returns the break points with any that would strand a
+   heading removed: nothing may break between a heading and keepPx of the
+   content beneath it. headings are the real h1-h3 plus the bold list items
+   that act as headings inside a procedure. */
+function _pdfDropOrphanBreaks(root, originTop, breaks, keepPx){
+  const zones = [];
+  const note = el => {
+    const r = el.getBoundingClientRect();
+    const top = Math.round((r.top - originTop) * 2);
+    const bot = Math.round((r.bottom - originTop) * 2);
+    if(bot >= 0) zones.push([top, bot + keepPx]);
+  };
+  root.querySelectorAll("h1, h2, h3").forEach(note);
+  root.querySelectorAll("li").forEach(li => {
+    const b = li.querySelector("strong");
+    if(b && b.textContent.trim() === li.textContent.trim()) note(li);
+  });
+  return new Set([...breaks].filter(v =>
+    !zones.some(z => v > z[0] && v < z[1])));
+}
+
+function _msListBreaks(root, originTop){
+  const major = [], minor = [];
+  root.querySelectorAll("li").forEach(li => {
+    const r = li.getBoundingClientRect();
+    const top = Math.round((r.top - originTop) * 2);
+    if(top < 0) return;
+    const b = li.querySelector("strong");
+    const heading = b && b.textContent.trim() === li.textContent.trim();
+    (heading ? major : minor).push(top);
+  });
+  return { major: major, minor: minor };
+}
+
 function pdfFindSafeBreak(sortedMajor, sortedMinor, proposed, currentTop, minFill){
   // minFill 0 means "take any major break", which is how the risk
   // assessment has always paginated and still does.
@@ -6555,12 +6524,38 @@ $("#restoreFile").addEventListener("change", e=>{
   const f = e.target.files[0]; if(!f) return;
   const r = new FileReader();
   r.onload = ()=>{
+    // "Bad backup file" used to be the answer to every failure here, including
+    // a storage that was simply full, which sends you looking at the wrong
+    // thing. Say which problem it actually is, and name the file.
+    let data;
     try{
-      const data = JSON.parse(r.result);
-      Object.entries(data).forEach(([k,v])=> localStorage.setItem(k, v));
-      toast("Restored — reloading…");
-      setTimeout(()=> location.reload(), 600);
-    }catch(err){ toast("Bad backup file", "error"); }
+      data = JSON.parse(r.result);
+    }catch(err){
+      toast(/\.js$/i.test(f.name)
+        ? "That is a snippet file, not a backup. Restore needs the .json."
+        : "Could not read " + f.name + " as a backup: it is not valid JSON.", "error");
+      return;
+    }
+    if(!data || typeof data !== "object" || Array.isArray(data)){
+      toast("That JSON is not a backup: it should be a list of saved keys.", "error");
+      return;
+    }
+    const entries = Object.entries(data).filter(([k]) =>
+      k.startsWith(LS_PREFIX) || k.startsWith("brand."));
+    if(!entries.length){
+      toast("No saved work in " + f.name + ". Nothing restored.", "error");
+      return;
+    }
+    let done = 0;
+    try{
+      entries.forEach(([k,v])=>{ localStorage.setItem(k, String(v)); done++; });
+    }catch(err){
+      toast("Storage is full: restored " + done + " of " + entries.length
+        + " items. Use Clear, then restore again.", "error");
+      return;
+    }
+    toast("Restored " + done + " items — reloading…");
+    setTimeout(()=> location.reload(), 600);
   };
   r.readAsText(f);
 });
@@ -6797,7 +6792,9 @@ window.exportPDF = async function(){
             const top = Math.round((r.top - compositeRect.top) * 2);
             const bot = Math.round((r.bottom - compositeRect.top) * 2);
             if(top >= 0) majorBreaks.add(top);
-            if(bot >= 0) majorBreaks.add(bot);
+            // Breaking just BELOW a heading strands it at the foot of the
+            // page with its content overleaf, so headings give their top only.
+            if(bot >= 0 && !/^H[1-6]$/.test(el.tagName)) majorBreaks.add(bot);
           });
           // MINOR: top of every tr — fallback only.
           composite.querySelectorAll("tr").forEach(el => {
@@ -6805,6 +6802,12 @@ window.exportPDF = async function(){
             const top = Math.round((r.top - compositeRect.top) * 2);
             if(top >= 0) minorBreaks.add(top);
           });
+          // The procedure is a list inside one cell. Its headings are major
+          // break points and its bullets are minor ones, which is what stops
+          // a page ending a third of the way down.
+          const _lb = _msListBreaks(composite, compositeRect.top);
+          _lb.major.forEach(v => majorBreaks.add(v));
+          _lb.minor.forEach(v => minorBreaks.add(v));
 
           const canvas = await html2canvas(composite, {
             scale: 2,
@@ -6813,10 +6816,13 @@ window.exportPDF = async function(){
             windowWidth: A4_PORTRAIT_PX_W,
             width: A4_PORTRAIT_PX_W
           });
-          majorBreaks.add(canvas.height);
-          minorBreaks.add(canvas.height);
-          const sortedMajor = Array.from(majorBreaks).sort((a, b) => a - b);
-          const sortedMinor = Array.from(minorBreaks).sort((a, b) => a - b);
+          // keep a heading with its content: about 18mm of it
+          const keepPx = Math.round(18 * (canvas.width / pageWmm));
+          const mj = _pdfDropOrphanBreaks(composite, compositeRect.top, majorBreaks, keepPx);
+          const mn = _pdfDropOrphanBreaks(composite, compositeRect.top, minorBreaks, keepPx);
+          mj.add(canvas.height); mn.add(canvas.height);
+          const sortedMajor = Array.from(mj).sort((a, b) => a - b);
+          const sortedMinor = Array.from(mn).sort((a, b) => a - b);
 
           const imgWmm = pageWmm;
           const imgHmm = canvas.height * (imgWmm / canvas.width);
