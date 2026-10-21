@@ -3552,16 +3552,7 @@ const SNIPPETS_RA = [
         action: ""
       },
       {
-        hazard: "06 Combustion appliances",
-        who: "Occupants and the tester",
-        how: "Fumes drawn into the building, or carbon monoxide after the test",
-        initial: "",
-        controls: "Switch off boilers, fires and open-flued appliances before sealing anything. Don't relight until all seals are removed",
-        residual: "",
-        action: ""
-      },
-      {
-        hazard: "07 Temporary seals left on vents and extract fans",
+        hazard: "06 Temporary seals left on vents and extract fans",
         who: "Occupants",
         how: "Loss of ventilation, condensation, carbon monoxide build-up",
         initial: "",
@@ -3570,7 +3561,7 @@ const SNIPPETS_RA = [
         action: ""
       },
       {
-        hazard: "08 Sealing high vents",
+        hazard: "07 Sealing high vents",
         who: "The tester",
         how: "Fall from height",
         initial: "",
@@ -3579,7 +3570,7 @@ const SNIPPETS_RA = [
         action: ""
       },
       {
-        hazard: "09 Air blast and dust",
+        hazard: "08 Air blast and dust",
         who: "The tester, occupants and anyone near the outlet",
         how: "Debris in the eyes",
         initial: "",
@@ -3588,7 +3579,7 @@ const SNIPPETS_RA = [
         action: ""
       },
       {
-        hazard: "10 Occupied homes",
+        hazard: "09 Occupied homes",
         who: "Occupants, children, pets and the lone tester",
         how: "Startled occupants, children or pets near the unit, lone working",
         initial: "",
@@ -3597,20 +3588,47 @@ const SNIPPETS_RA = [
         action: ""
       },
       {
-        hazard: "11 Asbestos",
-        who: "The tester and occupants",
-        how: "Disturbance when fixing seals",
-        initial: "",
-        controls: "Use tape and film only, no drilling or fixings. Check the asbestos information for pre-2000 buildings",
-        residual: "",
-        action: ""
-      },
-      {
-        hazard: "12 Transport",
+        hazard: "10 Transport",
         who: "The tester and other road users",
         how: "Load shifting in the vehicle",
         initial: "",
         controls: "Secure the unit upright in the vehicle and keep the tank vented in transit",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "11 Very cold air nozzle",
+        who: "The tester and anyone near the nozzle",
+        how: "The nozzle reaches sub-zero temperatures during and after air release. Cold burn on contact.",
+        initial: "",
+        controls: "Keep all people and body parts away from the air nozzle during and after use.",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "12 Objects toppled or projected by the air blast",
+        who: "The tester, occupants and anyone in the room",
+        how: "The force of escaping air can topple objects or throw them.",
+        initial: "",
+        controls: "Do not block or place objects near the air nozzle. Clear the area around it before firing.",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "13 Pets and animals distressed by the release",
+        who: "Pets and other animals, and the occupants",
+        how: "The loud release can distress animals, and a moving animal also voids the test.",
+        initial: "",
+        controls: "Do not operate in the vicinity of pets or other animals. Keep them away from the air receiver.",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "14 Equipment used wet, damaged or modified",
+        who: "The tester and occupants",
+        how: "Shock, fire or failure of a pressurised component.",
+        initial: "",
+        controls: "Indoor use only, never in rain or moisture. Do not handle the plug with wet hands, spill liquid on it, insert metal into ports, remove covers or modify it. Take faulty or damaged equipment out of use, switch off and unplug, and contact BTS.",
         residual: "",
         action: ""
       }
@@ -5150,28 +5168,30 @@ const SNIPPETS_MS = [
     group: PULSE_GROUP,
     fields: {
       title: "Pulse air tightness testing of a dwelling",
-      equipment: "Pulse unit in three parts: compressor, controller and air receiver (the tank, carried on the back). Four cables: air hose compressor to air receiver (blue denotes air), power compressor to air receiver, Ethernet data cable controller to the control port on the air receiver, and the mains lead into the air receiver. Vibration mat for hard floors. In-date PAT-tested mains lead and an RCD. Hearing protection. Tape measure or laser for the volume and envelope area. USB stick. Seal record sheet if anything is sealed. The BTS operator manual.",
-      ppe: "Hearing protection during pulses. Footwear suitable for the property. Anything further the BTS operator manual specifies.",
+      equipment: "Pulse system: compressor, controller and air receiver(s) with built-in shoulder straps. Air hose, interconnect cable and mains leads. Vibration mat for hard floors. In-date PAT-tested mains lead and an RCD. Ear protection or earplugs. Anemometer to record wind speed. Tape measure or laser for volume and envelope area. Air sealing tape for ventilation openings and a seal record sheet. Signs for external doors. USB stick. The Pulse documentation and sizing guide.",
+      ppe: "Ear protection or earplugs whenever the equipment is used, and especially across a day of repeated tests. Footwear suitable for the property. Anything further the equipment specification requires.",
       raRef: "",
-      procedure: "**1 BEFORE GOING TO SITE**\ncheck the unit, leads and tubes for damage, and that the service and PAT records are in date. Have hearing protection, sealing tape and film, a seal record sheet, a USB stick and the means to measure the building with you.\n\n**2 ON ARRIVAL**\nintroduce yourself to the occupants or site contact and explain the test, including the noise. Agree which rooms you'll enter. Check for an asbestos survey if the building is pre-2000.\n\n**3 SET THE UNIT DOWN AND CONNECT IT**\nthe kit is a single person carry in three parts: compressor, controller and air receiver. Stand the air receiver roughly central on the ground floor, with clear air around it and not immediately against a wall. Put the vibration mat under the compressor on hard floors, tiles or laminate. Connect the four cables: air hose from compressor to air receiver, power from compressor to air receiver, Ethernet from controller to the control port on the air receiver, and last the mains lead into the air receiver. The air receiver is the power hub, so the whole system runs from one wall socket, which must be sound and RCD protected.\n\n**4 CHARGE THE TANK**\nrun the compressor. It takes about seven minutes to charge the tank to full and cuts off automatically when it reaches pressure. Stay with the unit while it charges.\n\n**5 PREPARE THE BUILDING WHILE IT CHARGES**\nopen all internal doors. Close all windows and doors to the outside. Take the measurements the test needs: the total volume of the building and the overall envelope area.\n\n**6 SET THE TEST UP ON THE CONTROLLER**\nenter the tester initials and check the tank is detected. Enter the job number or address and any notes. Enter the building geometry, the envelope area and the volume. Choose the test type: existing home pre-improvement, existing home post-improvement, new build, a bedroom, or another space.\n\n**7 RUN THE TEST**\nwarn everyone in the building, then press go. There is a five second countdown. The unit samples the background pressure for a couple of seconds, releases two bursts of air in succession, then samples the background pressure again. The result is on screen in about fifteen seconds. Occupants can remain in the property and use it as normal.\n\n**8 CHECK THE RESULT**\nthe screen gives the air leakage rate in cubic metres per hour, the air permeability and the air changes per hour, all at four pascals, with the quality checks beside them: the R squared value, the achieved pressure range, the pressure exponent as an N value and the number of steps used. Confirm it reads as a valid test before packing up.\n\n**9 SAVE AND REPORT**\nfrom the main menu go to history, where every test is saved automatically. Select the test, download it to a USB stick, then upload it to the online Pulse software to generate the report and send it to the client.\n\n**10 RESTORE THE BUILDING AND LEAVE SITE**\nremove any seals you fitted and tick them off against the record sheet. Turn any extract fans back on and relight or switch on any combustion appliance you turned off, and confirm with the occupants that everything is as it was. Vent the tank if the manual requires it, then switch off, disconnect and pack the kit. Secure the unit upright in the vehicle. Report any defects before its next use.",
-      training: "To be completed before issue.",
-      risks: "01 Stored compressed air in the tank; 02 Noise from the pulse and compressor; 03 Manual handling; 04 Electrical supply to the compressor; 05 Leads, hoses and tubes; 06 Combustion appliances; 07 Temporary seals left on vents and extract fans; 08 Sealing high vents; 09 Air blast and dust; 10 Occupied homes; 11 Asbestos; 12 Transport",
+      procedure: "**1 BEFORE GOING TO SITE**\ncheck the unit, leads and hoses for damage, and that the service and PAT records are in date. Do not use equipment suspected faulty or damaged. Work out how many air receivers the building needs and the charge pressure, using the BTS sizing guide: one receiver covers roughly 150m2 floor, 350m2 envelope or 350m3 volume, and up to ten receivers can be linked. Typical charge pressures run from 3 to 9 bar. Equipment is for indoor use only and must be allowed to reach room temperature before operating if it has been below 0C.\n\n**2 ON ARRIVAL, ASSESS THE SITE**\nintroduce yourself to the occupants or site contact and explain the test, including the noise and the gush of air. Agree which rooms you will enter. Check for an asbestos survey if the building is pre-2000. Measure and record the wind speed: tests should only be run below 6 m/s, about 13 mph. Higher is possible but needs greater caution and is not recommended.\n\n**3 CARRY THE KIT IN AND SET IT UP**\na system with one air receiver is a single person carry on the built-in shoulder straps. Seek manual handling training before moving the unit, and if you are unsure you can move it safely, do not: get help or a lifting aid. Stand the air receiver roughly central on the ground floor with clear air around it and not immediately against a wall. Vibration mat under the compressor on hard floors. Connect the air hose, the interconnect cable and the mains last. The air receiver is the power hub, so the system runs from one sound, RCD protected socket. Route every cable and hose so nothing is strained, damaged or left as a trip hazard. Never handle the plug with wet hands.\n\n**4 CHARGE THE AIR RECEIVERS**\ncharge to the pressure the sizing guide gives for this building, watching the on-screen tank pressure or the mechanical gauge on top of the receiver. Smaller buildings need a lower charge pressure to avoid overpressurising. Stay with the unit while it charges.\n\n**5 PREPARE THE BUILDING WHILE IT CHARGES**\nopen all interior doors and openings so air can move between rooms. Close or seal up any intentionally provided ventilation to the protocol being followed, for example CIBSE TM23 or an IAA Background Ventilation Assessment: intermittent extract fans, passive vents and mechanical ventilation outlets, using air sealing tape. Record every seal. Measure the internal volume and the envelope area accurately. Tell the occupants testing is about to start and warn them about the noise. Consider signs on external doors so nobody walks in and voids the test. Keep pets away from the air receiver. For a room only test, open a single external door or large window instead, so the pressure difference is between the room and the rest of the building.\n\n**6 ENTER THE TEST DETAILS**\ntester ID, date and time, address, weather conditions, notable site conditions and the sealing protocol followed. Enter the building geometry, volume and envelope area, and the test type.\n\n**7 RUN THE TEST**\ntell the occupants the test is starting, that there will be noise and a gush of air, and ask that movement is kept to a minimum. Put on ear protection. Keep everyone, and every part of yourself, away from the air nozzle. Press go: there is a five second countdown, during which the operator steps away from the unit as well. A two step cycle samples background pressure for two seconds, releases air for 1.5 seconds, samples for 1.5, releases again more gently, then samples for 2.5. A three step test adds one more release. A three step test takes about fifteen seconds. Nobody, including animals, should move about during it.\n\n**8 CHECK THE RESULT IS VALID**\nthe screen gives the air leakage rate, air permeability, air changes per hour and effective leakage area, with the achieved pressure range beside them. For a valid result the coefficient of determination R2 must be greater than 0.96 and the air flow exponent n between 0.5 and 1.0.\n\n**9 RESTORE THE BUILDING**\nremove every seal and tick it off against the record sheet, so no ventilation opening is left covered. Confirm with the occupants that everything is as it was.\n\n**10 PACK DOWN**\nswitch the compressor off, switch off at the wall and unplug. Release the air hose by pressing the green button on the side of the socket first, never by pulling it, or the compressor or connector will be damaged. Disconnect the interconnect cable and refit the dust caps. Coil the cables and hoses without twisting them. Close and latch the controller lid.\n\n**11 DRAIN AND TRANSPORT**\ndrain the air receivers outside, using the drain valve, because condensed water can come out with the air and damage carpets or flooring. Air receivers are transported empty of air for safety. Strap them in place in the vehicle. Report any defect before the next use.\n\n**REFERENCE**\nThis method follows the manufacturer’s own documentation: Build Test Solutions Pulse documentation, docs.pulseairtest.com. Specifically the Important safety information, Site assessment, Preparing the building or room, Test procedure and results, and Disassembly and transport pages, read with the equipment specification for the unit in use.\nBuild Test Solutions state plainly that they cannot be held liable for damage or injury from improper use, handling or moving of the equipment, and that a thorough risk assessment must be carried out for the job being undertaken.",
+      training: "Manual handling training before moving the unit, as the manufacturer requires. If you are unsure you can move it safely, do not: get help or a lifting aid. The equipment is for professional use only and the documentation must be read and understood before use.",
+      risks: "01 Stored compressed air in the tank; 02 Noise from the pulse and compressor; 03 Manual handling; 04 Electrical supply to the compressor; 05 Leads, hoses and tubes; 06 Temporary seals left on vents and extract fans; 07 Sealing high vents; 08 Air blast and dust; 09 Occupied homes; 10 Transport; 11 Very cold air nozzle; 12 Objects toppled or projected by the air blast; 13 Pets and animals distressed by the release; 14 Equipment used wet, damaged or modified",
       sequence: [
-          { step: "1 Before going to site", detail: "check the unit, leads and tubes for damage, and that the service and PAT records are in date. Have hearing protection, sealing tape and film, a seal record sheet, a USB stick and the means to measure the building with you." },
-          { step: "2 On arrival", detail: "introduce yourself to the occupants or site contact and explain the test, including the noise. Agree which rooms you'll enter. Check for an asbestos survey if the building is pre-2000." },
-          { step: "3 Set the unit down and connect it", detail: "the kit is a single person carry in three parts: compressor, controller and air receiver. Stand the air receiver roughly central on the ground floor, with clear air around it and not immediately against a wall. Put the vibration mat under the compressor on hard floors, tiles or laminate. Connect the four cables: air hose from compressor to air receiver, power from compressor to air receiver, Ethernet from controller to the control port on the air receiver, and last the mains lead into the air receiver. The air receiver is the power hub, so the whole system runs from one wall socket, which must be sound and RCD protected." },
-          { step: "4 Charge the tank", detail: "run the compressor. It takes about seven minutes to charge the tank to full and cuts off automatically when it reaches pressure. Stay with the unit while it charges." },
-          { step: "5 Prepare the building while it charges", detail: "open all internal doors. Close all windows and doors to the outside. Take the measurements the test needs: the total volume of the building and the overall envelope area." },
-          { step: "6 Set the test up on the controller", detail: "enter the tester initials and check the tank is detected. Enter the job number or address and any notes. Enter the building geometry, the envelope area and the volume. Choose the test type: existing home pre-improvement, existing home post-improvement, new build, a bedroom, or another space." },
-          { step: "7 Run the test", detail: "warn everyone in the building, then press go. There is a five second countdown. The unit samples the background pressure for a couple of seconds, releases two bursts of air in succession, then samples the background pressure again. The result is on screen in about fifteen seconds. Occupants can remain in the property and use it as normal." },
-          { step: "8 Check the result", detail: "the screen gives the air leakage rate in cubic metres per hour, the air permeability and the air changes per hour, all at four pascals, with the quality checks beside them: the R squared value, the achieved pressure range, the pressure exponent as an N value and the number of steps used. Confirm it reads as a valid test before packing up." },
-          { step: "9 Save and report", detail: "from the main menu go to history, where every test is saved automatically. Select the test, download it to a USB stick, then upload it to the online Pulse software to generate the report and send it to the client." },
-          { step: "10 Restore the building and leave site", detail: "remove any seals you fitted and tick them off against the record sheet. Turn any extract fans back on and relight or switch on any combustion appliance you turned off, and confirm with the occupants that everything is as it was. Vent the tank if the manual requires it, then switch off, disconnect and pack the kit. Secure the unit upright in the vehicle. Report any defects before its next use." }
+          { step: "1 Before going to site", detail: "check the unit, leads and hoses for damage, and that the service and PAT records are in date. Do not use equipment suspected faulty or damaged. Work out how many air receivers the building needs and the charge pressure, using the BTS sizing guide: one receiver covers roughly 150m2 floor, 350m2 envelope or 350m3 volume, and up to ten receivers can be linked. Typical charge pressures run from 3 to 9 bar. Equipment is for indoor use only and must be allowed to reach room temperature before operating if it has been below 0C." },
+          { step: "2 On arrival, assess the site", detail: "introduce yourself to the occupants or site contact and explain the test, including the noise and the gush of air. Agree which rooms you will enter. Check for an asbestos survey if the building is pre-2000. Measure and record the wind speed: tests should only be run below 6 m/s, about 13 mph. Higher is possible but needs greater caution and is not recommended." },
+          { step: "3 Carry the kit in and set it up", detail: "a system with one air receiver is a single person carry on the built-in shoulder straps. Seek manual handling training before moving the unit, and if you are unsure you can move it safely, do not: get help or a lifting aid. Stand the air receiver roughly central on the ground floor with clear air around it and not immediately against a wall. Vibration mat under the compressor on hard floors. Connect the air hose, the interconnect cable and the mains last. The air receiver is the power hub, so the system runs from one sound, RCD protected socket. Route every cable and hose so nothing is strained, damaged or left as a trip hazard. Never handle the plug with wet hands." },
+          { step: "4 Charge the air receivers", detail: "charge to the pressure the sizing guide gives for this building, watching the on-screen tank pressure or the mechanical gauge on top of the receiver. Smaller buildings need a lower charge pressure to avoid overpressurising. Stay with the unit while it charges." },
+          { step: "5 Prepare the building while it charges", detail: "open all interior doors and openings so air can move between rooms. Close or seal up any intentionally provided ventilation to the protocol being followed, for example CIBSE TM23 or an IAA Background Ventilation Assessment: intermittent extract fans, passive vents and mechanical ventilation outlets, using air sealing tape. Record every seal. Measure the internal volume and the envelope area accurately. Tell the occupants testing is about to start and warn them about the noise. Consider signs on external doors so nobody walks in and voids the test. Keep pets away from the air receiver. For a room only test, open a single external door or large window instead, so the pressure difference is between the room and the rest of the building." },
+          { step: "6 Enter the test details", detail: "tester ID, date and time, address, weather conditions, notable site conditions and the sealing protocol followed. Enter the building geometry, volume and envelope area, and the test type." },
+          { step: "7 Run the test", detail: "tell the occupants the test is starting, that there will be noise and a gush of air, and ask that movement is kept to a minimum. Put on ear protection. Keep everyone, and every part of yourself, away from the air nozzle. Press go: there is a five second countdown, during which the operator steps away from the unit as well. A two step cycle samples background pressure for two seconds, releases air for 1.5 seconds, samples for 1.5, releases again more gently, then samples for 2.5. A three step test adds one more release. A three step test takes about fifteen seconds. Nobody, including animals, should move about during it." },
+          { step: "8 Check the result is valid", detail: "the screen gives the air leakage rate, air permeability, air changes per hour and effective leakage area, with the achieved pressure range beside them. For a valid result the coefficient of determination R2 must be greater than 0.96 and the air flow exponent n between 0.5 and 1.0." },
+          { step: "9 Restore the building", detail: "remove every seal and tick it off against the record sheet, so no ventilation opening is left covered. Confirm with the occupants that everything is as it was." },
+          { step: "10 Pack down", detail: "switch the compressor off, switch off at the wall and unplug. Release the air hose by pressing the green button on the side of the socket first, never by pulling it, or the compressor or connector will be damaged. Disconnect the interconnect cable and refit the dust caps. Coil the cables and hoses without twisting them. Close and latch the controller lid." },
+          { step: "11 Drain and transport", detail: "drain the air receivers outside, using the drain valve, because condensed water can come out with the air and damage carpets or flooring. Air receivers are transported empty of air for safety. Strap them in place in the vehicle. Report any defect before the next use." },
+          { step: "Reference", detail: "Build Test Solutions Pulse documentation, docs.pulseairtest.com. A risk assessment for the job is required by the manufacturer, not optional." }
       ],
       firstaid: "To be completed before issue.",
       fire: "To be completed before issue.",
-      spill: "To be completed before issue.",
-      contacts: "To be completed before issue."
+      spill: "Condensed water can come out of an air receiver when it is drained, which is why draining is done outside. To be completed before issue.",
+      contacts: "Supervisor — TBC | Client or site contact — TBC | Build Test Solutions technical support — TBC | Emergency 999"
     }
   }
 
