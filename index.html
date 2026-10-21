@@ -7386,6 +7386,9 @@ function draViewList(){
         ? '<button type="button" class="btn btn-outline" id="draPrintFor">Fillable PDF for '
           + escapeHtml(ra.ref || "the open assessment") + '</button>'
         : '')
+    + '<button type="button" class="btn btn-outline" id="draSend">Send '
+      + (ra.hazards.length ? escapeHtml(ra.ref || "the open assessment") : 'a blank sheet')
+      + ' to the office</button>'
     + '<span class="dra-spacer"></span>'
     + '<button type="button" class="btn btn-ghost" id="draNew">Fill one in on this device</button>'
     + '</div>'
@@ -7744,6 +7747,7 @@ function draWire(host){
   on("#draNew", "click", () => { draUI.view = "setup"; draUI.recId = null; draRender(); });
   on("#draPrintBlank", "click", () => draSaveEditablePdf(false));
   on("#draPrintFor", "click", () => draSaveEditablePdf(true));
+  on("#draSend", "click", () => draShareSheet(draLiveRA().hazards.length > 0));
   on("#draCancel", "click", () => { draUI.view = "list"; draUI.recId = null; draRender(); });
 
   on(".dra-rec", "click", e => {
@@ -8300,6 +8304,82 @@ function draEditablePdf(withRA){
 
   _draPdfFooter(d, page);
   return { doc: d, pages: page, fields: nFields, ref: ra.ref || "" };
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   SEND THE SHEET
+
+   The surveyor needs the Check before you start sheet on their phone, and
+   the office needs it back once it is filled in. One button, handing the
+   PDF straight to whatever the phone shares with: WhatsApp, Mail, Teams,
+   anything.
+
+   The PDF is built synchronously and share() is called in the same tick as
+   the tap. On an iPad, a share() that happens after an await has lost the
+   user gesture and Safari refuses it, which is the kind of thing that only
+   shows up on the actual device.
+   ──────────────────────────────────────────────────────────────────── */
+
+function draSheetName(withRA){
+  const ref = withRA === true ? (draLiveRA().ref || "").trim() : "";
+  /* the office files these by reference, so the reference goes in the name */
+  return "Check before you start" + (ref ? " " + ref.replace(/[\\/:*?"<>|]/g, "-") : "") + ".pdf";
+}
+
+function draShareSheet(withRA){
+  const out = draEditablePdf(withRA === true);
+  if(!out) return;
+  const name = draSheetName(withRA);
+  const ref  = withRA === true ? (out.ref || "").trim() : "";
+  const subject = "Check before you start" + (ref ? " — " + ref : "");
+  const body = "Attached is the Check before you start sheet"
+    + (ref ? " for " + ref : "")
+    + ". Fill it in on site, then send it back to the office.";
+
+  let file = null;
+  try {
+    file = new File([out.doc.output("blob")], name, { type: "application/pdf" });
+  } catch(e){ file = null; }
+
+  /* The phone's own share sheet, which is where WhatsApp and Mail live.
+     Called straight away, still inside the tap. */
+  if(file && navigator.canShare && navigator.canShare({ files: [file] })){
+    navigator.share({ files: [file], title: subject, text: body })
+      .then(()  => toast("Sheet sent"))
+      .catch(err => { if(err && err.name !== "AbortError") toast("Could not share: " + err.message, "error"); });
+    return;
+  }
+
+  /* No file sharing here, so do the next most useful thing: save the sheet
+     and open a draft with the wording ready, for them to attach it to. */
+  out.doc.save(name);
+  draShareFallback(name, subject, body);
+}
+
+/* Desktop and anything else that cannot attach a file to a share. The file
+   is already downloaded; this just opens the message. */
+function draShareFallback(name, subject, body){
+  const old = $(".dra-share-fallback");
+  if(old) old.remove();
+  const wa = "https://wa.me/?text=" + encodeURIComponent(subject + "\n" + body);
+  const mail = "mailto:?subject=" + encodeURIComponent(subject)
+             + "&body=" + encodeURIComponent(body + "\n\n(" + name + " is in your downloads, attach it here.)");
+  const box = document.createElement("div");
+  box.className = "dra-card dra-share-fallback";
+  box.innerHTML =
+      '<h2>' + escapeHtml(name) + ' saved</h2>'
+    + '<p class="dra-sub">This device cannot attach a file to a share, so the sheet has been '
+    +   'saved to your downloads. Open a message below and attach it.</p>'
+    + '<div class="dra-extra">'
+    +   '<a class="btn btn-primary" target="_blank" rel="noopener" href="' + wa + '">WhatsApp</a>'
+    +   '<a class="btn btn-outline" href="' + mail + '">Email</a>'
+    +   '<span class="dra-spacer"></span>'
+    +   '<button type="button" class="btn btn-ghost dra-share-dismiss">Close</button>'
+    + '</div>';
+  const host = $("#draBody");
+  if(host) host.insertBefore(box, host.firstChild);
+  const close = box.querySelector(".dra-share-dismiss");
+  if(close) close.addEventListener("click", () => box.remove());
 }
 
 function draSaveEditablePdf(withRA){
