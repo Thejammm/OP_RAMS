@@ -5601,7 +5601,15 @@ function attachPersistHandlers(scope){
 
   $$(".ppe-checks input[type=checkbox]", scope).forEach(cb=>{
     if(cb.dataset.ppeWired) return; cb.dataset.ppeWired="1";
+    /* Ticking a box sets the .checked PROPERTY. The container is saved as
+       HTML, and only the checked ATTRIBUTE survives that, so the ticks
+       were persisted as an empty list every time and came back blank on
+       the next load. Same trap as the risk select. Write the attribute
+       before saving, and the tick sticks. */
+    if(cb.checked) cb.setAttribute("checked", "checked");
     cb.addEventListener("change", ()=>{
+      if(cb.checked) cb.setAttribute("checked", "checked");
+      else cb.removeAttribute("checked");
       const c = cb.closest("[data-persist-container]");
       if(c) persistContainer(c);
     });
