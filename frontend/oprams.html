@@ -713,6 +713,33 @@ body.ras-render #raActions{left:-99999px;}
   border-radius:6px;background:var(--surface);color:var(--text);}
 .dra-ctl-pick{margin-top:10px;}
 
+/* Print preview: the page as it will be cut, with the cuts draggable. */
+.prev-back{position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:9000;
+  display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 0;}
+.prev-win{background:var(--surface);width:min(980px,96vw);border:1px solid var(--border);
+  box-shadow:0 18px 50px rgba(0,0,0,.3);}
+.prev-head{display:flex;align-items:center;gap:12px;padding:10px 14px;
+  border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:2;}
+.prev-hint{font-size:11.5px;color:var(--text-muted);}
+.prev-sp{flex:1;}
+.prev-body{padding:18px;background:var(--muted-bg);}
+.prev-sheet{position:relative;margin:0 auto 22px;width:794px;max-width:100%;
+  background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.16);}
+.prev-cut{position:absolute;left:0;right:0;height:0;border-top:2px dashed var(--accent);
+  z-index:3;}
+.prev-cut.manual{border-top-color:var(--danger);}
+.prev-tag{position:absolute;right:6px;top:-9px;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;background:var(--accent);color:#fff;
+  padding:1px 6px;}
+.prev-cut.manual .prev-tag{background:var(--danger);}
+.prev-grip{position:absolute;left:6px;top:-11px;width:54px;height:20px;cursor:ns-resize;
+  background:var(--accent);opacity:.9;}
+.prev-cut.manual .prev-grip{background:var(--danger);}
+.prev-grip::after{content:"drag";position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-size:9.5px;font-weight:700;color:#fff;letter-spacing:.06em;
+  text-transform:uppercase;}
+.prev-cut.dragging{border-top-width:3px;}
+@media print{.prev-back{display:none !important;}}
 </style>
 </head>
 <body>
@@ -737,7 +764,8 @@ body.ras-render #raActions{left:-99999px;}
       <button class="btn btn-outline btn-sm" onclick="exportJSON()" title="Backup all data to JSON">Backup</button>
       <button class="btn btn-outline btn-sm" onclick="importJSON()" title="Restore from JSON">Restore</button>
       <button class="btn btn-outline btn-sm" onclick="resetApp()" title="Clear ALL saved data and reload" style="color:var(--danger);border-color:var(--danger-brd);">Reset</button>
-      <button class="btn btn-outline btn-sm" onclick="window.print()" title="Print preview">Print</button>
+      <button class="btn btn-outline btn-sm" onclick="msPreviewOpen()" title="See where the PDF will break, and move the breaks">Preview</button>
+      <button class="btn btn-outline btn-sm" onclick="window.print()" title="Browser print">Print</button>
       <button class="btn btn-primary btn-sm" onclick="exportPDF()" title="Export to PDF">PDF</button>
     </div>
   </div>
@@ -6566,6 +6594,240 @@ $("#restoreFile").addEventListener("change", e=>{
    temporary <body class="pdf-render"> mirror of @media print rules so
    the PDF visually matches the browser's print preview.
    ════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════
+   PRINT PREVIEW, WITH THE PAGE BREAKS ON A STRING
+
+   The slicer fills pages on its own. It is usually right and sometimes it
+   is not, and arguing with it from the outside is a poor use of anyone's
+   afternoon. So: show where it is going to cut, and let the cuts be
+   dragged.
+
+   A dragged line is stored as a y position in composite pixels against the
+   method statement page it belongs to. At export time those positions are
+   mandatory: the slice ends at the first one past the top of the page.
+   Everything else is unchanged, so a document with no dragged lines comes
+   out exactly as it does today.
+   ──────────────────────────────────────────────────────────────────── */
+
+const MS_BREAK_KEY = "ms.breaks.";
+
+function msManualBreaks(idx){
+  try{
+    const raw = lsGet(MS_BREAK_KEY + idx);
+    const v = raw ? JSON.parse(raw) : [];
+    return Array.isArray(v) ? v.filter(n => typeof n === "number" && n > 0).sort((a,b)=>a-b) : [];
+  }catch(e){ return []; }
+}
+function msSetManualBreaks(idx, list){
+  const clean = (list || []).filter(n => typeof n === "number" && n > 0)
+    .map(n => Math.round(n)).sort((a,b)=>a-b);
+  if(clean.length) lsSet(MS_BREAK_KEY + idx, JSON.stringify(clean));
+  else lsDel(MS_BREAK_KEY + idx);
+  flagSaving();
+}
+/* The first dragged line below the top of this page, if it lands on the
+   page at all. Returns -1 when the slicer should decide for itself. */
+function msForcedBreak(idx, fromPx, maxPx){
+  const b = msManualBreaks(idx).find(v => v > fromPx && v <= maxPx);
+  return b === undefined ? -1 : b;
+}
+
+/* ── the composite, shared with the export so the preview is the real
+      thing and not an impression of it ──────────────────────────────── */
+const MS_COMPOSITE_W = 794;          // A4 portrait at 96dpi
+function msCompositeStyle(){
+  const id = "__pdfMsComposite";
+  if(document.getElementById(id)) return;
+  const s = document.createElement("style");
+  s.id = id;
+  s.textContent =
+    ".__ms-composite, .__ms-composite *{box-sizing:border-box;}" +
+    ".__ms-composite .letterhead{margin-bottom:14px;}" +
+    ".__ms-composite h1{font-size:18px;margin:0 0 12px 0;color:var(--primary);}" +
+    ".__ms-composite .method-table th,.__ms-composite .method-table td{font-size:11px;padding:6px 8px;}" +
+    ".__ms-composite .seq-table th,.__ms-composite .seq-table td{font-size:11px;padding:5px 7px;}" +
+    ".__ms-composite .method-table .editable-section,.__ms-composite .seq-table .editable{font-size:11px;line-height:1.45;}" +
+    ".__ms-composite .lh-title{font-size:16px;}" +
+    ".__ms-composite .headersplitter{font-size:11px;padding:6px 8px;}" +
+    ".__ms-composite .snippet-toolbar,.__ms-composite .seq-section-head,.__ms-composite .seq-row-del,.__ms-composite .row-del{display:none !important;}" +
+    ".__ms-composite .seq-section.excluded{display:none !important;}";
+  document.head.appendChild(s);
+}
+function msMakeComposite(hidden){
+  msCompositeStyle();
+  const c = document.createElement("div");
+  c.className = "__ms-composite";
+  c.style.cssText = (hidden ? "position:absolute;left:-99999px;top:0;" : "position:relative;")
+    + "width:" + MS_COMPOSITE_W + "px;background:#fff;padding:24px 28px;"
+    + "box-sizing:border-box;font-family:'Inter',sans-serif;";
+  return c;
+}
+function msFillComposite(c, msPage, letterhead, h1){
+  c.innerHTML = "";
+  if(letterhead) c.appendChild(letterhead.cloneNode(true));
+  if(h1) c.appendChild(h1.cloneNode(true));
+  c.appendChild(msPage.cloneNode(true));
+}
+
+/* Where the slicer would cut this composite, in composite pixels (which are
+   half a canvas pixel, because the canvas renders at scale 2). */
+function msPlanBreaks(c, idx){
+  const rect = c.getBoundingClientRect();
+  const major = new Set([0]), minor = new Set([0]);
+  c.querySelectorAll("h1, h2, h3, .letterhead, .headersplitter, .method-table, .seq-section, table, section, .seq-section-body")
+    .forEach(el => {
+      const r = el.getBoundingClientRect();
+      const t = Math.round((r.top - rect.top) * 2), b = Math.round((r.bottom - rect.top) * 2);
+      if(t >= 0) major.add(t);
+      if(b >= 0 && !/^H[1-6]$/.test(el.tagName)) major.add(b);
+    });
+  c.querySelectorAll("tr").forEach(el => {
+    const t = Math.round((el.getBoundingClientRect().top - rect.top) * 2);
+    if(t >= 0) minor.add(t);
+  });
+  const lb = _msListBreaks(c, rect.top);
+  lb.major.forEach(v => major.add(v));
+  lb.minor.forEach(v => minor.add(v));
+
+  const hPx = Math.round(rect.height * 2);
+  const pxPerMm = (MS_COMPOSITE_W * 2) / 210;
+  const keepPx = Math.round(18 * pxPerMm);
+  const mj = _pdfDropOrphanBreaks(c, rect.top, major, keepPx);
+  const mn = _pdfDropOrphanBreaks(c, rect.top, minor, keepPx);
+  mj.add(hPx); mn.add(hPx);
+  const sm = Array.from(mj).sort((a,b)=>a-b), sn = Array.from(mn).sort((a,b)=>a-b);
+
+  const cuts = [];
+  let y = 0, i = 0;
+  while(y < hPx && i < 60){
+    const topMm = i > 0 ? 8 : 0;
+    const proposed = Math.min(y + Math.floor((297 - 13 - topMm) * pxPerMm), hPx);
+    if(proposed >= hPx) break;
+    const forced = msForcedBreak(idx, y, proposed);
+    const end = forced > 0 ? forced
+      : pdfFindSafeBreak(sm, sn, proposed, y, PDF_MIN_PAGE_FILL);
+    if(end <= y) break;
+    cuts.push({ y: end, forced: forced > 0, limit: proposed });
+    y = end; i++;
+  }
+  return { cuts: cuts, height: hPx, pxPerMm: pxPerMm };
+}
+
+/* ── the preview ─────────────────────────────────────────────────────── */
+function msPreviewOpen(){
+  const tab = $("#tab-ms");
+  const sheet = tab ? tab.querySelector(".sheet") : null;
+  const pages = tab ? tab.querySelectorAll(".ms-page") : [];
+  if(!pages.length){ toast("No method statement pages to preview", "error"); return; }
+  const letterhead = sheet ? sheet.querySelector(".letterhead") : null;
+  const h1 = sheet ? sheet.querySelector("h1") : null;
+
+  const back = document.createElement("div");
+  back.className = "prev-back";
+  back.innerHTML =
+      '<div class="prev-win" role="dialog" aria-label="Print preview">'
+    +   '<div class="prev-head">'
+    +     '<strong>Print preview</strong>'
+    +     '<span class="prev-hint">Drag a dotted line to move where the page breaks. '
+    +       'Double click a line you have moved to hand it back to the app.</span>'
+    +     '<span class="prev-sp"></span>'
+    +     '<button type="button" class="btn btn-ghost btn-sm prev-reset">Reset breaks</button>'
+    +     '<button type="button" class="btn btn-ghost btn-sm prev-close">Close</button>'
+    +   '</div>'
+    +   '<div class="prev-body"></div>'
+    + '</div>';
+  document.body.appendChild(back);
+  const body = back.querySelector(".prev-body");
+
+  /* A backdrop click closes it ONLY if the mousedown started on the
+     backdrop. Bare click-to-close means a drag that finishes outside the
+     window shuts the preview from under you mid-drag. */
+  let downOnBack = false;
+  back.addEventListener('mousedown', e => { downOnBack = (e.target === back); });
+  back.addEventListener('click', e => { if(e.target === back && downOnBack) back.remove(); });
+  back.querySelector(".prev-close").addEventListener("click", () => back.remove());
+
+  const render = () => {
+    body.innerHTML = "";
+    pages.forEach((msPage, idx) => {
+      const c = msMakeComposite(false);
+      msFillComposite(c, msPage, letterhead, h1);
+      const wrap = document.createElement("div");
+      wrap.className = "prev-sheet";
+      wrap.appendChild(c);
+      body.appendChild(wrap);
+
+      const plan = msPlanBreaks(c, idx);
+      const h = c.getBoundingClientRect().height;
+      const pageH = (297 - 13) * plan.pxPerMm / 2;     // usable, in composite px
+
+      plan.cuts.forEach((cut, n) => {
+        const line = document.createElement("div");
+        line.className = "prev-cut" + (cut.forced ? " manual" : "");
+        line.style.top = (cut.y / 2) + "px";
+        line.innerHTML = '<span class="prev-tag">page ' + (n + 2) + '</span>'
+          + '<span class="prev-grip" title="Drag to move this break"></span>';
+        wrap.appendChild(line);
+
+        const prevY = n === 0 ? 0 : plan.cuts[n - 1].y;
+        let dragging = false, startY = 0, startTop = 0;
+        const grip = line.querySelector(".prev-grip");
+        const down = e => {
+          dragging = true;
+          startY = (e.touches ? e.touches[0].clientY : e.clientY);
+          startTop = parseFloat(line.style.top);
+          line.classList.add("dragging");
+          e.preventDefault();
+        };
+        const move = e => {
+          if(!dragging) return;
+          const y = (e.touches ? e.touches[0].clientY : e.clientY);
+          let t = startTop + (y - startY);
+          const min = prevY / 2 + 20;                    // keep something on the page
+          const max = Math.min(h, prevY / 2 + pageH);    // never more than one page
+          t = Math.max(min, Math.min(max, t));
+          line.style.top = t + "px";
+          e.preventDefault();
+        };
+        const up = () => {
+          if(!dragging) return;
+          dragging = false;
+          line.classList.remove("dragging");
+          const list = msManualBreaks(idx).filter(v => v !== cut.y);
+          list.push(Math.round(parseFloat(line.style.top) * 2));
+          msSetManualBreaks(idx, list);
+          render();
+        };
+        grip.addEventListener("mousedown", down);
+        grip.addEventListener("touchstart", down, { passive: false });
+        window.addEventListener("mousemove", move);
+        window.addEventListener("touchmove", move, { passive: false });
+        window.addEventListener("mouseup", up);
+        window.addEventListener("touchend", up);
+        back.addEventListener("remove", () => {
+          window.removeEventListener("mousemove", move);
+          window.removeEventListener("mouseup", up);
+        });
+
+        /* give a moved line back to the app */
+        line.addEventListener("dblclick", () => {
+          if(!cut.forced) return;
+          msSetManualBreaks(idx, msManualBreaks(idx).filter(v => v !== cut.y));
+          render();
+        });
+      });
+    });
+  };
+
+  back.querySelector(".prev-reset").addEventListener("click", () => {
+    pages.forEach((_, idx) => msSetManualBreaks(idx, []));
+    render();
+    toast("Breaks handed back to the app");
+  });
+
+  render();
+}
+
 window.exportPDF = async function(){
   if(typeof window.jspdf === "undefined" && typeof window.jsPDF === "undefined"){
     toast("PDF library not loaded", "error"); return;
@@ -6771,7 +7033,9 @@ window.exportPDF = async function(){
       }
       composite.classList.add("__ms-composite");
       try {
+        let msIndex = -1;
         for(const msPage of msPages){
+          msIndex++;
           composite.innerHTML = "";
           if(letterhead) composite.appendChild(letterhead.cloneNode(true));
           if(projectTitle) composite.appendChild(projectTitle.cloneNode(true));
@@ -6848,9 +7112,12 @@ window.exportPDF = async function(){
               const topMm = sliceIdx > 0 ? continuationTopMm : 0;
               const sliceHpx = Math.floor((pageHmm - footerBandMm - topMm) * pxPerMm);
               const proposed = Math.min(yPx + sliceHpx, canvas.height);
+              // A line dragged in the preview wins: the page ends there.
+              const forced = (typeof msForcedBreak === "function")
+                ? msForcedBreak(msIndex, yPx, proposed) : -1;
               const sliceEnd = (proposed >= canvas.height)
                 ? canvas.height
-                : findSafeBreak(proposed, yPx);
+                : (forced > 0 ? forced : findSafeBreak(proposed, yPx));
               const sliceHeight = sliceEnd - yPx;
               if(sliceHeight <= 0) break;
               const slice = document.createElement("canvas");
