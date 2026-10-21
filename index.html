@@ -5289,6 +5289,186 @@ function pdfFindSafeBreak(sortedMajor, sortedMinor, proposed, currentTop, minFil
   const best = Math.max(major, minor);
   return best > currentTop ? best : proposed;
 }
+/* ════════════════════════════════════════════════════════════════════
+   MAKING THE RISK ASSESSMENT AND METHOD STATEMENT TYPEABLE
+
+   Both are exported as an image of the sheet, which is what keeps the
+   PDF looking exactly like the page on screen. An image cannot be typed
+   into, so every box that is still BLANK when it is exported gets a real
+   PDF form field dropped on top of it, in the same place, the same size.
+
+   Blank only, deliberately. Anything already written is the assessment,
+   and the issued PDF is the record of it: it prints. What stays typeable
+   is what the sheet itself leaves to be filled in on the day — the
+   briefing register at the back, a risk rating not yet given, an action
+   owner not yet named.
+
+   Two steps, because the image is sliced across pages:
+     _pdfFieldTargets  reads the blanks off the DOM in CSS pixels, before
+                       anything is rendered.
+     _pdfPlaceFields   after a slice has been drawn onto a page, places
+                       the fields that fall wholly inside that slice, in
+                       millimetres, on the page that is current.
+   A field is never split across a page break: if it straddles the cut it
+   is placed on the page that carries the rest of it.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* A blank cell is one with no text in it. The risk cells are a special
+   case: the select is hidden in the export and the badge is empty, so
+   what is blank is the .risk-cell itself. */
+/* "Add Text", "Add Name", "Add Date" and the rest are the prompts the sheet
+   shows in a field nobody has touched, and the app already counts "Add Text"
+   as empty elsewhere. None of them should print on an issued assessment, and
+   a typed value would sit on top of one, so they come off the page for the
+   export and go straight back afterwards. Nothing is persisted, so a reload
+   would restore them even if this threw.
+
+   Only a field the sheet itself owns, meaning one carrying data-persist, is
+   treated this way. A hazard control that happens to begin "Add " is the
+   assessor's own words and prints as written. */
+let _pdfPlaceholderUndo = [];
+function _pdfIsBlank(el){
+  const t = (el.innerText || el.textContent || "").trim();
+  if(t === "") return true;
+  return el.hasAttribute("data-persist") && /^add\s+[a-z]+$/i.test(t);
+}
+function _pdfRestorePlaceholders(){
+  _pdfPlaceholderUndo.forEach(u => {
+    u.el.innerHTML = u.html;
+    if(u.style === null) u.el.removeAttribute("style");
+    else u.el.setAttribute("style", u.style);
+  });
+  _pdfPlaceholderUndo = [];
+}
+
+function _pdfFieldTargets(node, prefix){
+  const ns = window.jspdf || window;
+  if(!ns.AcroFormTextField) return [];
+  const nr = node.getBoundingClientRect();
+  const out = [];
+  let auto = 0;
+
+  const push = (el, kind, explicitKey) => {
+    const r = el.getBoundingClientRect();
+    if(r.width < 6 || r.height < 4) return;           // hidden, or too small to use
+    const key = explicitKey || el.getAttribute("data-key") || (kind + "_" + (++auto));
+    /* two identical labels on one page would otherwise collide, and a
+       field whose name is taken is silently dropped */
+    let name = prefix + "_" + String(key).replace(/[^A-Za-z0-9]+/g, "_");
+    if(out.some(o => o.name === name)){
+      let dup = 2;
+      while(out.some(o => o.name === name + "_" + dup)) dup++;
+      name = name + "_" + dup;
+    }
+    out.push({
+      name: name,
+      kind: kind,
+      x: r.left - nr.left, y: r.top - nr.top, w: r.width, h: r.height,
+      /* one line of 13px type is about 20px tall, so anything much taller
+         than that is a box somebody will write a sentence in */
+      multiline: kind === "text" && r.height > 30
+    });
+  };
+
+  /* the hazard and sequence cells, the briefing register, and the
+     letterhead meta fields, which are plain contenteditable */
+  node.querySelectorAll(".editable, .editable-section, [data-persist][contenteditable]")
+    .forEach(el => {
+      if(!_pdfIsBlank(el)) return;                   // written: it prints
+      if((el.textContent || "").trim() !== ""){      // showing "Add Text"
+        /* emptying an inline element collapses it to nothing, and a field
+           the width of the words "Add Text" is no use to anybody, so the
+           box is held open at the width of its cell while the prompt is
+           off the page */
+        const r0 = el.getBoundingClientRect();
+        _pdfPlaceholderUndo.push({
+          el: el, html: el.innerHTML, style: el.getAttribute("style")
+        });
+        el.innerHTML = "";
+        el.style.display = "block";
+        el.style.minHeight = Math.max(r0.height, 14) + "px";
+      }
+      push(el, "text");
+    });
+  node.querySelectorAll(".risk-cell").forEach(el => {
+    const badge = el.querySelector(".badge");
+    if(badge && (badge.textContent || "").trim() !== "") return;
+    push(el, "risk");
+  });
+  /* the letterhead date is a date input, not contenteditable */
+  node.querySelectorAll("input.lh-date-input").forEach(el => {
+    if(el.value) return;
+    const chip = el.closest(".date-chip");
+    push(el, "text", chip ? chip.getAttribute("data-key") : null);
+  });
+  /* a PPE box nobody has ticked yet is ticked on the day, not in the app */
+  node.querySelectorAll('.check input[type="checkbox"]').forEach(el => {
+    if(el.checked) return;
+    const lbl = el.closest("label");
+    push(el, "tick",
+      "ppe_" + ((lbl ? lbl.textContent : "") || "").trim().slice(0, 24));
+  });
+  return out;
+}
+
+/* The slice running from sliceTopPx to sliceEndPx of the canvas has just
+   been drawn at (originXmm, originYmm) at widthMm across. Place the
+   blanks that live inside it. `placed` carries across slices so nothing
+   is added twice. */
+function _pdfPlaceFields(pdf, targets, canvas, nodeW,
+                         sliceTopPx, sliceEndPx, originXmm, originYmm, widthMm, placed){
+  const ns = window.jspdf || window;
+  const TextField = ns.AcroFormTextField;
+  if(!TextField || !targets || !targets.length || !nodeW) return 0;
+  const sx = canvas.width / nodeW;          // CSS px  -> canvas px
+  const mm = widthMm / canvas.width;        // canvas px -> mm
+  let n = 0;
+  targets.forEach(t => {
+    if(placed[t.name]) return;
+    const topPx = t.y * sx, botPx = (t.y + t.h) * sx;
+    /* wholly inside this slice, or at least more than half of it is: a
+       field is never cut in two */
+    const mid = (topPx + botPx) / 2;
+    if(mid < sliceTopPx || mid >= sliceEndPx) return;
+    const x = originXmm + (t.x * sx) * mm;
+    const y = originYmm + (topPx - sliceTopPx) * mm;
+    const w = (t.w * sx) * mm, h = (t.h * sx) * mm;
+    if(y < 0 || w <= 0 || h <= 0) return;
+
+    let f;
+    if(t.kind === "tick" && ns.AcroFormCheckBox){
+      f = new ns.AcroFormCheckBox();
+      f.appearanceState = "Off";
+      f.caption = "4";                       // ZapfDingbats tick
+    } else if(t.kind === "risk" && ns.AcroFormComboBox){
+      /* a rating is one of three, so offer the three rather than a box
+         somebody types "med" into */
+      f = new ns.AcroFormComboBox();
+      f.topIndex = 0;
+      f.setOptions(["", "LOW", "MEDIUM", "HIGH"]);
+      f.edit = false;
+    } else {
+      f = new TextField();
+      if(t.multiline) f.multiline = true;
+    }
+    if(t.kind === "tick"){
+      /* sit exactly on the printed square */
+      f.Rect = [x, y, w, h];
+    } else {
+      /* inset by a hair so the field does not sit on the printed cell rule */
+      f.Rect = [x + 0.3, y + 0.3, Math.max(w - 0.6, 1), Math.max(h - 0.6, 1)];
+      f.fontSize = t.multiline ? 8.5 : 9.5;
+      f.value = "";
+    }
+    f.fieldName = t.name;
+    f.borderWidth = 0;                       // the sheet already draws the box
+    pdf.addField(f);
+    placed[t.name] = 1;
+    n++;
+  });
+  return n;
+}
+
 const AHS_URL      = "https://www.archersafety.co.uk";
 const AHS_TEAL = "#4bbfd6";
 const AHS_GREY = "#8b9096";
@@ -6077,33 +6257,172 @@ function _raActionsHtml(items, d){
     + '<div class="ras-sign"><span>Raised by</span><span>Agreed by</span><span>Date</span></div></div>';
 }
 
+/* ════════════════════════════════════════════════════════════════════
+   ACTIONS ARISING, AS A FILLABLE PDF
+
+   This sheet is the one that goes to the board and comes back with
+   decisions on it, so it is the sheet that most wants typing into. It was
+   a rasterised picture of a div; it is now drawn with real form fields,
+   the same way the Check before you start sheet is.
+
+   What is printed is what the assessment already says: the hazard, its
+   number, and the thing identified as outstanding. What is fillable is
+   what the board decides: who owns it, when by, whether it is done, and
+   what was agreed. Nobody can quietly rewrite the finding.
+   ──────────────────────────────────────────────────────────────────── */
+
 function raActionsSheet(items){
   items = items || _raAllTodo();
   if(!items.length){ toast("Nothing outstanding to put on a sheet"); return; }
-  const d = _raDocRef();
-  const host = $("#raActions");
-  if(!host) return;
-  host.innerHTML = _raActionsHtml(items, d);
 
-  const { jsPDF } = window.jspdf || window;
-  if(!jsPDF || typeof html2canvas !== "function"){ toast("PDF library not loaded", "error"); return; }
-  document.body.classList.add("ras-render");
-  html2canvas(host, { scale: 2, useCORS: true, backgroundColor: "#ffffff", windowWidth: host.scrollWidth })
-    .then(canvas => {
-      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-      const W = pdf.internal.pageSize.getWidth(), H = pdf.internal.pageSize.getHeight();
-      const M = 10, band = 13;
-      const availW = W - M * 2, availH = H - M - band;
-      let w = availW, h = canvas.height * (availW / canvas.width);
-      if(h > availH){ h = availH; w = canvas.width * (availH / canvas.height); }
-      pdf.addImage(pdfImg(canvas), PDF_IMG_TYPE, M, M, w, h);
-      stampPdfFooters(pdf, $("#tab-ra"));
-      const slug = (d.ref || "RA").replace(/[^A-Za-z0-9]+/g, "-").slice(0, 32);
-      pdf.save("Actions-arising-" + slug + "-" + new Date().toISOString().slice(0, 10) + ".pdf");
-      toast("Actions sheet saved");
-    })
-    .catch(err => { console.error(err); toast("Could not build the sheet: " + err.message, "error"); })
-    .then(() => { document.body.classList.remove("ras-render"); });
+  const ns = window.jspdf || window;
+  const AcroFormTextField = ns.AcroFormTextField, AcroFormCheckBox = ns.AcroFormCheckBox;
+  if(!ns.jsPDF || !AcroFormTextField || !AcroFormCheckBox){
+    toast("PDF library not loaded", "error"); return;
+  }
+
+  const d = _raDocRef();
+  const P = DRA_PDF;
+  const C = _draBrandInk();
+  const W = P.pageW - P.mL - P.mR;
+  const doc = _draPdfDoc();
+  let y = P.mT, page = 1, nFields = 0;
+
+  const need = h => {
+    if(y + h <= P.pageH - P.mB - 6) return;
+    _draPdfFooter(doc, page);
+    doc.addPage(); page++; y = P.mT;
+  };
+  const ink  = () => doc.setTextColor(P.ink[0], P.ink[1], P.ink[2]);
+  const mute = () => doc.setTextColor(P.mute[0], P.mute[1], P.mute[2]);
+
+  const field = (name, label, x, w, h, multiline) => {
+    doc.setFontSize(6.6); mute(); doc.setFont("helvetica", "bold");
+    doc.text(String(label).toUpperCase(), x, y + 2.3);
+    doc.setFont("helvetica", "normal");
+    const top = y + 3.4;
+    doc.setDrawColor(P.rule[0], P.rule[1], P.rule[2]);
+    doc.setLineWidth(0.25);
+    doc.rect(x, top, w, h);
+    const f = new AcroFormTextField();
+    f.Rect = [x + 0.4, top + 0.4, w - 0.8, h - 0.8];
+    f.fieldName = name;
+    f.fontSize = multiline ? 9 : 10;
+    f.value = "";
+    if(multiline) f.multiline = true;
+    f.borderWidth = 0;
+    doc.addField(f); nFields++;
+  };
+
+  /* ── header ── */
+  doc.setFontSize(17); doc.setFont("helvetica", "bold");
+  doc.setTextColor(C.title[0], C.title[1], C.title[2]);
+  doc.text("Actions arising", P.mL, y + 6);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.4); mute();
+  doc.text("Identified while writing the risk assessment. Not yet in place.", P.mL, y + 10.8);
+  doc.text(items.length + (items.length === 1 ? " action" : " actions"),
+    P.pageW - P.mR, y + 10.8, { align: "right" });
+  y += 12.6;
+  doc.setDrawColor(C.accent[0], C.accent[1], C.accent[2]);
+  doc.setLineWidth(0.9);
+  doc.line(P.mL, y, P.pageW - P.mR, y);
+  y += 4.4;
+
+  /* ── which assessment, printed not typed ── */
+  const meta = [["Risk assessment", d.ref], ["Task or activity", d.task],
+                ["Location", d.location], ["Assessor", d.assessor], ["Dated", d.date]]
+    .filter(r => r[1]);
+  if(meta.length){
+    doc.setFillColor(249, 250, 251);
+    doc.setDrawColor(P.rule[0], P.rule[1], P.rule[2]);
+    doc.setLineWidth(0.25);
+    const rows = Math.ceil(meta.length / 2);
+    const boxH = rows * 4.6 + 3;
+    need(boxH + 4);
+    doc.rect(P.mL, y, W, boxH, "FD");
+    doc.setDrawColor(C.accent[0], C.accent[1], C.accent[2]);
+    doc.setLineWidth(0.8);
+    doc.line(P.mL, y, P.mL, y + boxH);
+    meta.forEach((m, i) => {
+      const col = i % 2, row = Math.floor(i / 2);
+      const x = P.mL + 3 + col * (W / 2);
+      doc.setFontSize(6.6); mute(); doc.setFont("helvetica", "bold");
+      doc.text(m[0].toUpperCase(), x, y + 4 + row * 4.6);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8.4); ink();
+      doc.text(String(m[1]).slice(0, 48), x + 30, y + 4 + row * 4.6);
+    });
+    y += boxH + 4.6;
+  }
+
+  /* ── one block per action ── */
+  items.forEach((it, i) => {
+    doc.setFontSize(8.6);
+    const hz = doc.splitTextToSize(
+      /* some snippet libraries number the hazard inside its own text
+         ("01 Manual handling"), so strip that or the sheet says
+         "Hazard 3.  03 Manual handling" */
+      "Hazard " + it.hazardNo + ".  " + String(it.hazard || "").replace(/^\s*\d+[.)]?\s+/, ""), W - 6);
+    doc.setFontSize(9);
+    const tx = doc.splitTextToSize(it.text || "", W - 6);
+    const headH = 6.4 + hz.length * 3.8 + tx.length * 4.1 + 3;
+    const fillH = 3.4 + 7 + 3 + 3.4 + 13;
+    need(headH + fillH + 4);
+
+    /* the finding, printed */
+    doc.setFillColor(P.panel[0], P.panel[1], P.panel[2]);
+    doc.rect(P.mL, y, W, 6.4, "F");
+    doc.setDrawColor(C.accent[0], C.accent[1], C.accent[2]);
+    doc.setLineWidth(0.8);
+    doc.line(P.mL, y, P.mL, y + 6.4);
+    doc.setFontSize(8.8); ink(); doc.setFont("helvetica", "bold");
+    doc.text("Action " + (i + 1) + (it.kind ? "   ·   " + it.kind : ""), P.mL + 2.8, y + 4.3);
+    doc.setFont("helvetica", "normal");
+    y += 6.4 + 2.4;
+
+    doc.setFontSize(8.6); mute();
+    doc.text(hz, P.mL + 2, y);
+    y += hz.length * 3.8 + 1.4;
+    doc.setFontSize(9); ink();
+    doc.text(tx, P.mL + 2, y);
+    y += tx.length * 4.1 + 2.6;
+
+    /* what the board decides, fillable */
+    const third = (W - 8) / 3;
+    field("a" + (i + 1) + "_owner", "Owner", P.mL, third, 7, false);
+    field("a" + (i + 1) + "_by", "Target date", P.mL + third + 4, third, 7, false);
+    const bx = P.mL + (third + 4) * 2;
+    doc.setFontSize(6.6); mute(); doc.setFont("helvetica", "bold");
+    doc.text("DONE", bx, y + 2.3);
+    doc.setFont("helvetica", "normal");
+    doc.setDrawColor(P.ink[0], P.ink[1], P.ink[2]);
+    doc.setLineWidth(0.3);
+    doc.rect(bx, y + 3.4, 4.6, 4.6);
+    const cb = new AcroFormCheckBox();
+    cb.Rect = [bx, y + 3.4, 4.6, 4.6];
+    cb.fieldName = "a" + (i + 1) + "_done";
+    cb.appearanceState = "Off";
+    cb.caption = "4";
+    cb.borderWidth = 0;
+    doc.addField(cb); nFields++;
+    y += 3.4 + 7 + 3;
+
+    field("a" + (i + 1) + "_agreed", "What was agreed, and by whom", P.mL, W, 13, true);
+    y += 3.4 + 13 + 5;
+  });
+
+  /* ── sign off ── */
+  const colW = (W - 5) / 2;
+  need(13.6);
+  field("reviewed_by", "Reviewed by", P.mL, colW, 7, false);
+  field("reviewed_date", "Date", P.mL + colW + 5, colW, 7, false);
+  y += 3.4 + 7;
+
+  _draPdfFooter(doc, page);
+
+  const slug = (d.ref || "RA").replace(/[^A-Za-z0-9]+/g, "-").slice(0, 32);
+  doc.save("Actions-arising-" + slug + "-" + new Date().toISOString().slice(0, 10) + ".pdf");
+  toast("Actions sheet saved: " + nFields + " fields to fill in");
 }
 
 function insertRaSnippet(btn){
@@ -6713,10 +7032,14 @@ function exportJSON(){
   const blob = new Blob([JSON.stringify(out, null, 2)], {type:"application/json"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "easy-travel-rams-backup-" + new Date().toISOString().slice(0,10) + ".json";
+  // The file carries the producer's name, not the first client the app
+  // was ever built for. The KEYS inside stay easytravel.ramsv1. — they are
+  // the storage keys, and renaming them would orphan every saved form and
+  // break every backup already taken.
+  a.download = "AHS-RAMS-export-" + new Date().toISOString().slice(0,10) + ".json";
   a.click();
   URL.revokeObjectURL(a.href);
-  toast("Backup downloaded");
+  toast("Export saved");
 }
 function importJSON(){ $("#restoreFile").click(); }
 $("#restoreFile").addEventListener("change", e=>{
@@ -7097,8 +7420,11 @@ window.exportPDF = async function(){
     // Helper: render a tall DOM node, slicing across multiple pages and
     // snapping cut points to safe breaks (between tr/section/heading) so no
     // row is split mid-row.
-    async function addNodeWithSlicing(node, isFirst){
+    async function addNodeWithSlicing(node, isFirst, fieldPrefix){
       const nodeRect = node.getBoundingClientRect();
+      // the blanks, read off the sheet before anything is rendered
+      const targets = fieldPrefix ? _pdfFieldTargets(node, fieldPrefix) : [];
+      const placed = {};
       const majorBreaks = new Set([0]);
       const minorBreaks = new Set([0]);
       node.querySelectorAll(
@@ -7131,6 +7457,8 @@ window.exportPDF = async function(){
       if(!isFirst) pdf.addPage("a4", pdfOrientation);
       if(imgHmm <= usableHmm){
         pdf.addImage(imgData, PDF_IMG_TYPE, marginMm, marginMm, imgWmm, imgHmm);
+        nFields += _pdfPlaceFields(pdf, targets, canvas, nodeRect.width,
+          0, canvas.height, marginMm, marginMm, imgWmm, placed);
       } else {
         const pxPerMm = canvas.width / imgWmm;
         // RA pagination is unchanged: any major break is good enough.
@@ -7153,6 +7481,8 @@ window.exportPDF = async function(){
           if(pageIdx > 0) pdf.addPage("a4", pdfOrientation);
           const sliceHmm = sliceHeight / pxPerMm;
           pdf.addImage(pdfImg(slice), PDF_IMG_TYPE, marginMm, topMm, imgWmm, sliceHmm);
+          nFields += _pdfPlaceFields(pdf, targets, canvas, nodeRect.width,
+            yPx, sliceEnd, marginMm, topMm, imgWmm, placed);
           yPx = sliceEnd;
           pageIdx++;
         }
@@ -7160,6 +7490,7 @@ window.exportPDF = async function(){
     }
 
     let isFirst = true;
+    let nFields = 0;   // blanks turned into form fields, for the toast
 
     if(activeTab.id === "tab-ms"){
       // MS: render letterhead + each .ms-page at a CONSISTENT natural size.
@@ -7216,6 +7547,8 @@ window.exportPDF = async function(){
           //   MINOR — gaps between table rows (fallback when a single section
           //          is taller than a page and we have no choice but to split it)
           const compositeRect = composite.getBoundingClientRect();
+          const targets = _pdfFieldTargets(composite, "ms" + msIndex);
+          const placed = {};
           const majorBreaks = new Set([0]);
           const minorBreaks = new Set([0]);
           // MAJOR: top + bottom of every section-level block. These are the
@@ -7267,6 +7600,8 @@ window.exportPDF = async function(){
 
           if(imgHmm <= pageHmm - footerBandMm){
             pdf.addImage(pdfImg(canvas), PDF_IMG_TYPE, 0, 0, imgWmm, imgHmm);
+            nFields += _pdfPlaceFields(pdf, targets, canvas, compositeRect.width,
+              0, canvas.height, 0, 0, imgWmm, placed);
           } else {
             const pxPerMm = canvas.width / imgWmm;
 
@@ -7298,6 +7633,8 @@ window.exportPDF = async function(){
               if(sliceIdx > 0) pdf.addPage("a4", pdfOrientation);
               const sliceHmm = sliceHeight / pxPerMm;
               pdf.addImage(pdfImg(slice), PDF_IMG_TYPE, 0, topMm, imgWmm, sliceHmm);
+              nFields += _pdfPlaceFields(pdf, targets, canvas, compositeRect.width,
+                yPx, sliceEnd, 0, topMm, imgWmm, placed);
               yPx = sliceEnd;
               sliceIdx++;
             }
@@ -7310,8 +7647,9 @@ window.exportPDF = async function(){
       // RA (or any other tab): existing slicing behaviour per .sheet
       const sheets = activeTab.querySelectorAll(".sheet");
       if(!sheets.length){ document.body.classList.remove("pdf-render"); toast("Nothing to export", "error"); return; }
+      let sheetIdx = 0;
       for(const sheet of sheets){
-        await addNodeWithSlicing(sheet, isFirst);
+        await addNodeWithSlicing(sheet, isFirst, "ra" + (sheetIdx++));
         isFirst = false;
       }
     }
@@ -7321,11 +7659,14 @@ window.exportPDF = async function(){
     const tabName = activeTab.id === "tab-ra" ? "RA" : (activeTab.id === "tab-ms" ? "MS" : activeTab.id);
     const brandSlug = (localStorage.getItem("brand.name") || "AHS").replace(/[^A-Za-z0-9]+/g,"").slice(0,24) || "AHS";
     pdf.save(brandSlug + "-" + tabName + "-" + new Date().toISOString().slice(0,10) + ".pdf");
-    toast("PDF saved");
+    toast(nFields
+      ? "PDF saved \u2014 " + nFields + " blank" + (nFields === 1 ? "" : "s") + " you can type into"
+      : "PDF saved");
   } catch (err){
     console.error(err);
     toast("PDF generation failed: " + err.message, "error");
   } finally {
+    _pdfRestorePlaceholders();
     document.body.classList.remove("pdf-render");
   }
 };
