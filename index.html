@@ -56,15 +56,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 
 /* ── Sticky app header ────────────────────────────────── */
 .app-header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:3px solid var(--accent);box-shadow:0 1px 8px rgba(0,0,0,.06);}
-.header-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
-.header-brand{display:flex;align-items:center;gap:12px;flex-shrink:0;min-width:0;}
+.header-inner{max-width:1200px;margin:0 auto;padding:8px 20px;min-height:64px;display:flex;
+  align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.header-brand{display:flex;align-items:center;gap:12px;flex-shrink:1;min-width:0;}
 .logo-mark{width:40px;height:40px;background:none;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
 .logo-mark img{width:100%;height:100%;object-fit:contain;}
 .logo-mark svg{width:100%;height:100%;}
 .header-text{display:flex;flex-direction:column;min-width:0;}
 .header-title{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.01em;}
 .header-sub{font-size:11px;color:var(--text-muted);}
-.header-right{display:flex;align-items:center;gap:8px;}
+/* Wraps onto a second row rather than pushing buttons off the edge.
+   The live site adds Cloud Save and sign out to this row, so it has to
+   cope with more than the file alone shows. */
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  justify-content:flex-end;min-width:0;}
 .save-indicator{font-size:11px;color:var(--text-muted);white-space:nowrap;}
 
 /* Date chip — uses a real native date input styled to match */
@@ -1271,6 +1276,7 @@ const ET_GROUP = "Vehicle workshop (Easy Travel)";
 const FL_GROUP = "Office & survey (Fineline Architects)";
 const FLRA_GROUP = "Fineline: one method statement per risk assessment";
 const ATT_GROUP = "Air tightness testing (Fineline)";
+const PULSE_GROUP = "Pulse air tightness testing";
 const LIB_GROUP = "General hazard library (any sector)";
 
 // ─── RA hazard snippets — append more entries here ─────────────────
@@ -3495,7 +3501,122 @@ const SNIPPETS_RA = [
         ]
       }
     ]
+  },
+  {
+    name: "PULSE \u2014 01 \u2014 Pulse air tightness test of a dwelling",
+    group: PULSE_GROUP,
+    rows: [
+      {
+        hazard: "01 Stored compressed air in the tank",
+        who: "The tester and anyone near the unit",
+        how: "Uncontrolled release, injury from a failed fitting or valve",
+        initial: "",
+        controls: "Inspect the tank, valve and fittings before use. Don't use if damaged. Maintain to the manufacturer's schedule and keep the service records. Check with BTS whether the unit needs a written scheme of examination under the Pressure Systems Safety Regulations 2000. Vent the tank before transport if the manual says so",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "02 Noise from the pulse and compressor",
+        who: "The tester, occupants and everyone in the building",
+        how: "Startle, hearing damage on repeated tests",
+        initial: "",
+        controls: "Wear hearing protection during pulses. Warn everyone in the building before each pulse. Check the noise level in the manual",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "03 Manual handling",
+        who: "The tester",
+        how: "Back injury carrying the unit up stairs and to and from the vehicle",
+        initial: "",
+        controls: "Use the backpack straps and handles as designed. Check the unit's weight and plan the route. Use two people for long or awkward carries",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "04 Electrical supply to the compressor",
+        who: "The tester and occupants",
+        how: "Shock, fire",
+        initial: "",
+        controls: "Use an in-date PAT-tested lead and an RCD. Use a sound socket and don't overload adaptors",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "05 Leads, hoses and tubes",
+        who: "The tester and occupants",
+        how: "Slips and trips",
+        initial: "",
+        controls: "Route them away from walkways, tape them down if needed, and keep the area clear",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "06 Combustion appliances",
+        who: "Occupants and the tester",
+        how: "Fumes drawn into the building, or carbon monoxide after the test",
+        initial: "",
+        controls: "Switch off boilers, fires and open-flued appliances before sealing anything. Don't relight until all seals are removed",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "07 Temporary seals left on vents and extract fans",
+        who: "Occupants",
+        how: "Loss of ventilation, condensation, carbon monoxide build-up",
+        initial: "",
+        controls: "Record every seal fitted. Remove them all after the test and check against the list before leaving",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "08 Sealing high vents",
+        who: "The tester",
+        how: "Fall from height",
+        initial: "",
+        controls: "Use stepladders that are in good condition, with three points of contact. Don't overreach or stand on furniture",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "09 Air blast and dust",
+        who: "The tester, occupants and anyone near the outlet",
+        how: "Debris in the eyes",
+        initial: "",
+        controls: "Clear loose items and dust from around the outlet. Keep people back from the outlet when it fires",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "10 Occupied homes",
+        who: "Occupants, children, pets and the lone tester",
+        how: "Startled occupants, children or pets near the unit, lone working",
+        initial: "",
+        controls: "Explain the test to the occupants before starting. Keep children and pets out of the room. Follow the lone working procedure",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "11 Asbestos",
+        who: "The tester and occupants",
+        how: "Disturbance when fixing seals",
+        initial: "",
+        controls: "Use tape and film only, no drilling or fixings. Check the asbestos information for pre-2000 buildings",
+        residual: "",
+        action: ""
+      },
+      {
+        hazard: "12 Transport",
+        who: "The tester and other road users",
+        how: "Load shifting in the vehicle",
+        initial: "",
+        controls: "Secure the unit upright in the vehicle and keep the tank vented in transit",
+        residual: "",
+        action: ""
+      }
+    ]
   }
+
 
 ];
 
@@ -5023,7 +5144,37 @@ const SNIPPETS_MS = [
       firstaid: "First aid kit carried with the test equipment. First aider, kit location and emergency access to be completed in the local arrangements before the visit.\nOther failure, damage or distress: stop the fan, equalise pressure and isolate if safe. Make the area safe, inform the supervisor and landlord and record the incident. Reassess before any restart. Report injuries and dangerous occurrences through employer procedures for assessment of any statutory reporting duty.", fire: "Fire, suspected CO exposure, collapse or serious illness: warn people and leave by a safe route. Stop the fan only if safe. Call 999 for immediate danger or serious symptoms. Do not re-enter or restart until the relevant competent authority confirms safety.\nGas smell: do not operate switches, unplug equipment or create ignition sources. Leave and call the National Gas Emergency Service on 0800 111 999 from safety (Great Britain). Follow advice and notify the landlord. The normal equipment shutdown sequence must not expose anyone to ignition risk.",
       spill: "To be completed before issue. The source drafts set no spill or environmental arrangement for this activity.", contacts: "Supervisor — TBC | Landlord emergency repairs — TBC | Lone worker monitor — TBC | National Gas Emergency 0800 111 999 | Emergency 999"
     }
+  },
+  {
+    name: "MS \u2014 PULSE \u2014 Pulse air tightness test of a dwelling",
+    group: PULSE_GROUP,
+    fields: {
+      title: "Pulse air tightness testing of a dwelling",
+      equipment: "Pulse unit in three parts: compressor, controller and air receiver (the tank, carried on the back). Four cables: air hose compressor to air receiver (blue denotes air), power compressor to air receiver, Ethernet data cable controller to the control port on the air receiver, and the mains lead into the air receiver. Vibration mat for hard floors. In-date PAT-tested mains lead and an RCD. Hearing protection. Tape measure or laser for the volume and envelope area. USB stick. Seal record sheet if anything is sealed. The BTS operator manual.",
+      ppe: "Hearing protection during pulses. Footwear suitable for the property. Anything further the BTS operator manual specifies.",
+      raRef: "",
+      procedure: "**1 BEFORE GOING TO SITE**\ncheck the unit, leads and tubes for damage, and that the service and PAT records are in date. Have hearing protection, sealing tape and film, a seal record sheet, a USB stick and the means to measure the building with you.\n\n**2 ON ARRIVAL**\nintroduce yourself to the occupants or site contact and explain the test, including the noise. Agree which rooms you'll enter. Check for an asbestos survey if the building is pre-2000.\n\n**3 SET THE UNIT DOWN AND CONNECT IT**\nthe kit is a single person carry in three parts: compressor, controller and air receiver. Stand the air receiver roughly central on the ground floor, with clear air around it and not immediately against a wall. Put the vibration mat under the compressor on hard floors, tiles or laminate. Connect the four cables: air hose from compressor to air receiver, power from compressor to air receiver, Ethernet from controller to the control port on the air receiver, and last the mains lead into the air receiver. The air receiver is the power hub, so the whole system runs from one wall socket, which must be sound and RCD protected.\n\n**4 CHARGE THE TANK**\nrun the compressor. It takes about seven minutes to charge the tank to full and cuts off automatically when it reaches pressure. Stay with the unit while it charges.\n\n**5 PREPARE THE BUILDING WHILE IT CHARGES**\nopen all internal doors. Close all windows and doors to the outside. Take the measurements the test needs: the total volume of the building and the overall envelope area.\n\n**6 SET THE TEST UP ON THE CONTROLLER**\nenter the tester initials and check the tank is detected. Enter the job number or address and any notes. Enter the building geometry, the envelope area and the volume. Choose the test type: existing home pre-improvement, existing home post-improvement, new build, a bedroom, or another space.\n\n**7 RUN THE TEST**\nwarn everyone in the building, then press go. There is a five second countdown. The unit samples the background pressure for a couple of seconds, releases two bursts of air in succession, then samples the background pressure again. The result is on screen in about fifteen seconds. Occupants can remain in the property and use it as normal.\n\n**8 CHECK THE RESULT**\nthe screen gives the air leakage rate in cubic metres per hour, the air permeability and the air changes per hour, all at four pascals, with the quality checks beside them: the R squared value, the achieved pressure range, the pressure exponent as an N value and the number of steps used. Confirm it reads as a valid test before packing up.\n\n**9 SAVE AND REPORT**\nfrom the main menu go to history, where every test is saved automatically. Select the test, download it to a USB stick, then upload it to the online Pulse software to generate the report and send it to the client.\n\n**10 RESTORE THE BUILDING AND LEAVE SITE**\nremove any seals you fitted and tick them off against the record sheet. Turn any extract fans back on and relight or switch on any combustion appliance you turned off, and confirm with the occupants that everything is as it was. Vent the tank if the manual requires it, then switch off, disconnect and pack the kit. Secure the unit upright in the vehicle. Report any defects before its next use.",
+      training: "To be completed before issue.",
+      risks: "01 Stored compressed air in the tank; 02 Noise from the pulse and compressor; 03 Manual handling; 04 Electrical supply to the compressor; 05 Leads, hoses and tubes; 06 Combustion appliances; 07 Temporary seals left on vents and extract fans; 08 Sealing high vents; 09 Air blast and dust; 10 Occupied homes; 11 Asbestos; 12 Transport",
+      sequence: [
+          { step: "1 Before going to site", detail: "check the unit, leads and tubes for damage, and that the service and PAT records are in date. Have hearing protection, sealing tape and film, a seal record sheet, a USB stick and the means to measure the building with you." },
+          { step: "2 On arrival", detail: "introduce yourself to the occupants or site contact and explain the test, including the noise. Agree which rooms you'll enter. Check for an asbestos survey if the building is pre-2000." },
+          { step: "3 Set the unit down and connect it", detail: "the kit is a single person carry in three parts: compressor, controller and air receiver. Stand the air receiver roughly central on the ground floor, with clear air around it and not immediately against a wall. Put the vibration mat under the compressor on hard floors, tiles or laminate. Connect the four cables: air hose from compressor to air receiver, power from compressor to air receiver, Ethernet from controller to the control port on the air receiver, and last the mains lead into the air receiver. The air receiver is the power hub, so the whole system runs from one wall socket, which must be sound and RCD protected." },
+          { step: "4 Charge the tank", detail: "run the compressor. It takes about seven minutes to charge the tank to full and cuts off automatically when it reaches pressure. Stay with the unit while it charges." },
+          { step: "5 Prepare the building while it charges", detail: "open all internal doors. Close all windows and doors to the outside. Take the measurements the test needs: the total volume of the building and the overall envelope area." },
+          { step: "6 Set the test up on the controller", detail: "enter the tester initials and check the tank is detected. Enter the job number or address and any notes. Enter the building geometry, the envelope area and the volume. Choose the test type: existing home pre-improvement, existing home post-improvement, new build, a bedroom, or another space." },
+          { step: "7 Run the test", detail: "warn everyone in the building, then press go. There is a five second countdown. The unit samples the background pressure for a couple of seconds, releases two bursts of air in succession, then samples the background pressure again. The result is on screen in about fifteen seconds. Occupants can remain in the property and use it as normal." },
+          { step: "8 Check the result", detail: "the screen gives the air leakage rate in cubic metres per hour, the air permeability and the air changes per hour, all at four pascals, with the quality checks beside them: the R squared value, the achieved pressure range, the pressure exponent as an N value and the number of steps used. Confirm it reads as a valid test before packing up." },
+          { step: "9 Save and report", detail: "from the main menu go to history, where every test is saved automatically. Select the test, download it to a USB stick, then upload it to the online Pulse software to generate the report and send it to the client." },
+          { step: "10 Restore the building and leave site", detail: "remove any seals you fitted and tick them off against the record sheet. Turn any extract fans back on and relight or switch on any combustion appliance you turned off, and confirm with the occupants that everything is as it was. Vent the tank if the manual requires it, then switch off, disconnect and pack the kit. Secure the unit upright in the vehicle. Report any defects before its next use." }
+      ],
+      firstaid: "To be completed before issue.",
+      fire: "To be completed before issue.",
+      spill: "To be completed before issue.",
+      contacts: "To be completed before issue."
+    }
   }
+
 
 
 ];
