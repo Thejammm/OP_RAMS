@@ -1277,6 +1277,7 @@ const FL_GROUP = "Office & survey (Fineline Architects)";
 const FLRA_GROUP = "Fineline: one method statement per risk assessment";
 const ATT_GROUP = "Air tightness testing (Fineline)";
 const PULSE_GROUP = "Pulse air tightness testing";
+const RSSC_GROUP = "RS Security Consultants (RSSC)";
 const LIB_GROUP = "General hazard library (any sector)";
 
 // ─── RA hazard snippets — append more entries here ─────────────────
@@ -3633,9 +3634,789 @@ const SNIPPETS_RA = [
         action: ""
       }
     ]
+  },
+
+  // ─── RSSC: site survey (RSSC_SS_01) and out of office (RSSC_OOO_01), 23/10/2026
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS — Site survey: all 19 rows",
+    rows: [
+      {
+        hazard: "Injury from unknown premises condition",
+        who: "Employees",
+        how: "Arriving at premises with no prior knowledge of their condition, site rules or known hazards",
+        initial: "high",
+        controls: "Client asked for the site rules, known hazards, asbestos information and escort arrangements before the visit. Visit not carried out until these are received. Visit abandoned if the premises look unsafe on arrival. Nothing entered that cannot be left quickly.",
+        residual: "low",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Slips, trips and falls on unfamiliar premises",
+        who: "Employees",
+        how: "Uneven floors, stairs, cables, debris and wet surfaces in areas the employee does not know",
+        initial: "medium",
+        controls: "Employee attends under escort, follows the site induction and stays in agreed areas. Route checked ahead rather than walking while looking up at equipment. Suitable footwear worn. Debris not climbed over.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Working in poor light",
+        who: "Employees",
+        how: "Surveys of external areas, car parks and perimeters at dusk or after dark, or in areas with lighting switched off",
+        initial: "medium",
+        controls: "Surveys planned for daylight hours where possible. Where lighting has to be assessed after dark, the visit is arranged with the client, carried out under escort and a torch with spare batteries is carried. Survey stopped if the floor and the route out cannot be seen.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Guard dogs or uncontrolled dogs",
+        who: "Employees",
+        how: "A guard dog or loose dog on the premises or perimeter during a survey",
+        initial: "high",
+        controls: "Client asked when the visit is arranged whether dogs are kept on site, and asked to secure them before arrival. Employee does not enter, or open a gate, while a loose dog is present. Visit rearranged rather than risked. Dogs not approached.",
+        residual: "low",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Exposure to asbestos fibres",
+        who: "Employees / Others",
+        how: "Disturbing materials in buildings built or altered before 2000, for example lifting ceiling tiles or opening risers and voids",
+        initial: "high",
+        controls: "Every building built or altered before 2000 is presumed to contain asbestos unless a survey shows otherwise. Asbestos register or survey requested for the areas to be visited. No material that may contain asbestos is disturbed. Ceiling tiles, risers and voids only opened where the asbestos information shows it is safe and the client agrees.",
+        residual: "low",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Disturbing suspect material",
+        who: "Employees / Others",
+        how: "Unexpected material found or damaged behind a panel, in a void or above a ceiling",
+        initial: "high",
+        controls: "Work stops the moment suspect material is found or damaged. The area is left and access prevented. No attempt is made to clean up or remove anything. The client is informed the same day. Work does not resume in that area until the client confirms it is safe.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Fall from height",
+        who: "Employees",
+        how: "Inspecting high-level cameras, sensors, cabling or ceiling voids",
+        initial: "high",
+        controls: "RSSC employees do not use ladders, podiums, towers or MEWPs. Access above floor level is arranged with the client and carried out by the client or its contractor. Inspection from floor level or from photographs where access is not available.",
+        residual: "low",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Struck by moving plant, vehicles or deliveries",
+        who: "Employees",
+        how: "Car parks, service yards, loading bays and construction sites with vehicles and plant moving",
+        initial: "high",
+        controls: "Employee stays on pedestrian routes and in areas agreed with the escort. High visibility clothing worn in yards, car parks and on construction sites. Vehicle routes not crossed except at marked crossings or with the escort.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Struck by falling or dropped objects",
+        who: "Employees",
+        how: "Work going on overhead on a construction site or during refurbishment",
+        initial: "medium",
+        controls: "Live construction areas not entered unless the client has authorised it and provided a competent escort. Safety helmet and the PPE the site requires worn. Areas below work at height are not entered.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Fall into an excavation or opening",
+        who: "Employees",
+        how: "Open trenches, risers, floor openings and incomplete edges on a construction site",
+        initial: "high",
+        controls: "Employee follows the principal contractor's induction and rules and stays on authorised routes. Barriers and edge protection are never crossed or moved. Areas behind barriers are not entered.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Separated from the escort",
+        who: "Employees",
+        how: "Losing the escort on a large or unfamiliar site with no knowledge of its hazards or exits",
+        initial: "medium",
+        controls: "Escort's mobile number obtained at sign-in. Employee stays with the escort throughout. If separated, the employee stops, stays in a safe area and calls the escort rather than looking for them.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Harm caused by giving instructions to contractor's operatives",
+        who: "Employees / Contractors",
+        how: "Operatives acting on comments made on site that bypass the contractor's own controls",
+        initial: "medium",
+        controls: "RSSC employees do not direct the contractor's operatives. Design queries and changes are raised in writing through the client or principal contractor.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Contact with live electrical equipment",
+        who: "Employees",
+        how: "Plant rooms, comms rooms, security panels and access control equipment",
+        initial: "medium",
+        controls: "Plant and comms rooms only entered with the client's authority and escort. RSSC employees do not open panels, enclosures or equipment. Any inspection inside equipment is carried out by the client's competent contractor.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Exposure to dust, noise and site conditions",
+        who: "Employees",
+        how: "Construction or refurbishment activity going on during the survey",
+        initial: "medium",
+        controls: "Time in noisy or dusty areas kept short. Hearing protection worn where the site requires it. Survey rearranged where conditions prevent it being carried out safely.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Violence, aggression or intimidation",
+        who: "Employees",
+        how: "Hostile person on or near the premises, including at sites with a known crime problem",
+        initial: "high",
+        controls: "Client asked about any known history of crime or aggression at the site before the visit. Visit carried out with the client's escort. Vehicle parked for an easy exit. Identification carried and shown. Employee withdraws immediately if anyone becomes hostile and does not argue or defend property.",
+        residual: "medium",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Encountering intruders or unauthorised occupants",
+        who: "Employees",
+        how: "Intruders, squatters or stored property found at vacant or partly occupied premises",
+        initial: "high",
+        controls: "Vacant premises are not entered alone. Employee withdraws immediately and does not challenge or try to remove anyone. Client and police informed. Premises not revisited until the client confirms they are clear.",
+        residual: "medium",
+        action: "Employee"
+      },
+      {
+        hazard: "Lone worker taken ill or threatened with no one aware",
+        who: "Employees",
+        how: "Attending site alone with no fixed time for confirming they have left",
+        initial: "high",
+        controls: "Managing Director knows where the employee is going and the expected arrival and finish times. Employee confirms when they have left site. Mobile phone carried, charged and signal checked on arrival. Agreed action if the employee does not confirm, ending in a call to the emergency services.",
+        residual: "medium",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Harassment by people on site",
+        who: "Employees",
+        how: "Harassment by client, contractor or other staff during a visit",
+        initial: "medium",
+        controls: "Sexual Harassment Prevention Policy and Sexual Harassment Risk Assessment apply. Employee may leave any site where they feel unsafe and will be supported for doing so. Any incident reported to the Managing Director the same day.",
+        residual: "low",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Emergencies on site",
+        who: "Employees",
+        how: "Fire alarm, injury or illness while on premises the employee does not know",
+        initial: "medium",
+        controls: "Client's fire and emergency arrangements confirmed at sign-in, including the nearest exit and assembly point. Personal first aid kit carried. Nearest A&amp;E noted before the visit.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 01 — Injury from unknown premises condition",
+    rows: [
+      {
+        hazard: "Injury from unknown premises condition",
+        who: "Employees",
+        how: "Arriving at premises with no prior knowledge of their condition, site rules or known hazards",
+        initial: "high",
+        controls: "Client asked for the site rules, known hazards, asbestos information and escort arrangements before the visit. Visit not carried out until these are received. Visit abandoned if the premises look unsafe on arrival. Nothing entered that cannot be left quickly.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 02 — Slips, trips and falls on unfamiliar premises",
+    rows: [
+      {
+        hazard: "Slips, trips and falls on unfamiliar premises",
+        who: "Employees",
+        how: "Uneven floors, stairs, cables, debris and wet surfaces in areas the employee does not know",
+        initial: "medium",
+        controls: "Employee attends under escort, follows the site induction and stays in agreed areas. Route checked ahead rather than walking while looking up at equipment. Suitable footwear worn. Debris not climbed over.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 03 — Working in poor light",
+    rows: [
+      {
+        hazard: "Working in poor light",
+        who: "Employees",
+        how: "Surveys of external areas, car parks and perimeters at dusk or after dark, or in areas with lighting switched off",
+        initial: "medium",
+        controls: "Surveys planned for daylight hours where possible. Where lighting has to be assessed after dark, the visit is arranged with the client, carried out under escort and a torch with spare batteries is carried. Survey stopped if the floor and the route out cannot be seen.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 04 — Guard dogs or uncontrolled dogs",
+    rows: [
+      {
+        hazard: "Guard dogs or uncontrolled dogs",
+        who: "Employees",
+        how: "A guard dog or loose dog on the premises or perimeter during a survey",
+        initial: "high",
+        controls: "Client asked when the visit is arranged whether dogs are kept on site, and asked to secure them before arrival. Employee does not enter, or open a gate, while a loose dog is present. Visit rearranged rather than risked. Dogs not approached.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 05 — Exposure to asbestos fibres",
+    rows: [
+      {
+        hazard: "Exposure to asbestos fibres",
+        who: "Employees / Others",
+        how: "Disturbing materials in buildings built or altered before 2000, for example lifting ceiling tiles or opening risers and voids",
+        initial: "high",
+        controls: "Every building built or altered before 2000 is presumed to contain asbestos unless a survey shows otherwise. Asbestos register or survey requested for the areas to be visited. No material that may contain asbestos is disturbed. Ceiling tiles, risers and voids only opened where the asbestos information shows it is safe and the client agrees.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 06 — Disturbing suspect material",
+    rows: [
+      {
+        hazard: "Disturbing suspect material",
+        who: "Employees / Others",
+        how: "Unexpected material found or damaged behind a panel, in a void or above a ceiling",
+        initial: "high",
+        controls: "Work stops the moment suspect material is found or damaged. The area is left and access prevented. No attempt is made to clean up or remove anything. The client is informed the same day. Work does not resume in that area until the client confirms it is safe.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 07 — Fall from height",
+    rows: [
+      {
+        hazard: "Fall from height",
+        who: "Employees",
+        how: "Inspecting high-level cameras, sensors, cabling or ceiling voids",
+        initial: "high",
+        controls: "RSSC employees do not use ladders, podiums, towers or MEWPs. Access above floor level is arranged with the client and carried out by the client or its contractor. Inspection from floor level or from photographs where access is not available.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 08 — Struck by moving plant, vehicles or deliveries",
+    rows: [
+      {
+        hazard: "Struck by moving plant, vehicles or deliveries",
+        who: "Employees",
+        how: "Car parks, service yards, loading bays and construction sites with vehicles and plant moving",
+        initial: "high",
+        controls: "Employee stays on pedestrian routes and in areas agreed with the escort. High visibility clothing worn in yards, car parks and on construction sites. Vehicle routes not crossed except at marked crossings or with the escort.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 09 — Struck by falling or dropped objects",
+    rows: [
+      {
+        hazard: "Struck by falling or dropped objects",
+        who: "Employees",
+        how: "Work going on overhead on a construction site or during refurbishment",
+        initial: "medium",
+        controls: "Live construction areas not entered unless the client has authorised it and provided a competent escort. Safety helmet and the PPE the site requires worn. Areas below work at height are not entered.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 10 — Fall into an excavation or opening",
+    rows: [
+      {
+        hazard: "Fall into an excavation or opening",
+        who: "Employees",
+        how: "Open trenches, risers, floor openings and incomplete edges on a construction site",
+        initial: "high",
+        controls: "Employee follows the principal contractor's induction and rules and stays on authorised routes. Barriers and edge protection are never crossed or moved. Areas behind barriers are not entered.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 11 — Separated from the escort",
+    rows: [
+      {
+        hazard: "Separated from the escort",
+        who: "Employees",
+        how: "Losing the escort on a large or unfamiliar site with no knowledge of its hazards or exits",
+        initial: "medium",
+        controls: "Escort's mobile number obtained at sign-in. Employee stays with the escort throughout. If separated, the employee stops, stays in a safe area and calls the escort rather than looking for them.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 12 — Harm caused by giving instructions to contractor's operatives",
+    rows: [
+      {
+        hazard: "Harm caused by giving instructions to contractor's operatives",
+        who: "Employees / Contractors",
+        how: "Operatives acting on comments made on site that bypass the contractor's own controls",
+        initial: "medium",
+        controls: "RSSC employees do not direct the contractor's operatives. Design queries and changes are raised in writing through the client or principal contractor.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 13 — Contact with live electrical equipment",
+    rows: [
+      {
+        hazard: "Contact with live electrical equipment",
+        who: "Employees",
+        how: "Plant rooms, comms rooms, security panels and access control equipment",
+        initial: "medium",
+        controls: "Plant and comms rooms only entered with the client's authority and escort. RSSC employees do not open panels, enclosures or equipment. Any inspection inside equipment is carried out by the client's competent contractor.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 14 — Exposure to dust, noise and site conditions",
+    rows: [
+      {
+        hazard: "Exposure to dust, noise and site conditions",
+        who: "Employees",
+        how: "Construction or refurbishment activity going on during the survey",
+        initial: "medium",
+        controls: "Time in noisy or dusty areas kept short. Hearing protection worn where the site requires it. Survey rearranged where conditions prevent it being carried out safely.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 15 — Violence, aggression or intimidation",
+    rows: [
+      {
+        hazard: "Violence, aggression or intimidation",
+        who: "Employees",
+        how: "Hostile person on or near the premises, including at sites with a known crime problem",
+        initial: "high",
+        controls: "Client asked about any known history of crime or aggression at the site before the visit. Visit carried out with the client's escort. Vehicle parked for an easy exit. Identification carried and shown. Employee withdraws immediately if anyone becomes hostile and does not argue or defend property.",
+        residual: "medium",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 16 — Encountering intruders or unauthorised occupants",
+    rows: [
+      {
+        hazard: "Encountering intruders or unauthorised occupants",
+        who: "Employees",
+        how: "Intruders, squatters or stored property found at vacant or partly occupied premises",
+        initial: "high",
+        controls: "Vacant premises are not entered alone. Employee withdraws immediately and does not challenge or try to remove anyone. Client and police informed. Premises not revisited until the client confirms they are clear.",
+        residual: "medium",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 17 — Lone worker taken ill or threatened with no one aware",
+    rows: [
+      {
+        hazard: "Lone worker taken ill or threatened with no one aware",
+        who: "Employees",
+        how: "Attending site alone with no fixed time for confirming they have left",
+        initial: "high",
+        controls: "Managing Director knows where the employee is going and the expected arrival and finish times. Employee confirms when they have left site. Mobile phone carried, charged and signal checked on arrival. Agreed action if the employee does not confirm, ending in a call to the emergency services.",
+        residual: "medium",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 18 — Harassment by people on site",
+    rows: [
+      {
+        hazard: "Harassment by people on site",
+        who: "Employees",
+        how: "Harassment by client, contractor or other staff during a visit",
+        initial: "medium",
+        controls: "Sexual Harassment Prevention Policy and Sexual Harassment Risk Assessment apply. Employee may leave any site where they feel unsafe and will be supported for doing so. Any incident reported to the Managing Director the same day.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — SS 19 — Emergencies on site",
+    rows: [
+      {
+        hazard: "Emergencies on site",
+        who: "Employees",
+        how: "Fire alarm, injury or illness while on premises the employee does not know",
+        initial: "medium",
+        controls: "Client's fire and emergency arrangements confirmed at sign-in, including the nearest exit and assembly point. Personal first aid kit carried. Nearest A&amp;E noted before the visit.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO — Out of office: all 13 rows",
+    rows: [
+      {
+        hazard: "Road traffic collision",
+        who: "Employees / Other road users",
+        how: "Driving to and from client premises and sites, often in unfamiliar areas and in poor weather",
+        initial: "high",
+        controls: "Licence checked once a year. Journeys planned before setting off and the route entered into the navigation system while stationary. Weather checked and non-urgent journeys postponed in severe conditions. Employees report any medical condition or medication affecting their fitness to drive.",
+        residual: "medium",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Use of a vehicle that is not roadworthy or not insured for business use",
+        who: "Employees / Other road users",
+        how: "Employees using their own cars for Company journeys without business cover or with defects",
+        initial: "high",
+        controls: "Anyone driving on Company business provides evidence of a valid licence, MOT and insurance including business use, and this is recorded and checked once a year. Walk round check of tyres, lights and fluid levels at sensible intervals. Vehicles with defects affecting safety are not used for Company journeys until repaired.",
+        residual: "low",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Driver distraction",
+        who: "Employees / Other road users",
+        how: "Calls, messages and client queries arriving while driving",
+        initial: "high",
+        controls: "Hand-held phone use while driving is prohibited, including when stopped in traffic. Calls go to voicemail and are returned during a break. Employees are not expected to answer while travelling. Route and appointment changes made before setting off or after parking safely.",
+        residual: "low",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Fatigue at the wheel",
+        who: "Employees / Other road users",
+        how: "Driving home after a long day on site, or an early start following a late finish",
+        initial: "high",
+        controls: "Breaks taken at least every two hours on long journeys. Visits planned so the return journey is not made when tired, with an overnight stay where needed. Employees supported to stop and rest, or stay over, without having to justify it.",
+        residual: "medium",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Slips, trips and falls while travelling",
+        who: "Employees",
+        how: "Car parks, pavements, stations and unfamiliar buildings, particularly in the dark or in wet and icy weather",
+        initial: "medium",
+        controls: "Suitable footwear worn for the weather and the destination. Parking chosen close to the entrance and in lit areas where possible. Extra time allowed so the employee is not rushing.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Manual handling of bags and equipment",
+        who: "Employees",
+        how: "Carrying a laptop, drawings and survey equipment between the vehicle and the premises",
+        initial: "medium",
+        controls: "Only the equipment needed for the visit is carried. A rucksack or wheeled bag is used to spread or take the load. Loads that cannot be carried comfortably are split into more than one trip.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Use of a laptop away from a workstation",
+        who: "Employees",
+        how: "Working on a laptop in a vehicle, client office, train or hotel without a suitable set-up",
+        initial: "medium",
+        controls: "Laptop work away from the office kept short, with regular breaks. Laptop not used in the driving seat with the engine running. Longer work done at a desk with a suitable chair. Home Working and DSE Risk Assessment applies to the main workstation.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Violence, aggression or intimidation",
+        who: "Employees",
+        how: "Hostile person in a public place, car park or at a client's premises",
+        initial: "medium",
+        controls: "Meetings arranged in advance at known venues. Vehicle parked for an easy exit and in a lit area. Employee leaves any situation where they feel threatened and does not argue or defend property. Any incident reported to the Managing Director the same day.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Theft of the laptop, drawings or belongings",
+        who: "Employees",
+        how: "Confrontation with a thief, or loss of client security information left in a vehicle or public place",
+        initial: "medium",
+        controls: "Laptop and drawings kept out of sight and never left in an unattended vehicle overnight. Employee does not resist a theft. Loss of any client information reported to the Managing Director straight away.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Lone worker taken ill or threatened with no one aware",
+        who: "Employees",
+        how: "Travelling and working alone with no fixed time for checking in",
+        initial: "high",
+        controls: "Managing Director knows where the employee is going and the expected arrival and finish times. Employee confirms when they have finished for the day. Mobile phone carried and charged. Agreed action if the employee does not confirm, ending in a call to the emergency services.",
+        residual: "medium",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Harassment by people met through work",
+        who: "Employees",
+        how: "Harassment by a client, contractor or member of the public during a meeting or visit",
+        initial: "medium",
+        controls: "Sexual Harassment Prevention Policy and Sexual Harassment Risk Assessment apply. Employee may leave any meeting or premises where they feel unsafe and will be supported for doing so.",
+        residual: "low",
+        action: "Managing Director"
+      },
+      {
+        hazard: "Emergencies away from the office",
+        who: "Employees",
+        how: "Fire alarm, injury, illness or vehicle breakdown away from the office",
+        initial: "medium",
+        controls: "Host's fire and emergency arrangements followed at any premises visited. Personal first aid kit carried in the vehicle. Breakdown cover held for vehicles used on Company business. Nearest A&amp;E noted for site visits.",
+        residual: "low",
+        action: "Employee"
+      },
+      {
+        hazard: "Stress from travel and long days",
+        who: "Employees",
+        how: "Long journeys, late finishes and time away from home",
+        initial: "medium",
+        controls: "Visits planned to keep days to a reasonable length. Time back allowed after late or long days. Mental Health and Wellbeing Policy applies and employees can raise concerns with the Managing Director at any time.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 01 — Road traffic collision",
+    rows: [
+      {
+        hazard: "Road traffic collision",
+        who: "Employees / Other road users",
+        how: "Driving to and from client premises and sites, often in unfamiliar areas and in poor weather",
+        initial: "high",
+        controls: "Licence checked once a year. Journeys planned before setting off and the route entered into the navigation system while stationary. Weather checked and non-urgent journeys postponed in severe conditions. Employees report any medical condition or medication affecting their fitness to drive.",
+        residual: "medium",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 02 — Use of a vehicle that is not roadworthy or not insured for business use",
+    rows: [
+      {
+        hazard: "Use of a vehicle that is not roadworthy or not insured for business use",
+        who: "Employees / Other road users",
+        how: "Employees using their own cars for Company journeys without business cover or with defects",
+        initial: "high",
+        controls: "Anyone driving on Company business provides evidence of a valid licence, MOT and insurance including business use, and this is recorded and checked once a year. Walk round check of tyres, lights and fluid levels at sensible intervals. Vehicles with defects affecting safety are not used for Company journeys until repaired.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 03 — Driver distraction",
+    rows: [
+      {
+        hazard: "Driver distraction",
+        who: "Employees / Other road users",
+        how: "Calls, messages and client queries arriving while driving",
+        initial: "high",
+        controls: "Hand-held phone use while driving is prohibited, including when stopped in traffic. Calls go to voicemail and are returned during a break. Employees are not expected to answer while travelling. Route and appointment changes made before setting off or after parking safely.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 04 — Fatigue at the wheel",
+    rows: [
+      {
+        hazard: "Fatigue at the wheel",
+        who: "Employees / Other road users",
+        how: "Driving home after a long day on site, or an early start following a late finish",
+        initial: "high",
+        controls: "Breaks taken at least every two hours on long journeys. Visits planned so the return journey is not made when tired, with an overnight stay where needed. Employees supported to stop and rest, or stay over, without having to justify it.",
+        residual: "medium",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 05 — Slips, trips and falls while travelling",
+    rows: [
+      {
+        hazard: "Slips, trips and falls while travelling",
+        who: "Employees",
+        how: "Car parks, pavements, stations and unfamiliar buildings, particularly in the dark or in wet and icy weather",
+        initial: "medium",
+        controls: "Suitable footwear worn for the weather and the destination. Parking chosen close to the entrance and in lit areas where possible. Extra time allowed so the employee is not rushing.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 06 — Manual handling of bags and equipment",
+    rows: [
+      {
+        hazard: "Manual handling of bags and equipment",
+        who: "Employees",
+        how: "Carrying a laptop, drawings and survey equipment between the vehicle and the premises",
+        initial: "medium",
+        controls: "Only the equipment needed for the visit is carried. A rucksack or wheeled bag is used to spread or take the load. Loads that cannot be carried comfortably are split into more than one trip.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 07 — Use of a laptop away from a workstation",
+    rows: [
+      {
+        hazard: "Use of a laptop away from a workstation",
+        who: "Employees",
+        how: "Working on a laptop in a vehicle, client office, train or hotel without a suitable set-up",
+        initial: "medium",
+        controls: "Laptop work away from the office kept short, with regular breaks. Laptop not used in the driving seat with the engine running. Longer work done at a desk with a suitable chair. Home Working and DSE Risk Assessment applies to the main workstation.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 08 — Violence, aggression or intimidation",
+    rows: [
+      {
+        hazard: "Violence, aggression or intimidation",
+        who: "Employees",
+        how: "Hostile person in a public place, car park or at a client's premises",
+        initial: "medium",
+        controls: "Meetings arranged in advance at known venues. Vehicle parked for an easy exit and in a lit area. Employee leaves any situation where they feel threatened and does not argue or defend property. Any incident reported to the Managing Director the same day.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 09 — Theft of the laptop, drawings or belongings",
+    rows: [
+      {
+        hazard: "Theft of the laptop, drawings or belongings",
+        who: "Employees",
+        how: "Confrontation with a thief, or loss of client security information left in a vehicle or public place",
+        initial: "medium",
+        controls: "Laptop and drawings kept out of sight and never left in an unattended vehicle overnight. Employee does not resist a theft. Loss of any client information reported to the Managing Director straight away.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 10 — Lone worker taken ill or threatened with no one aware",
+    rows: [
+      {
+        hazard: "Lone worker taken ill or threatened with no one aware",
+        who: "Employees",
+        how: "Travelling and working alone with no fixed time for checking in",
+        initial: "high",
+        controls: "Managing Director knows where the employee is going and the expected arrival and finish times. Employee confirms when they have finished for the day. Mobile phone carried and charged. Agreed action if the employee does not confirm, ending in a call to the emergency services.",
+        residual: "medium",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 11 — Harassment by people met through work",
+    rows: [
+      {
+        hazard: "Harassment by people met through work",
+        who: "Employees",
+        how: "Harassment by a client, contractor or member of the public during a meeting or visit",
+        initial: "medium",
+        controls: "Sexual Harassment Prevention Policy and Sexual Harassment Risk Assessment apply. Employee may leave any meeting or premises where they feel unsafe and will be supported for doing so.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 12 — Emergencies away from the office",
+    rows: [
+      {
+        hazard: "Emergencies away from the office",
+        who: "Employees",
+        how: "Fire alarm, injury, illness or vehicle breakdown away from the office",
+        initial: "medium",
+        controls: "Host's fire and emergency arrangements followed at any premises visited. Personal first aid kit carried in the vehicle. Breakdown cover held for vehicles used on Company business. Nearest A&amp;E noted for site visits.",
+        residual: "low",
+        action: "Employee"
+      }
+    ]
+  },
+  {
+    group: RSSC_GROUP,
+    name: "RSSC — OOO 13 — Stress from travel and long days",
+    rows: [
+      {
+        hazard: "Stress from travel and long days",
+        who: "Employees",
+        how: "Long journeys, late finishes and time away from home",
+        initial: "medium",
+        controls: "Visits planned to keep days to a reasonable length. Time back allowed after late or long days. Mental Health and Wellbeing Policy applies and employees can raise concerns with the Managing Director at any time.",
+        residual: "low",
+        action: "Managing Director"
+      }
+    ]
   }
-
-
 ];
 
 // ─── MS snippet blocks — append more entries here ──────────────────
