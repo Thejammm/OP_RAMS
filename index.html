@@ -6304,10 +6304,26 @@ function persistField(el){
 /* The open note editor is furniture, not work. It is a <tr> inside the
    hazards tbody, so without this it gets saved along with the rows and
    comes back after a reload as HTML with nothing wired behind it. */
+/* The snippet pickers sit INSIDE #raForms and #msPages, so their option
+   list was being saved with the user's work — a frozen copy of whatever
+   the library held on the day. Restoring that blob put the old list back,
+   with data-populated="1" still on it, so populateRaSnippets saw the flag,
+   assumed it had already run, and left the stale library in place. New
+   snippets were invisible to anyone with saved work, which is everyone.
+
+   The list is furniture, not work. It is emptied before saving so a blob
+   can never carry a library again, and data-populated is stripped on
+   restore (see restoreContainer) so blobs already saved heal themselves. */
 function _htmlForSave(el){
-  if(!el.querySelector || !el.querySelector(".note-edit")) return el.innerHTML;
+  if(!el.querySelector) return el.innerHTML;
+  const stale = el.querySelector(".note-edit, .ra-snip-select, .ms-snip-select");
+  if(!stale) return el.innerHTML;
   const c = el.cloneNode(true);
   c.querySelectorAll(".note-edit").forEach(n => n.remove());
+  c.querySelectorAll(".ra-snip-select, .ms-snip-select").forEach(s => {
+    s.removeAttribute("data-populated");
+    s.innerHTML = "";
+  });
   return c.innerHTML;
 }
 function persistContainer(el){
@@ -6345,7 +6361,11 @@ function restoreContainer(el){
     "data-persist-wired","data-risk-wired","data-ppe-wired","data-snip-wired",
     "data-form-wired","data-row-del-wired","data-seq-wired","data-date-wired",
     "data-add-row-wired","data-ppe-add-wired","data-ppe-item-wired",
-    "data-seq-del-wired","data-seq-inc-wired","data-pin-wired"
+    "data-seq-del-wired","data-seq-inc-wired","data-pin-wired",
+    /* not a handler guard, but the same trap: left on a restored snippet
+       picker it makes populateRaSnippets skip, freezing the library at
+       whatever it held when the blob was saved */
+    "data-populated"
   ];
   el.querySelectorAll("[" + wiredAttrs.join("],[") + "]").forEach(node => {
     wiredAttrs.forEach(a => node.removeAttribute(a));
