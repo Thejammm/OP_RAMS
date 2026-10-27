@@ -8684,21 +8684,25 @@ function insertRaSnippet(btn){
   persistContainer(tbody);
   renderArrangements(formPage);
 
-  // Auto-populate the form's RA reference field if it is empty / placeholder.
-  // Snippet names follow the pattern "RA — XX — Description"; extract XX.
-  const refMatch = (s.name || "").match(/^RA\s*[\-\u2013\u2014]\s*([\w]+)\s*[\-\u2013\u2014]/i);
+  // Auto-populate the form's reference and task / activity from the snippet
+  // if they are empty / placeholder. Snippet names follow the pattern
+  // "RA — XX — Description": XX gives the reference (RA-XX) and the
+  // description is the assessment's name. Anything already typed is kept.
+  const refMatch = (s.name || "").match(/^RA\s*[\-\u2013\u2014]\s*([\w]+)\s*[\-\u2013\u2014]\s*(.*)$/i);
   if(refMatch){
-    const ref = "RA-" + refMatch[1];
-    // Find the "Risk Assessment Reference" field on THIS form page.
-    const refField = formPage.querySelector('[data-key^="ra.meta.reference"]');
-    if(refField){
-      const currentText = (refField.innerText || refField.textContent || "").trim();
+    const fillIfEmpty = (key, value) => {
+      // The field on THIS form page.
+      const el = formPage.querySelector('[data-key^="' + key + '"]');
+      if(!el || !value) return;
+      const currentText = (el.innerText || el.textContent || "").trim();
       // Treat blank, placeholder "Add Text", or just whitespace as empty.
       if(currentText === "" || currentText.toLowerCase() === "add text"){
-        refField.textContent = ref;
-        persistField(refField);
+        el.textContent = value;
+        persistField(el);
       }
-    }
+    };
+    fillIfEmpty("ra.meta.reference", "RA-" + refMatch[1]);
+    fillIfEmpty("ra.meta.task", refMatch[2].trim());
   }
 
   toast(inserted === 1 ? "Hazard row inserted" : (inserted + " hazard rows inserted"));
