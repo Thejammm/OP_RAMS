@@ -1175,8 +1175,9 @@ body.ras-render #raActions{left:-99999px;}
 
       </div><!-- /#msPages -->
 
-      <!-- Sign-off -->
-      <section>
+      <!-- Sign-off. Not an .ms-page itself: the PDF export and the preview
+           append a copy of it under the last method page (msSignoffFor). -->
+      <section class="ms-signoff">
         <h2>Sign-off</h2>
         <div class="sig-grid">
           <div class="sig"><div class="label">Author</div><div class="sig-value" contenteditable="true" data-persist data-key="ms.sig.author">Add Name</div></div>
@@ -9372,11 +9373,23 @@ function msMakeComposite(hidden){
     + "box-sizing:border-box;font-family:'Inter',sans-serif;";
   return c;
 }
+/* The author sign-off lives outside every .ms-page, so on its own it never
+   printed. It goes under the last method page, after the emergency
+   arrangements. Export and preview both call this, so they cannot differ. */
+function msSignoffFor(msPage){
+  const methodPages = $$("#msPages .ms-page");
+  if(!methodPages.length || msPage !== methodPages[methodPages.length - 1]) return null;
+  const so = $("#tab-ms .ms-signoff");
+  return so ? so.cloneNode(true) : null;
+}
+
 function msFillComposite(c, msPage, letterhead, h1){
   c.innerHTML = "";
   if(letterhead) c.appendChild(letterhead.cloneNode(true));
   if(h1) c.appendChild(h1.cloneNode(true));
   c.appendChild(msPage.cloneNode(true));
+  const so = msSignoffFor(msPage);
+  if(so) c.appendChild(so);
 }
 
 /* Where the slicer would cut this composite, in composite pixels (which are
@@ -9758,6 +9771,8 @@ window.exportPDF = async function(){
           if(letterhead) composite.appendChild(letterhead.cloneNode(true));
           if(projectTitle) composite.appendChild(projectTitle.cloneNode(true));
           composite.appendChild(msPage.cloneNode(true));
+          const signoff = msSignoffFor(msPage);
+          if(signoff) composite.appendChild(signoff);
           // Compute TWO tiers of safe break Y positions BEFORE rendering:
           //   MAJOR — gaps BETWEEN whole tables/sections/headings (preferred)
           //   MINOR — gaps between table rows (fallback when a single section
