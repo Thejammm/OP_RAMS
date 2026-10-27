@@ -1287,51 +1287,51 @@ const SNIPPETS_RA = [
     name: "RA — 01 — Vehicle re-fuelling",
     rows: [
       {
-        hazard: "Diesel or petrol vapour at the fill point",
+        hazard: "Fuel (flammable liquid)",
         who: "Employees / Public / Others",
-        how: "Vapour ignites from a cigarette, a spark or a running engine during filling, causing fire",
+        how: "Vapour or spilt fuel is ignited by a running engine, a cigarette, a phone or static while filling, causing a fire and burns",
         initial: "high",
-        controls: "Fuelling done only at the designated fuelling point. Engine off and ignition key out before the nozzle goes in. No smoking, vapes, mobile phone use or hot work within 6m; signs posted. Earth bond strap clipped on before decanting from containers.",
+        controls: "<strong>Eliminate:</strong> Ignition sources removed: engine off and key out before the nozzle goes in. No smoking, vapes, phones or hot work within 6m.<br><strong>Reduce:</strong> Auto shut-off nozzle, never wedged open or overridden.<br><strong>Isolate:</strong> Fuelling done only at the designated fuelling point.<br><strong>Control:</strong> Earth bond strap on before decanting into cans. Signs posted at the fuelling point.<br><strong>Safe system:</strong> Fuelling carried out to MS-01.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Spill kit and suitable extinguisher kept at the fuelling point and checked monthly.","status":"have"}]
       },
       {
-        hazard: "Fuel on the ground",
-        who: "Employees / Others nearby",
-        how: "Overfill or splash makes the floor slippery and contaminates drains",
+        hazard: "Fuel (pollutant)",
+        who: "Employees / Environment",
+        how: "Overfill or splash runs to the drains and makes the floor slippery",
         initial: "medium",
-        controls: "Nozzle attended for the whole fill, never wedged open. Funnel used for containers and a drip tray under the fill point. Any spill covered with absorbent straight away and the drain cover laid if it is running towards a drain.",
+        controls: "<strong>Reduce:</strong> Only the quantity needed is decanted into cans.<br><strong>Control:</strong> Drip tray under the filler and a funnel for cans. Drain cover kept ready at the fuelling point.<br><strong>Safe system:</strong> Fuelling carried out to MS-01.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Full jerry cans (up to 20kg each)",
-        who: "Employees",
-        how: "Back strain carrying full cans from the store to the vehicle and lifting them to the filler",
-        initial: "medium",
-        controls: "Cans moved on a trolley, not carried any distance. Can filled no more than needed so it can be lifted close to the body. Two people where a full can has to be raised to the filler height.",
-        residual: "low",
-        action: "Workshop Manager",
-        notes: [{"kind":"Training","text":"Manual handling training current for operatives who decant fuel.","status":"have"}]
-      },
-      {
-        hazard: "Vehicles manoeuvring in the fuelling bay",
+        hazard: "Moving vehicles in the fuelling bay",
         who: "Employees / Others nearby",
-        how: "Person struck or crushed by a vehicle reversing onto or pulling away from the fuelling point",
+        how: "Person struck or crushed as a vehicle reverses onto or pulls off the bay",
         initial: "high",
-        controls: "Vehicle reversed onto the bay only with a banksman or reversing aid, and nobody stands behind a reversing vehicle. Nozzle hung up and the filler cap on before the vehicle moves. 5mph speed limit on site.",
+        controls: "<strong>Reduce:</strong> 5mph speed limit on site.<br><strong>Isolate:</strong> Nobody stands behind a reversing vehicle. Pedestrians kept clear of the bay.<br><strong>Control:</strong> Reversing only with a banksman or reversing aid. Nozzle hung up and cap on before the vehicle moves.<br><strong>Safe system:</strong> Fuelling carried out to MS-01.<br><strong>PPE:</strong> Hi-vis clothing.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Diesel on the skin",
+        hazard: "Fuel (skin irritant)",
         who: "Employees",
         how: "Repeated skin contact with diesel causes dermatitis",
         initial: "medium",
-        controls: "Nitrile gloves worn for fuelling. Any splash washed off with soap and water straight away.",
+        controls: "<strong>Control:</strong> Washing facilities at hand. Any splash washed off straight away.<br><strong>Safe system:</strong> Fuelling carried out to MS-01.<br><strong>PPE:</strong> Nitrile gloves, and eye protection when decanting.",
         residual: "low",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Full fuel cans (up to 20kg each)",
+        who: "Employees",
+        how: "Back strain carrying full cans and lifting them to the filler",
+        initial: "medium",
+        controls: "<strong>Reduce:</strong> Cans filled only to the quantity needed, so they are lighter.<br><strong>Control:</strong> Cans moved on a trolley, not carried. Two people where a full can has to be raised to filler height.<br><strong>Safe system:</strong> Fuelling carried out to MS-01.<br><strong>PPE:</strong> Safety footwear.",
+        residual: "low",
+        action: "Workshop Manager",
+        notes: [{"kind":"Training","text":"Manual handling training current for operatives who decant fuel.","status":"have"}]
       }
     ]
   },
@@ -1341,27 +1341,27 @@ const SNIPPETS_RA = [
       {
         hazard: "Hot burner casing and flue",
         who: "Employees",
-        how: "Burns from touching the casing or flue while it runs or while it is cooling down",
+        how: "Burns from touching the casing or flue while it runs or while it cools",
         initial: "medium",
-        controls: "Burner sited where nobody has to pass close to it, with its guard fitted. Nobody touches or moves it while running; it is left to cool fully before any work on it. Heat resistant gloves used for any adjustment.",
+        controls: "<strong>Isolate:</strong> Burner sited where nobody has to pass close to it, with its guard fitted.<br><strong>Control:</strong> Nobody touches or moves the burner while it runs.<br><strong>Safe system:</strong> Use of the burner carried out to MS-02.<br><strong>PPE:</strong> Heat resistant gloves for any adjustment.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Combustible materials near the burner",
+        hazard: "Burner flame (ignition source)",
         who: "Employees / Others nearby",
-        how: "Rags, cardboard, oily waste or fuel near the flame catch fire",
+        how: "Rags, cardboard, oily waste or fuel near the burner catch fire",
         initial: "high",
-        controls: "3m clear zone around the burner kept free of combustibles, oily rags and fuel. Burner attended while lit and switched off when the workshop is empty. Suitable extinguisher kept within reach of the burner.",
+        controls: "<strong>Reduce:</strong> Burner attended while lit, switched off when the workshop is empty and never left running overnight.<br><strong>Isolate:</strong> 3m clear zone around the burner kept free of combustibles, oily rags and fuel.<br><strong>Control:</strong> Suitable extinguisher kept within reach of the burner.<br><strong>Safe system:</strong> Use of the burner carried out to MS-02.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Carbon monoxide from combustion",
+        hazard: "Carbon monoxide (combustion gas)",
         who: "Employees / Others nearby",
         how: "Fumes build up when the burner runs in a closed workshop, causing headaches, collapse or death",
         initial: "high",
-        controls: "Burner only run with the workshop doors or vents open. CO alarm fitted in the workshop and tested. Burner shut down and the area ventilated if the alarm sounds or anyone reports a headache or dizziness. Never left running overnight.",
+        controls: "<strong>Control:</strong> Burner run only with the workshop doors or vents open. CO alarm fitted in the workshop and tested.<br><strong>Safe system:</strong> Use of the burner carried out to MS-02.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Burner serviced by a competent engineer to the manufacturer's schedule.","status":"have"}]
@@ -1372,41 +1372,33 @@ const SNIPPETS_RA = [
     name: "RA — 03 — Re-fuelling of oil burner",
     rows: [
       {
-        hazard: "Fuel vapour near a hot burner",
-        who: "Employees",
-        how: "Burner not fully cooled when re-fuelled, vapour ignites",
+        hazard: "Burner fuel (flammable liquid)",
+        who: "Employees / Others nearby",
+        how: "Fuel vapour or a spill ignites on the burner during re-fuelling, causing a fire and burns",
         initial: "high",
-        controls: "Burner switched off and left at least 15 minutes, and cool to the touch, before the cap comes off. Fuel container kept away from the burner until it is cool.",
+        controls: "<strong>Eliminate:</strong> Burner re-fuelled only when switched off and cold, never while lit or hot.<br><strong>Reduce:</strong> Fuel transferred by hand pump or spouted can, not poured. Only the quantity needed is brought to the burner.<br><strong>Isolate:</strong> Fuel kept in the fuel store, away from the burner, until it is cold.<br><strong>Control:</strong> Drip tray under the filler. Spill kit and extinguisher to hand. No smoking or naked flames within 6m.<br><strong>Safe system:</strong> Re-fuelling carried out to MS-03.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Fuel splashed onto the burner",
+        hazard: "Burner fuel (skin irritant)",
         who: "Employees",
-        how: "Splash or overfill onto hot parts causes fire or burns",
-        initial: "high",
-        controls: "Funnel used and fuel poured slowly. Only the quantity needed is decanted. Drip tray under the filler and any splash wiped off before the burner is relit. Spill kit to hand.",
-        residual: "medium",
-        action: "Workshop Manager"
-      },
-      {
-        hazard: "Fuel on the skin",
-        who: "Employees",
-        how: "Repeated skin contact with burner fuel causes dermatitis",
+        how: "Repeated skin contact with the fuel causes dermatitis",
         initial: "medium",
-        controls: "Nitrile gloves worn for re-fuelling. Any splash washed off with soap and water straight away.",
+        controls: "<strong>Reduce:</strong> Fuel transferred by hand pump or spouted can, so hands stay clear of the fuel.<br><strong>Control:</strong> Washing facilities in the workshop. Any splash washed off straight away.<br><strong>Safe system:</strong> Re-fuelling carried out to MS-03.<br><strong>PPE:</strong> Nitrile gloves and eye protection.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Information","text":"COSHH assessment and SDS for the burner fuel kept together and available in the workshop.","status":"have"}]
       },
       {
-        hazard: "Full fuel container",
+        hazard: "Full fuel container (up to 20kg)",
         who: "Employees",
         how: "Back strain carrying the container to the burner and lifting it to the filler",
         initial: "medium",
-        controls: "Container moved on a trolley, not carried any distance. Filled only to the quantity needed so it can be lifted close to the body.",
+        controls: "<strong>Reduce:</strong> Container filled only to the quantity needed, so it is lighter.<br><strong>Control:</strong> Container moved on a trolley, not carried.<br><strong>Safe system:</strong> Re-fuelling carried out to MS-03.<br><strong>PPE:</strong> Safety footwear.",
         residual: "low",
-        action: "Workshop Manager"
+        action: "Workshop Manager",
+        notes: [{"kind":"Training","text":"Manual handling training current for operatives who re-fuel the burner.","status":"have"}]
       }
     ]
   },
@@ -1414,40 +1406,49 @@ const SNIPPETS_RA = [
     name: "RA — 04 — Re-filling of the main fuel tanker",
     rows: [
       {
-        hazard: "Fuel vapour during the bulk delivery",
+        hazard: "Fuel (flammable liquid)",
         who: "Employees / Public / Others",
-        how: "Vapour ignites during the bulk fill",
+        how: "Vapour ignites during the bulk delivery, causing a fire or explosion",
         initial: "high",
-        controls: "Delivery driver and site operative agree the fill point and quantity before starting. Earth bond connected between tanker and tank. No smoking, phones or running engines in the delivery area; signs posted. Spill kit and extinguisher at the fill point.",
+        controls: "<strong>Eliminate:</strong> No smoking, phones, naked flames or running engines in the delivery area.<br><strong>Isolate:</strong> Delivery area coned off for the whole delivery.<br><strong>Control:</strong> Earth bond connected between tanker and tank before the fill starts. Spill kit and extinguisher at the fill point. Signs posted.<br><strong>Safe system:</strong> The delivery carried out to MS-04.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Access to the tank fill cap at height",
-        who: "Employees",
-        how: "Fall while climbing the tank to reach the cap",
-        initial: "high",
-        controls: "Cap reached only from the fixed steps and guard-railed platform. Three points of contact on the steps and nothing carried in the hands; tools go up in a bag.",
-        residual: "medium",
-        action: "Workshop Manager"
-      },
-      {
-        hazard: "Bulk fuel (tank capacity)",
+        hazard: "Bulk fuel (pollutant)",
         who: "Environment",
-        how: "Tank overfills or a hose disconnects, fuel reaches drains or ground",
+        how: "Tank overfills or a hose disconnects and fuel reaches the drains or ground",
         initial: "high",
-        controls: "Ullage (free space) in the tank dipped and confirmed before the delivery quantity is agreed. Operative stays at the fill point for the whole delivery. Tank bund kept empty of rainwater and debris; drain covers ready to lay.",
+        controls: "<strong>Reduce:</strong> Ullage (free space) in the tank dipped and confirmed before the delivery quantity is agreed.<br><strong>Isolate:</strong> Tank bunded, with the bund kept free of rainwater and debris.<br><strong>Control:</strong> Overfill alarm fitted. Operative stays at the fill point for the whole delivery. Drain covers ready to lay.<br><strong>Safe system:</strong> The delivery carried out to MS-04.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Tank bund and overfill alarm inspected and the result recorded.","status":"have"}]
       },
       {
-        hazard: "Delivery tanker manoeuvring on site",
-        who: "Employees / Public / Others",
-        how: "Person struck by the tanker as it reverses into or leaves the delivery area",
+        hazard: "Tank fill point at height",
+        who: "Employees",
+        how: "Fall while climbing to the fill cap",
         initial: "high",
-        controls: "Delivery area coned off before the tanker arrives. Tanker reverses only with a banksman. Pedestrians and other vehicles kept out of the area until the tanker has left.",
+        controls: "<strong>Isolate:</strong> Cap reached only from the fixed steps and guard-railed platform.<br><strong>Control:</strong> Hands kept free on the steps, with tools carried up in a bag.<br><strong>Safe system:</strong> The delivery carried out to MS-04.",
         residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Delivery tanker (moving vehicle)",
+        who: "Employees / Public / Others",
+        how: "Person struck as the tanker reverses into or leaves the delivery area",
+        initial: "high",
+        controls: "<strong>Isolate:</strong> Delivery area coned off before the tanker arrives. Pedestrians and other vehicles kept out until it has left.<br><strong>Control:</strong> Tanker reverses only with a banksman.<br><strong>Safe system:</strong> The delivery carried out to MS-04.<br><strong>PPE:</strong> Hi-vis clothing.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Fuel (skin irritant)",
+        who: "Employees",
+        how: "Skin contact dipping the tank or handling the hose causes dermatitis",
+        initial: "medium",
+        controls: "<strong>Control:</strong> Washing facilities at hand. Any splash washed off straight away.<br><strong>Safe system:</strong> The delivery carried out to MS-04.<br><strong>PPE:</strong> Nitrile gloves and eye protection.",
+        residual: "low",
         action: "Workshop Manager"
       }
     ]
@@ -1456,11 +1457,11 @@ const SNIPPETS_RA = [
     name: "RA — 05 — Replacing a tyre on the tyre changer",
     rows: [
       {
-        hazard: "Tyre under inflation pressure",
+        hazard: "Tyre under inflation pressure (stored energy)",
         who: "Employees / Others nearby",
         how: "Tyre or rim bursts while seating or inflating, causing blast or impact injury",
         initial: "high",
-        controls: "Tyre and rim checked for damage and matching size before fitting. Commercial and split-rim wheels inflated only in the inflation cage. Clip-on chuck with a remote gauge and valve used so the operative stands outside the line of the tyre wall. Pressure never taken above the manufacturer's seating pressure.",
+        controls: "<strong>Reduce:</strong> Tyre inflated only to the manufacturer's seating pressure, never above.<br><strong>Isolate:</strong> Commercial and split-rim wheels inflated only in the inflation cage. Clip-on chuck with a remote gauge, so the operative stands outside the line of the tyre wall.<br><strong>Control:</strong> Tyre and rim checked for damage and matching size before fitting.<br><strong>Safe system:</strong> Tyre fitting carried out to MS-05.<br><strong>PPE:</strong> Eye protection.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Operatives trained in tyre fitting for the wheel types they handle.","status":"have"}]
@@ -1470,25 +1471,25 @@ const SNIPPETS_RA = [
         who: "Employees",
         how: "Back strain lifting the wheel onto the turntable",
         initial: "medium",
-        controls: "Wheel lift or wheel handler used to put heavy wheels on the turntable. Where none is available, wheel rolled to the machine and lifted by two people. Wheel kept upright and rolled rather than carried.",
+        controls: "<strong>Reduce:</strong> Wheels rolled, not carried.<br><strong>Control:</strong> Wheel lift or wheel handler used for heavy wheels, otherwise a two-person lift.<br><strong>Safe system:</strong> Tyre fitting carried out to MS-05.<br><strong>PPE:</strong> Safety footwear.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Bead breaker and turntable",
+        hazard: "Bead breaker and turntable (moving parts)",
         who: "Employees",
         how: "Fingers or hand trapped between bead and rim, or by the bead breaker blade",
         initial: "medium",
-        controls: "Hands kept off the tyre bead and rim while the turntable turns or the bead breaker cycles. Bead lever and tools used, never fingers, to guide the bead.",
+        controls: "<strong>Control:</strong> Bead lever and tools used to guide the bead, never fingers. Hands kept off the bead and rim while the machine moves.<br><strong>Safe system:</strong> Tyre fitting carried out to MS-05.<br><strong>PPE:</strong> Gloves.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Bead seating bang",
+        hazard: "Noise (bead seating)",
         who: "Employees / Others nearby",
-        how: "Sudden loud noise when the bead seats damages hearing",
+        how: "Sudden loud bang when the bead seats damages hearing",
         initial: "medium",
-        controls: "Others kept away from the tyre machine while beads are seated. Hearing protection worn by the operator during inflation.",
+        controls: "<strong>Isolate:</strong> Others kept away from the tyre machine while beads are seated.<br><strong>Safe system:</strong> Tyre fitting carried out to MS-05.<br><strong>PPE:</strong> Hearing protection during inflation.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -1502,17 +1503,17 @@ const SNIPPETS_RA = [
         who: "Employees / Others nearby",
         how: "Spring slips or releases under compression and strikes the operative",
         initial: "high",
-        controls: "Spring checked for cracks and corrosion before it goes in. Correct size cups or plates fitted for the spring diameter, seated fully. Safety guard or retaining chain in place before full compression. Operative stands to the side, out of the release line, and nobody else in the bay while the spring is under load.",
+        controls: "<strong>Isolate:</strong> Safety guard or retaining chain in place before full compression. Operative stands out of the release line, and nobody else in the bay while the spring is under load.<br><strong>Control:</strong> Spring checked for cracks and corrosion before it goes in. Correct cups or plates for the spring diameter, fully seated.<br><strong>Safe system:</strong> Spring compression carried out to MS-06.<br><strong>PPE:</strong> Eye protection with face shield.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Only operatives trained on the static compressor carry out this task.","status":"have"},{"kind":"Equipment","text":"Compressor checked before use; damaged cups or hooks taken out of use.","status":"have"}]
       },
       {
-        hazard: "Compressor clamps and jaws",
+        hazard: "Compressor jaws, cups and spring coils (moving parts)",
         who: "Employees",
-        how: "Fingers trapped while clamping or releasing the spring",
+        how: "Fingers trapped while clamping, winding or releasing the spring",
         initial: "medium",
-        controls: "Hands kept clear of the jaws while the compressor moves. Spring positioned before clamping and the manufacturer's sequence followed.",
+        controls: "<strong>Control:</strong> Hands kept clear of the jaws and coils while the compressor moves. Spring positioned before clamping.<br><strong>Safe system:</strong> Spring compression carried out to MS-06.<br><strong>PPE:</strong> Gloves.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -1522,21 +1523,21 @@ const SNIPPETS_RA = [
     name: "RA — 07 — Replacing a suspension coil on a vice mounted spring compressor",
     rows: [
       {
-        hazard: "Compressed coil spring in a vice-mounted compressor (stored energy)",
+        hazard: "Compressed coil spring (stored energy)",
         who: "Employees / Others nearby",
-        how: "Spring slips off the cups during compression and is released violently",
+        how: "Spring slips or releases under compression and strikes the operative",
         initial: "high",
-        controls: "Static compressor used instead wherever the job allows. Where the vice unit has to be used, it is clamped firmly in the vice and the cups matched to the spring. Winding nut turned by hand tool only. DO NOT USE AN IMPACT DRIVER. Safety chain fitted before full compression and the operative stands out of the release line.",
+        controls: "<strong>Reduce:</strong> Static compressor used instead wherever the job allows. Wound by hand tool only, never an impact driver.<br><strong>Isolate:</strong> Safety chain fitted before full compression. Operative stands out of the release line.<br><strong>Control:</strong> Unit clamped firmly in the vice. Cups matched to the spring.<br><strong>Safe system:</strong> Spring compression carried out to MS-07.<br><strong>PPE:</strong> Eye protection with face shield.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Only operatives trained on spring compressors carry out this task.","status":"have"},{"kind":"Equipment","text":"Compressor checked before use; damaged cups or hooks taken out of use.","status":"have"}]
       },
       {
-        hazard: "Spring and compressor cups",
+        hazard: "Compressor jaws, cups and spring coils (moving parts)",
         who: "Employees",
-        how: "Fingers trapped between the spring coils and cups",
+        how: "Fingers trapped while clamping, winding or releasing the spring",
         initial: "medium",
-        controls: "Hands kept clear of the coils while winding. Steady winding only, no snatching. Correct size cups for the spring diameter.",
+        controls: "<strong>Control:</strong> Hands kept clear of the jaws and coils while the compressor moves. Spring positioned before clamping.<br><strong>Safe system:</strong> Spring compression carried out to MS-07.<br><strong>PPE:</strong> Gloves.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -1546,21 +1547,21 @@ const SNIPPETS_RA = [
     name: "RA — 08 — DSE",
     rows: [
       {
-        hazard: "Workstation set-up (chair, screen height, keyboard position)",
+        hazard: "Workstation (chair, desk, screen and keyboard position)",
         who: "Employees",
         how: "Back, neck and upper limb pain from long periods at a badly set up workstation",
         initial: "medium",
-        controls: "Chair, screen and keyboard adjusted to the user using the DSE checklist. Screen at eye level and an arm's length away, laptop on a stand with a separate keyboard and mouse. Screen work broken up with other tasks or short breaks at least hourly.",
+        controls: "<strong>Reduce:</strong> Screen work broken up with other tasks or short breaks at least hourly.<br><strong>Control:</strong> Chair, screen and keyboard adjusted to the user using the DSE checklist. Screen at eye level and an arm's length away. Laptop on a stand with a separate keyboard and mouse.<br><strong>Safe system:</strong> Screen work carried out to MS-08.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"DSE self-assessment completed for each user and reviewed when the workstation changes.","status":"have"}]
       },
       {
-        hazard: "Screen work",
+        hazard: "Display screen (prolonged viewing)",
         who: "Employees",
         how: "Eye strain and headaches from long periods looking at the screen",
         initial: "medium",
-        controls: "Screen positioned to avoid glare from windows and lights. Regular short breaks looking away from the screen.",
+        controls: "<strong>Reduce:</strong> Regular short breaks looking away from the screen.<br><strong>Control:</strong> Screen positioned to avoid glare from windows and lights.<br><strong>Safe system:</strong> Screen work carried out to MS-08.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Information","text":"Users told they can request an eye test paid for by the company.","status":"have"}]
@@ -1571,39 +1572,39 @@ const SNIPPETS_RA = [
     name: "RA — 09 — Manual handling of deliveries",
     rows: [
       {
-        hazard: "Delivered loads (weight, size and shape of each item) and the route to the store",
+        hazard: "Delivered loads (weight, size and shape)",
         who: "Employees",
         how: "Back injury lifting heavy or awkward items, or carrying them over a cluttered route",
         initial: "medium",
-        controls: "Weight checked on the label or by tilting before lifting. Route from the delivery point to the store cleared first. Items over 25kg, or awkward items, moved on the sack truck or trolley, or by two people. Pallets broken down where they arrive rather than carried whole.",
+        controls: "<strong>Reduce:</strong> Pallets broken down where they arrive rather than moved whole. Items over 25kg, or awkward items, moved on the sack truck or trolley, or by two people.<br><strong>Control:</strong> Weight checked on the label or by tilting before lifting. Route to the store cleared first.<br><strong>Safe system:</strong> Unloading and storing carried out to MS-09.<br><strong>PPE:</strong> Safety footwear and gloves.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Manual handling training current.","status":"have"}]
       },
       {
-        hazard: "Stacked deliveries",
+        hazard: "Stacked goods",
         who: "Employees",
         how: "Stack collapses and items fall onto feet or legs",
         initial: "medium",
-        controls: "Heaviest items at the bottom and stacks kept stable and below shoulder height. Damaged pallets not used. Safety footwear worn.",
+        controls: "<strong>Control:</strong> Heaviest items at the bottom, stacks stable and below shoulder height. Damaged pallets not used.<br><strong>Safe system:</strong> Unloading and storing carried out to MS-09.<br><strong>PPE:</strong> Safety footwear.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Delivery vehicle in the yard",
+        hazard: "Delivery vehicle (moving vehicle)",
         who: "Employees / Others nearby",
         how: "Person struck by the delivery vehicle while it manoeuvres or is unloaded",
         initial: "high",
-        controls: "Delivery vehicle parked in the marked delivery area. Nobody stands behind it while it reverses. Unloading starts only once the engine is off and the handbrake is on.",
+        controls: "<strong>Isolate:</strong> Delivery vehicle parked in the marked delivery area. Nobody stands behind it while it reverses.<br><strong>Control:</strong> Unloading starts only once the engine is off and the handbrake is on.<br><strong>Safe system:</strong> Unloading and storing carried out to MS-09.<br><strong>PPE:</strong> Hi-vis clothing in the yard.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Banding straps and packaging",
+        hazard: "Banding straps and blades (sharp edges, strap tension)",
         who: "Employees",
         how: "Cuts from knives, or a strap recoiling when it is cut",
         initial: "medium",
-        controls: "Strap cutter or safety knife used, never an open blade. Banding cut while standing to the side of the strap.",
+        controls: "<strong>Reduce:</strong> Strap cutter or safety knife used, never an open blade.<br><strong>Control:</strong> Banding cut while standing to the side of the strap.<br><strong>Safe system:</strong> Unloading and storing carried out to MS-09.<br><strong>PPE:</strong> Gloves.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -1617,16 +1618,16 @@ const SNIPPETS_RA = [
         who: "Employees",
         how: "Serious back injury or crushing if a full barrel is lifted, rolled or tipped by hand",
         initial: "high",
-        controls: "Full barrels never lifted or tipped by hand. Moved only with the barrel trolley or the fork truck drum attachment. Barrels stored at floor level on the bunded pallet. Empty barrels handled by two people.",
+        controls: "<strong>Eliminate:</strong> Full barrels never lifted or tipped by hand.<br><strong>Reduce:</strong> Full barrels moved only with the barrel trolley or the fork truck drum attachment.<br><strong>Control:</strong> Barrels stored at floor level. Empty barrels handled by two people.<br><strong>Safe system:</strong> Barrel handling carried out to MS-10.<br><strong>PPE:</strong> Safety footwear and gloves.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Leaking barrel",
-        who: "Employees / Others nearby",
-        how: "Oil leaks onto the floor, causing slips and contaminating drains",
+        hazard: "Engine oil (pollutant, slip hazard when spilt)",
+        who: "Employees / Environment",
+        how: "A leaking barrel makes the floor slippery and oil reaches the drains",
         initial: "medium",
-        controls: "Barrels kept on a bunded pallet. Barrels checked for damage when delivered and when moved. Leaks covered with absorbent straight away.",
+        controls: "<strong>Isolate:</strong> Barrels kept on a bunded pallet.<br><strong>Control:</strong> Barrels checked for damage when delivered and each time they are moved.<br><strong>Safe system:</strong> Barrel handling carried out to MS-10.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Spill kit kept at the oil store.","status":"have"}]
@@ -1637,11 +1638,11 @@ const SNIPPETS_RA = [
     name: "RA — 11 — Personal for manual handling physical conditions",
     rows: [
       {
-        hazard: "Manual handling by an operative with a health condition, injury or pregnancy",
+        hazard: "Manual handling loads (for a person with a health condition, injury or pregnancy)",
         who: "Employees",
-        how: "A pre-existing condition is made worse by handling loads the person should not be lifting",
+        how: "The condition is made worse by handling loads the person should not be lifting",
         initial: "medium",
-        controls: "Operative tells the line manager about any condition, injury or pregnancy that affects lifting. Tasks adjusted for that person: lighter loads, lifting aids or the task given to someone else. Separate assessment completed for new and expectant mothers.",
+        controls: "<strong>Reduce:</strong> Tasks adjusted for that person: lighter loads, lifting aids, or the task given to someone else.<br><strong>Control:</strong> Operative tells the line manager about any condition, injury or pregnancy that affects lifting. Separate assessment completed for new and expectant mothers.<br><strong>Safe system:</strong> Adjusting the work carried out to MS-11.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Health questionnaire on starting and when circumstances change.","status":"have"}]
@@ -1652,30 +1653,30 @@ const SNIPPETS_RA = [
     name: "RA — 12 — Oil drainer filling and draining",
     rows: [
       {
-        hazard: "Waste oil in the drainer",
+        hazard: "Waste oil drainer under air pressure",
         who: "Employees / Others nearby",
-        how: "Valve opened in the wrong order or a kinked hose sprays or spills oil",
+        how: "Valves opened in the wrong order or a kinked hose sprays oil",
         initial: "medium",
-        controls: "Valve sequence posted at the drainer and followed. Hose checked for kinks and secured in the receiving container before the valve opens. Drip tray under the hose connection. Spill kit at hand.",
+        controls: "<strong>Isolate:</strong> Drainer emptied only at the waste oil storage area.<br><strong>Control:</strong> Valve sequence posted at the drainer. Hose checked for kinks and secured in the receiving container before the valve opens.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.<br><strong>PPE:</strong> Eye protection.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Used engine oil (skin contact)",
+        hazard: "Used engine oil (harmful to skin)",
         who: "Employees",
         how: "Repeated skin contact causes dermatitis; used oil contains harmful contaminants",
         initial: "medium",
-        controls: "Nitrile gloves and overalls worn. Eye protection where there is a splash risk. Hands washed before eating and at the end of the shift.",
+        controls: "<strong>Control:</strong> Washing facilities at hand. Hands washed before eating and at the end of the shift.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.<br><strong>PPE:</strong> Nitrile gloves and eye protection.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Information","text":"COSHH assessment and SDS for used engine oil kept together and available in the workshop.","status":"have"}]
       },
       {
-        hazard: "Oil on the floor",
-        who: "Employees / Others nearby",
-        how: "Slip on oil left after draining",
+        hazard: "Waste oil (pollutant, slip hazard when spilt)",
+        who: "Employees / Environment",
+        how: "A spill makes the floor slippery and runs towards the drains",
         initial: "medium",
-        controls: "Floor checked when the job ends. Absorbent granules put down immediately on any spill and swept up.",
+        controls: "<strong>Control:</strong> Drip tray under the hose connection. Spill kit at hand.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -1685,29 +1686,39 @@ const SNIPPETS_RA = [
     name: "RA — 13 — General grinding",
     rows: [
       {
-        hazard: "Particles and sparks from the grinding wheel",
-        who: "Employees",
-        how: "Particles strike the eye",
+        hazard: "Abrasive wheel (rotating, can burst)",
+        who: "Employees / Others nearby",
+        how: "Wheel shatters because it is damaged, over-speeded or the work traps in the gap",
         initial: "high",
-        controls: "Goggles to BS EN 166 worn, not safety glasses, with a face shield over them for heavy grinding. Tool rest set close to the wheel on bench grinders. Screens placed between the grinding position and others.",
+        controls: "<strong>Isolate:</strong> Guard and visor fitted.<br><strong>Control:</strong> Wheel speed rating checked as equal to or above the grinder's speed. Wheel checked for damage before use. Tool rest set no more than 3mm from the wheel.<br><strong>Safe system:</strong> Grinding carried out to MS-13.<br><strong>PPE:</strong> Goggles to BS EN 166 with face shield.",
+        residual: "medium",
+        action: "Workshop Manager",
+        notes: [{"kind":"Training","text":"Operatives trained in abrasive wheels before mounting wheels.","status":"have"}]
+      },
+      {
+        hazard: "Flying particles",
+        who: "Employees / Others nearby",
+        how: "Particles from the wheel or the work strike the eye",
+        initial: "high",
+        controls: "<strong>Isolate:</strong> Screens between the grinding position and others.<br><strong>Safe system:</strong> Grinding carried out to MS-13.<br><strong>PPE:</strong> Goggles to BS EN 166 with face shield.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Hot sparks",
+        hazard: "Hot sparks (ignition source)",
         who: "Employees / Others nearby",
-        how: "Sparks land on skin or clothing, or on combustibles and start a fire",
+        how: "Sparks land on combustibles and start a fire, or burn skin",
         initial: "high",
-        controls: "Combustibles cleared for 5m or covered with fire blankets. Sparks directed away from people, fuel and the vehicle. Extinguisher within reach. Area checked for smouldering before leaving.",
+        controls: "<strong>Isolate:</strong> Combustibles cleared for 5m or covered with fire blankets. Sparks directed away from people, fuel and vehicles.<br><strong>Control:</strong> Extinguisher within reach. Area checked for smouldering before leaving.<br><strong>Safe system:</strong> Grinding carried out to MS-13.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Grinding noise",
+        hazard: "Noise (grinding)",
         who: "Employees / Others nearby",
         how: "Hearing damage from regular grinding",
         initial: "medium",
-        controls: "Grinding done away from others where possible. Hearing protection worn by the operator and anyone else within the area.",
+        controls: "<strong>Isolate:</strong> Grinding done away from others where possible.<br><strong>Safe system:</strong> Grinding carried out to MS-13.<br><strong>PPE:</strong> Hearing protection for the operator and anyone in the area.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Hearing health surveillance for regular users.","status":"have"}]
@@ -1717,20 +1728,10 @@ const SNIPPETS_RA = [
         who: "Employees",
         how: "Breathing in grinding dust",
         initial: "medium",
-        controls: "Extraction used at the bench grinder. FFP3 mask worn where no extraction is available.",
+        controls: "<strong>Control:</strong> Extraction used at the bench grinder.<br><strong>Safe system:</strong> Grinding carried out to MS-13.<br><strong>PPE:</strong> FFP3 mask where no extraction is available.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Information","text":"COSHH assessment for the material being ground.","status":"have"}]
-      },
-      {
-        hazard: "Abrasive wheel bursting",
-        who: "Employees / Others nearby",
-        how: "Bench grinder wheel shatters because it is damaged, over-speeded or the work is trapped in the gap",
-        initial: "high",
-        controls: "Wheel speed rating checked as equal to or above the grinder's speed. Wheel checked for damage before use. Tool rest set no more than 3mm from the wheel. Guard and visor fitted.",
-        residual: "medium",
-        action: "Workshop Manager",
-        notes: [{"kind":"Training","text":"Operatives trained in abrasive wheels before mounting wheels.","status":"have"}]
       }
     ]
   },
@@ -1738,57 +1739,57 @@ const SNIPPETS_RA = [
     name: "RA — 14 — General welding and heating",
     rows: [
       {
-        hazard: "Ultraviolet light from the welding arc",
+        hazard: "Welding arc (ultraviolet radiation)",
         who: "Employees / Others nearby",
         how: "Arc eye or skin burns from direct or reflected arc light",
         initial: "high",
-        controls: "Welding screens or curtains put round the work before striking an arc. Auto-darkening helmet shade 10 to 13. Others kept outside the screened area.",
+        controls: "<strong>Isolate:</strong> Welding screens or curtains put round the work before striking an arc. Others kept outside the screened area.<br><strong>Safe system:</strong> Welding and heating carried out to MS-14.<br><strong>PPE:</strong> Auto-darkening welding helmet, shade 10 to 13.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
         hazard: "Hot metal and spatter",
         who: "Employees",
-        how: "Burns from spatter or touching hot work",
+        how: "Burns from spatter or from touching hot work",
         initial: "high",
-        controls: "Leather gauntlets, flame retardant overalls and boots worn. Work left to cool, or marked HOT, before it is handled.",
+        controls: "<strong>Control:</strong> Work left to cool, or marked HOT, before it is handled.<br><strong>Safe system:</strong> Welding and heating carried out to MS-14.<br><strong>PPE:</strong> Leather gauntlets, flame retardant overalls and safety footwear.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Welding fume",
+        hazard: "Welding fume (carcinogen)",
         who: "Employees",
         how: "Breathing welding fume, which is a cause of lung cancer",
         initial: "high",
-        controls: "Extraction (on-torch or local exhaust) used for all indoor welding, however short. Head kept out of the fume plume. Respiratory protection (powered air helmet or FFP3) worn on top of extraction.",
+        controls: "<strong>Isolate:</strong> Extraction (on-torch or local exhaust) used for all indoor welding, however short.<br><strong>Control:</strong> Head kept out of the fume plume.<br><strong>Safe system:</strong> Welding and heating carried out to MS-14.<br><strong>PPE:</strong> Powered air helmet or FFP3, worn on top of the extraction.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Lung function health surveillance for regular welders.","status":"have"},{"kind":"Equipment","text":"Extraction examined and tested every 14 months (LEV thorough examination).","status":"have"}]
       },
       {
-        hazard: "Sparks and heat near combustibles or fuel",
+        hazard: "Sparks and heat (ignition source)",
         who: "Employees / Others nearby",
-        how: "Fire from sparks, spatter or heat",
+        how: "Fire from sparks, spatter or heat reaching combustibles or fuel",
         initial: "high",
-        controls: "Hot works permit issued. Combustibles cleared for 5m or covered. No welding within 6m of the fuel store or a vehicle fuel tank. Extinguisher at the work. Area checked for 60 minutes after work stops.",
+        controls: "<strong>Eliminate:</strong> No welding within 6m of the fuel store or a vehicle fuel tank.<br><strong>Isolate:</strong> Combustibles cleared for 5m or covered.<br><strong>Control:</strong> Hot works permit issued. Extinguisher at the work. Area checked for 60 minutes after work stops.<br><strong>Safe system:</strong> Welding and heating carried out to MS-14.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Gas cylinders and heating torch",
+        hazard: "Compressed gas cylinders (flammable gas)",
         who: "Employees / Others nearby",
         how: "Fire or explosion from a flashback, a leaking hose or a damaged cylinder",
         initial: "high",
-        controls: "Flashback arrestors fitted at the regulator and the torch. Hoses checked for damage before use. Cylinders stored upright and chained, and valved off when not in use. Torch never left lit unattended.",
+        controls: "<strong>Isolate:</strong> Cylinders stored upright and chained, and valved off when not in use.<br><strong>Control:</strong> Flashback arrestors fitted at the regulator and the torch. Hoses checked for damage before use. Torch never left lit unattended.<br><strong>Safe system:</strong> Welding and heating carried out to MS-14.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Welding set electrical supply",
+        hazard: "Electricity (welding set)",
         who: "Employees",
         how: "Electric shock from damaged leads or from welding in wet conditions",
         initial: "medium",
-        controls: "Welding set and leads checked before use. Return clamp fixed to the work close to the weld. No welding in wet conditions.",
+        controls: "<strong>Control:</strong> Welding set and leads checked before use. Return clamp fixed to the work close to the weld. No welding in wet conditions.<br><strong>Safe system:</strong> Welding and heating carried out to MS-14.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -1802,26 +1803,26 @@ const SNIPPETS_RA = [
         who: "Employees",
         how: "Loose clothing, hair or gloves caught in the chuck, dragging the hand or head in",
         initial: "high",
-        controls: "Chuck guard down before starting. Sleeves fastened, long hair tied back, no gloves near the chuck. Chuck key removed before the drill is switched on.",
+        controls: "<strong>Isolate:</strong> Chuck guard down before starting.<br><strong>Control:</strong> Sleeves fastened, long hair tied back, no gloves near the chuck. Chuck key removed before the drill is switched on.<br><strong>Safe system:</strong> Drilling carried out to MS-15.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Only trained operatives use the pillar drill.","status":"have"},{"kind":"Equipment","text":"Chuck guard checked before use.","status":"have"}]
       },
       {
-        hazard: "Hot swarf",
+        hazard: "Swarf (hot and sharp)",
         who: "Employees",
         how: "Swarf flies into the eye or cuts the hand",
         initial: "medium",
-        controls: "Goggles to BS EN 166 worn. Swarf cleared with a brush once the drill has stopped, never by hand.",
+        controls: "<strong>Control:</strong> Swarf cleared with a brush once the drill has stopped, never by hand.<br><strong>Safe system:</strong> Drilling carried out to MS-15.<br><strong>PPE:</strong> Goggles to BS EN 166.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Workpiece catching on the bit",
+        hazard: "Workpiece (rotating with the bit)",
         who: "Employees",
         how: "Unclamped work spins with the bit and strikes the hand",
         initial: "medium",
-        controls: "Work always clamped in the machine vice or to the table. Feed eased off as the bit breaks through.",
+        controls: "<strong>Control:</strong> Work always clamped in the machine vice or to the table. Feed eased off as the bit breaks through.<br><strong>Safe system:</strong> Drilling carried out to MS-15.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -1835,35 +1836,35 @@ const SNIPPETS_RA = [
         who: "Employees",
         how: "Fingers or hand under the blade, causing amputation",
         initial: "high",
-        controls: "Guillotine only used with its fixed front guard or light guard in place and working. Material fed from the side of the guard, hands kept behind it. Long sheets supported on the stand, not by a second person at the blade.",
+        controls: "<strong>Isolate:</strong> Guillotine used only with its fixed front guard or light guard in place and working. Material fed from the side, hands behind the guard. Long sheets supported on the stand, never by a second person at the blade.<br><strong>Safe system:</strong> Cutting carried out to MS-16.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Only operatives trained on the guillotine use it.","status":"have"}]
       },
       {
-        hazard: "Hold-down clamps",
+        hazard: "Hold-down clamps (moving parts)",
         who: "Employees",
         how: "Fingers trapped under the hold-downs as they close",
         initial: "medium",
-        controls: "Material lined up and hands clear before the pedal is pressed. One person only operates the machine.",
+        controls: "<strong>Control:</strong> Material lined up and hands clear before the pedal is pressed. One person only operates the machine.<br><strong>Safe system:</strong> Cutting carried out to MS-16.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Cutting noise and falling offcuts",
-        who: "Employees / Others nearby",
-        how: "Hearing damage from repeated bangs, and offcuts dropping on feet",
-        initial: "medium",
-        controls: "Receiving tray kept in place to catch offcuts. Hearing protection worn during cutting runs. Safety footwear worn.",
-        residual: "low",
-        action: "Workshop Manager"
-      },
-      {
-        hazard: "Sharp sheet edges and offcuts",
+        hazard: "Sheet edges and offcuts (sharp, falling)",
         who: "Employees",
-        how: "Cuts to the hands handling sheet metal and offcuts",
+        how: "Cuts handling sheet and offcuts, and offcuts dropping on feet",
         initial: "medium",
-        controls: "Cut-resistant gloves worn for handling sheet and offcuts. Offcuts cleared into the scrap bin, not left on the bed or the floor.",
+        controls: "<strong>Control:</strong> Receiving tray kept in place to catch offcuts. Offcuts cleared into the scrap bin, not left on the bed or the floor.<br><strong>Safe system:</strong> Cutting carried out to MS-16.<br><strong>PPE:</strong> Cut-resistant gloves for handling (not at the blade), eye protection and safety footwear.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Noise (cutting)",
+        who: "Employees / Others nearby",
+        how: "Hearing damage from repeated bangs during cutting runs",
+        initial: "medium",
+        controls: "<strong>Safe system:</strong> Cutting carried out to MS-16.<br><strong>PPE:</strong> Hearing protection during cutting runs.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -1873,21 +1874,21 @@ const SNIPPETS_RA = [
     name: "RA — 17 — Using the hydraulic press to press in wheel bearings",
     rows: [
       {
-        hazard: "Press ram",
+        hazard: "Press ram (hydraulic force)",
         who: "Employees",
         how: "Hand crushed under the ram",
         initial: "high",
-        controls: "Hub and bearing fully supported on the press bed before pressure is applied. Hands off the work and away from the ram before pumping. Two-hand control used where fitted.",
+        controls: "<strong>Isolate:</strong> Two-hand control used where fitted. Hands off the work and away from the ram before pumping.<br><strong>Control:</strong> Hub and bearing fully supported on the press bed before pressure is applied.<br><strong>Safe system:</strong> Pressing carried out to MS-17.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Only trained operatives use the press.","status":"have"},{"kind":"Equipment","text":"Press and hoses checked before use.","status":"have"}]
       },
       {
-        hazard: "Bearing or packing under hydraulic pressure",
+        hazard: "Parts under hydraulic load (stored energy)",
         who: "Employees / Others nearby",
         how: "Bearing, drift or packing shatters or flies out under load",
         initial: "high",
-        controls: "Correct size drift used, square to the bearing. Press guard or shield in place. Operative stands to the side of the work. Pressure not taken beyond the gauge limit; stop and check if it will not move.",
+        controls: "<strong>Reduce:</strong> Correct size drift, square to the bearing. Pressure not taken beyond the gauge limit.<br><strong>Isolate:</strong> Press guard or shield in place. Operative stands to the side of the work.<br><strong>Safe system:</strong> Pressing carried out to MS-17.<br><strong>PPE:</strong> Eye protection with face shield.",
         residual: "medium",
         action: "Workshop Manager"
       }
@@ -1897,30 +1898,30 @@ const SNIPPETS_RA = [
     name: "RA — 18 — Locating a vehicle on the ramp",
     rows: [
       {
-        hazard: "Vehicle being raised (vehicle weight and lifting points)",
+        hazard: "Raised vehicle (vehicle weight)",
         who: "Employees / Others nearby",
-        how: "Vehicle falls from the ramp because it is off centre or the pads are in the wrong place",
+        how: "Vehicle falls from the ramp because it is off centre, the pads are in the wrong place or it is over the SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the ramp SWL. Vehicle centred on the ramp and pads set on the manufacturer's lifting points. Raised a few inches, stopped and checked for stability before going to full height.",
+        controls: "<strong>Isolate:</strong> Ramp lowered onto its mechanical locks before anyone works underneath.<br><strong>Control:</strong> Vehicle weight checked against the ramp SWL. Pads set on the manufacturer's lifting points. Vehicle raised a few inches and checked for stability before going to full height.<br><strong>Safe system:</strong> Positioning and raising the vehicle carried out to MS-18.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Ramps thoroughly examined under LOLER at least every 12 months, with the report held.","status":"have"},{"kind":"Training","text":"Ramps operated only by trained operatives.","status":"have"}]
       },
       {
-        hazard: "Vehicle moving while positioned",
+        hazard: "Moving vehicle (driving onto the ramp)",
         who: "Employees / Others nearby",
         how: "Person crushed by the vehicle as it is driven onto or settles on the ramp",
         initial: "high",
-        controls: "One person drives the vehicle on, guided by one banksman standing to the side, not in front. Nobody else near the ramp. Handbrake on, in gear and key out once in position.",
+        controls: "<strong>Isolate:</strong> Nobody else near the ramp while the vehicle is driven on. Banksman stands to the side, not in front.<br><strong>Control:</strong> Handbrake on, in gear and key out once in position.<br><strong>Safe system:</strong> Positioning and raising the vehicle carried out to MS-18.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp lowering onto a person or object",
+        hazard: "Ramp in motion (lowering)",
         who: "Employees / Others nearby",
         how: "Person trapped, or a stand or tool crushed, as the ramp comes down",
         initial: "high",
-        controls: "Area under and around the ramp checked clear, and stands and tools removed, before lowering. Operator keeps sight of the whole ramp while it moves.",
+        controls: "<strong>Isolate:</strong> Area under and around the ramp checked clear, and stands and tools removed, before lowering.<br><strong>Control:</strong> Operator keeps sight of the whole ramp while it moves.<br><strong>Safe system:</strong> Positioning and raising the vehicle carried out to MS-18.",
         residual: "medium",
         action: "Workshop Manager"
       }
@@ -1930,21 +1931,30 @@ const SNIPPETS_RA = [
     name: "RA — 19 — Removing ball joint pins from hubs",
     rows: [
       {
-        hazard: "Suspension under load",
+        hazard: "Suspension under load (stored energy)",
         who: "Employees",
         how: "Pin releases suddenly and the hub or arm springs out",
         initial: "medium",
-        controls: "Vehicle on axle stands or ramp with the suspension taken off load before the pin is split. Operative positioned out of the line the arm will move in.",
+        controls: "<strong>Eliminate:</strong> Suspension taken off load before the pin is split.<br><strong>Isolate:</strong> Operative positioned out of the line the arm will move in.<br><strong>Safe system:</strong> Splitting the joint carried out to MS-19.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Flying debris from hammer and splitter",
-        who: "Employees",
+        hazard: "Flying debris (hammer and splitter)",
+        who: "Employees / Others nearby",
         how: "Particles strike the eye",
         initial: "medium",
-        controls: "Splitter used in preference to a hammer. Goggles to BS EN 166 worn. Others kept clear of the bay.",
+        controls: "<strong>Reduce:</strong> Splitter used in preference to a hammer.<br><strong>Isolate:</strong> Others kept clear of the bay.<br><strong>Safe system:</strong> Splitting the joint carried out to MS-19.<br><strong>PPE:</strong> Goggles to BS EN 166.",
         residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Raised vehicle (vehicle weight)",
+        who: "Employees",
+        how: "Crushed if the vehicle falls from its supports",
+        initial: "high",
+        controls: "<strong>Isolate:</strong> Vehicle on the ramp with the locks engaged, or on axle stands rated for its weight. Never worked under on a jack alone.<br><strong>Safe system:</strong> Splitting the joint carried out to MS-19.",
+        residual: "medium",
         action: "Workshop Manager"
       }
     ]
@@ -1957,7 +1967,7 @@ const SNIPPETS_RA = [
         who: "Employees / Public / Others",
         how: "Pedestrian struck or crushed by the truck",
         initial: "high",
-        controls: "Pedestrian walkways marked and kept separate from truck routes. Truck driven at walking pace in the yard and workshop. Driver stops if anyone comes within the working area. Reversing only with a clear view or a banksman.",
+        controls: "<strong>Reduce:</strong> Truck driven at walking pace in the yard and workshop.<br><strong>Isolate:</strong> Pedestrian walkways marked and kept separate from truck routes.<br><strong>Control:</strong> Driver stops if anyone comes within the working area. Reversing only with a clear view or a banksman.<br><strong>Safe system:</strong> Truck operation carried out to MS-20.<br><strong>PPE:</strong> Hi-vis clothing.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Trained and authorised operators only.","status":"have"},{"kind":"Equipment","text":"Pre-use check done each shift and the truck thoroughly examined under LOLER every 12 months.","status":"have"}]
@@ -1965,18 +1975,18 @@ const SNIPPETS_RA = [
       {
         hazard: "Raised load",
         who: "Employees / Others nearby",
-        how: "Truck tips or the load falls because of overload, uneven ground or turning with the load raised",
+        how: "Load falls because of overload, uneven ground or travelling with it raised",
         initial: "high",
-        controls: "Load weight checked against the truck's rating plate. Load seated against the backrest and secured. Travel with the forks low and the mast tilted back. No raising or lowering while moving. No one walks under a raised load.",
+        controls: "<strong>Isolate:</strong> No one walks under a raised load.<br><strong>Control:</strong> Load weight checked against the truck's rating plate. Load seated against the backrest and secured. Travel with the forks low and the mast tilted back. No raising or lowering while moving.<br><strong>Safe system:</strong> Truck operation carried out to MS-20.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Truck overturning",
+        hazard: "Fork truck (instability)",
         who: "Employees",
-        how: "Driver crushed if the truck tips over",
+        how: "Truck tips over and crushes the driver",
         initial: "high",
-        controls: "Seat belt worn whenever the truck is driven. Truck used only on level, firm ground. No turning on slopes or with the load raised.",
+        controls: "<strong>Control:</strong> Seat belt worn whenever the truck is driven. Truck used only on level, firm ground. No turning on slopes or with the load raised.<br><strong>Safe system:</strong> Truck operation carried out to MS-20.",
         residual: "medium",
         action: "Workshop Manager"
       }
@@ -1986,40 +1996,40 @@ const SNIPPETS_RA = [
     name: "RA — 21 — Roadside repairs — General",
     rows: [
       {
-        hazard: "Live traffic passing the broken down vehicle",
+        hazard: "Live traffic",
         who: "Employees",
         how: "Operative struck by a passing vehicle",
         initial: "high",
-        controls: "Repair only attempted where the vehicle is off the carriageway in a safe place. No repairs on a motorway hard shoulder or a high speed road; recovery called instead. Service vehicle parked behind to protect the work, beacons on. Operative works from the side away from traffic. Class 3 hi-vis worn.",
+        controls: "<strong>Eliminate:</strong> No repairs on a motorway hard shoulder or a high speed road: recovery called instead.<br><strong>Isolate:</strong> Repair attempted only where the vehicle is off the carriageway in a safe place. Service vehicle parked behind to protect the work, beacons on.<br><strong>Control:</strong> Operative works from the side away from traffic.<br><strong>Safe system:</strong> The roadside repair carried out to MS-21.<br><strong>PPE:</strong> Class 3 hi-vis.",
         residual: "medium",
-        action: "Workshop Manager"
-      },
-      {
-        hazard: "Weather and darkness at the roadside",
-        who: "Employees",
-        how: "Cold, wet or poor light leads to slips, mistakes and fatigue",
-        initial: "medium",
-        controls: "Work lights or head torch used after dark. Job stopped and recovery arranged if the conditions make it unsafe. Suitable waterproof and warm clothing worn.",
-        residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Lone worker check in with the office at the start and finish of each roadside job.","status":"have"}]
       },
       {
-        hazard: "Vehicle supported on a jack at the roadside",
-        who: "Employees",
-        how: "Crushed if the vehicle falls from the jack",
+        hazard: "Live traffic (passengers at the roadside)",
+        who: "Passengers / Public",
+        how: "Passengers struck by passing traffic or hurt leaving the vehicle at the roadside",
         initial: "high",
-        controls: "Vehicle jacked only on firm, level ground with the wheels chocked. Axle stand in place before any part of the body goes underneath. Never worked under on a jack alone.",
+        controls: "<strong>Isolate:</strong> Passengers moved off the carriageway and behind the barrier where it is safe to do so, otherwise kept seated with belts on.<br><strong>Control:</strong> A member of staff stays with them. Replacement vehicle arranged for vulnerable passengers.<br><strong>Safe system:</strong> The roadside repair carried out to MS-21.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Passengers on or near the broken-down vehicle",
-        who: "Passengers / Public",
-        how: "Passengers struck by passing traffic or hurt leaving the vehicle at the roadside",
+        hazard: "Raised vehicle on a jack (vehicle weight)",
+        who: "Employees",
+        how: "Crushed if the vehicle falls from the jack",
         initial: "high",
-        controls: "Passengers moved off the carriageway and behind the barrier where it is safe to do so; otherwise kept seated with belts on and a member of staff with them. Replacement vehicle arranged for vulnerable passengers.",
+        controls: "<strong>Isolate:</strong> Axle stand in place before any part of the body goes underneath. Never worked under on a jack alone.<br><strong>Control:</strong> Vehicle jacked only on firm, level ground with the wheels chocked.<br><strong>Safe system:</strong> The roadside repair carried out to MS-21.",
         residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Weather and darkness",
+        who: "Employees",
+        how: "Cold, wet or poor light leads to slips, mistakes and fatigue",
+        initial: "medium",
+        controls: "<strong>Control:</strong> Work lights or a head torch used after dark. Job stopped and recovery arranged if the conditions make it unsafe.<br><strong>Safe system:</strong> The roadside repair carried out to MS-21.<br><strong>PPE:</strong> Waterproof and warm clothing.",
+        residual: "low",
         action: "Workshop Manager"
       }
     ]
@@ -2028,11 +2038,11 @@ const SNIPPETS_RA = [
     name: "RA — 22 — Roadside recovery (strap on a vehicle)",
     rows: [
       {
-        hazard: "Live traffic at the recovery point",
+        hazard: "Live traffic",
         who: "Employees / Public / Others",
-        how: "Operative or passengers struck by passing traffic",
+        how: "Operative or passengers struck by passing traffic at the recovery point",
         initial: "high",
-        controls: "Passengers moved off the vehicle and away from the carriageway, behind a barrier where there is one. Recovery vehicle parked to protect the work area with beacons on. Operative stays on the side away from traffic as far as possible. Class 3 hi-vis worn.",
+        controls: "<strong>Isolate:</strong> Passengers moved off the vehicle and away from the carriageway, behind a barrier where there is one. Recovery vehicle parked to protect the work area, beacons on.<br><strong>Control:</strong> Operative stays on the side away from traffic as far as possible.<br><strong>Safe system:</strong> The recovery carried out to MS-22.<br><strong>PPE:</strong> Class 3 hi-vis.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Lone worker check in with the office at the start and finish of each recovery job.","status":"have"}]
@@ -2042,27 +2052,27 @@ const SNIPPETS_RA = [
         who: "Employees / Others nearby",
         how: "Strap or fixing fails and recoils, striking anyone nearby",
         initial: "high",
-        controls: "Strap checked for cuts and wear before use. Strap rating checked against the vehicle weight. Strap attached only to the manufacturer's towing points. Damper or blanket over the strap. Everyone kept back at least 1.5 times the strap length while it is loaded.",
+        controls: "<strong>Isolate:</strong> Everyone kept back at least 1.5 times the strap length while it is loaded.<br><strong>Control:</strong> Strap checked for cuts and wear, and its rating checked against the vehicle weight. Attached only to the manufacturer's towing points. Damper or blanket over the strap.<br><strong>Safe system:</strong> The recovery carried out to MS-22.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Tow straps inspected before use and withdrawn if damaged.","status":"have"}]
       },
       {
-        hazard: "Attaching the strap under the vehicle",
-        who: "Employees",
-        how: "Strain from crouching and reaching under the vehicle",
-        initial: "medium",
-        controls: "Kneeling mat used and the strap fixed from the side nearest the towing point. Rear towing eye fitted by hand before the strap is pulled through.",
-        residual: "low",
-        action: "Workshop Manager"
-      },
-      {
-        hazard: "Strap towing on the public road",
+        hazard: "Towed vehicle on the public road",
         who: "Employees / Public / Others",
         how: "Collision because the towed vehicle cannot brake or steer properly, or the strap is not seen",
         initial: "high",
-        controls: "Strap tow used only over a short distance at low speed to a place of safety. Towed vehicle steered by a competent driver with the ignition on. Gap between the vehicles no more than 4.5m, and the strap flagged if the gap is over 1.5m. ON TOW sign displayed.",
+        controls: "<strong>Reduce:</strong> Strap tow used only over a short distance at low speed to a place of safety.<br><strong>Control:</strong> Towed vehicle steered by a competent driver with the ignition on. Gap between the vehicles no more than 4.5m, and the strap flagged if the gap is over 1.5m. ON TOW sign displayed.<br><strong>Safe system:</strong> The recovery carried out to MS-22.",
         residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Awkward posture (attaching the strap)",
+        who: "Employees",
+        how: "Strain from crouching and reaching under the vehicle",
+        initial: "medium",
+        controls: "<strong>Control:</strong> Kneeling mat used. Strap fixed from the side nearest the towing point. Rear towing eye fitted by hand.<br><strong>Safe system:</strong> The recovery carried out to MS-22.<br><strong>PPE:</strong> Gloves.",
+        residual: "low",
         action: "Workshop Manager"
       }
     ]
@@ -2071,29 +2081,29 @@ const SNIPPETS_RA = [
     name: "RA — 23 — Inspecting vehicles",
     rows: [
       {
-        hazard: "Oil, water and debris on the workshop floor and pit edges",
+        hazard: "Inspection pit (open edge) and contaminated floor",
         who: "Employees",
-        how: "Slip or trip, or a fall into the pit",
+        how: "Fall into the pit, or a slip on oil, water or debris",
         initial: "medium",
-        controls: "Spills cleared as soon as they happen. Pit covered when not in use and its edges marked. Lighting in the pit and bays kept working.",
+        controls: "<strong>Isolate:</strong> Pit covered when not in use and its edges marked.<br><strong>Control:</strong> Spills cleared as soon as they happen. Pit and bay lighting kept working.<br><strong>Safe system:</strong> The inspection carried out to MS-23.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Vehicle raised for inspection",
+        hazard: "Raised vehicle (vehicle weight)",
         who: "Employees",
         how: "Crushed if the vehicle falls from its supports",
         initial: "high",
-        controls: "Vehicle on the ramp with the locks engaged, or on two axle stands rated for its weight. Wheels chocked. Never worked under on a jack alone.",
+        controls: "<strong>Isolate:</strong> Vehicle on the ramp with the locks engaged, or on two axle stands rated for its weight. Never worked under on a jack alone.<br><strong>Control:</strong> Wheels chocked.<br><strong>Safe system:</strong> The inspection carried out to MS-23.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Engine running during the inspection",
+        hazard: "Running engine (moving parts, hot parts, exhaust gas)",
         who: "Employees",
         how: "Hands or sleeves caught by the fan or belts, burns from hot parts, or exhaust fumes breathed in",
         initial: "medium",
-        controls: "Engine run only when the check needs it, with exhaust extraction connected indoors. Vehicle in neutral, handbrake on and wheels chocked. Hands, sleeves and tools kept clear of the fan, belts and exhaust.",
+        controls: "<strong>Reduce:</strong> Engine run only when the check needs it.<br><strong>Isolate:</strong> Exhaust extraction connected for any run indoors.<br><strong>Control:</strong> Vehicle in neutral, handbrake on and wheels chocked. Hands, sleeves and tools kept clear of the fan, belts and exhaust.<br><strong>Safe system:</strong> The inspection carried out to MS-23.<br><strong>PPE:</strong> Gloves and eye protection.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2103,23 +2113,32 @@ const SNIPPETS_RA = [
     name: "RA — 24 — Replacing leaf springs",
     rows: [
       {
-        hazard: "Leaf spring under tension",
+        hazard: "Leaf spring under tension (stored energy)",
         who: "Employees",
         how: "Spring releases and strikes the operative",
         initial: "high",
-        controls: "Vehicle weight taken off the axle on stands before the U-bolts and shackles are undone. Spring clamps fitted during removal. Operative stands out of line with the spring ends.",
+        controls: "<strong>Eliminate:</strong> Vehicle weight taken off the axle before the U-bolts and shackles are undone.<br><strong>Isolate:</strong> Operative stands out of line with the spring ends.<br><strong>Control:</strong> Spring clamps fitted during removal.<br><strong>Safe system:</strong> Spring replacement carried out to MS-24.<br><strong>PPE:</strong> Eye protection.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Leaf spring weight (often over 25kg)",
+        hazard: "Leaf spring (often over 25kg)",
         who: "Employees",
         how: "Back injury lifting and positioning the spring",
         initial: "medium",
-        controls: "Transmission jack or trolley jack used to lower and raise the spring. Two people where it has to be handled. Spring weight checked first.",
+        controls: "<strong>Reduce:</strong> Transmission jack or trolley jack used to lower and raise the spring.<br><strong>Control:</strong> Spring weight checked first. Two people where it has to be handled.<br><strong>Safe system:</strong> Spring replacement carried out to MS-24.<br><strong>PPE:</strong> Safety footwear and gloves.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Trolley and transmission jacks thoroughly examined under LOLER at least every 12 months; axle stands inspected and withdrawn if damaged.","status":"have"}]
+      },
+      {
+        hazard: "Raised vehicle (vehicle weight)",
+        who: "Employees",
+        how: "Crushed if the vehicle falls from the axle stands",
+        initial: "high",
+        controls: "<strong>Isolate:</strong> Vehicle on axle stands rated for its weight, under the chassis. Never worked under on a jack alone.<br><strong>Safe system:</strong> Spring replacement carried out to MS-24.<br><strong>PPE:</strong> Bump cap.",
+        residual: "medium",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -2127,40 +2146,49 @@ const SNIPPETS_RA = [
     name: "RA — 25 — Lifting out a gear box",
     rows: [
       {
-        hazard: "Gearbox suspended on the jack",
+        hazard: "Gearbox on the transmission jack (suspended load)",
         who: "Employees",
         how: "Gearbox slips off the jack and crushes the operative",
         initial: "high",
-        controls: "Transmission jack rated for the gearbox weight. Gearbox strapped to the jack cradle before the last bolts come out. Lowered slowly and nobody under or beside it on the low side.",
+        controls: "<strong>Isolate:</strong> Nobody under or beside the gearbox on the low side as it is lowered.<br><strong>Control:</strong> Transmission jack rated for the gearbox weight. Gearbox strapped to the jack cradle before the last bolts come out.<br><strong>Safe system:</strong> Gearbox removal carried out to MS-25.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Trolley and transmission jacks thoroughly examined under LOLER at least every 12 months; axle stands inspected and withdrawn if damaged.","status":"have"}]
       },
       {
-        hazard: "Gearbox weight",
+        hazard: "Gearbox (weight off the jack)",
         who: "Employees",
         how: "Back injury moving the gearbox off the jack",
         initial: "high",
-        controls: "Gearbox moved on the jack to the bench and transferred with the crane or by sliding at matching height. Never lifted off the jack by hand.",
+        controls: "<strong>Eliminate:</strong> Never lifted off the jack by hand.<br><strong>Reduce:</strong> Moved on the jack to the bench and transferred with the crane or by sliding at matching height.<br><strong>Safe system:</strong> Gearbox removal carried out to MS-25.<br><strong>PPE:</strong> Safety footwear.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Engine dropping when the gearbox mounts are removed",
+        hazard: "Engine (unsupported once the gearbox mounts are removed)",
         who: "Employees",
-        how: "Crushed if the unsupported engine drops",
+        how: "Engine drops and crushes the operative",
         initial: "high",
-        controls: "Engine supported on a support bar or jack before any gearbox mount is undone.",
+        controls: "<strong>Isolate:</strong> Engine supported on a support bar or jack before any gearbox mount is undone.<br><strong>Safe system:</strong> Gearbox removal carried out to MS-25.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Gearbox oil",
+        hazard: "Gearbox oil (skin irritant, slip hazard when spilt)",
         who: "Employees / Others nearby",
         how: "Skin contact, or a slip on oil spilled as the gearbox comes out",
         initial: "medium",
-        controls: "Gearbox drained before removal, with a drip tray underneath. Nitrile gloves worn. Spills covered with absorbent straight away.",
+        controls: "<strong>Eliminate:</strong> Gearbox drained before removal.<br><strong>Control:</strong> Drip tray underneath. Spills covered with absorbent straight away.<br><strong>Safe system:</strong> Gearbox removal carried out to MS-25.<br><strong>PPE:</strong> Nitrile gloves and eye protection.",
         residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Raised vehicle (vehicle weight)",
+        who: "Employees",
+        how: "Crushed if the vehicle falls from the ramp",
+        initial: "high",
+        controls: "<strong>Isolate:</strong> Ramp lowered onto its mechanical locks before anyone works underneath.<br><strong>Safe system:</strong> Gearbox removal carried out to MS-25.",
+        residual: "medium",
         action: "Workshop Manager"
       }
     ]
@@ -2169,32 +2197,32 @@ const SNIPPETS_RA = [
     name: "RA — 26 — Removing a vehicle wheel",
     rows: [
       {
-        hazard: "Wheel as it comes off the hub",
-        who: "Employees",
-        how: "Wheel drops onto feet or legs, or rolls away",
-        initial: "medium",
-        controls: "Nuts cracked loose with the vehicle on the ground. Wheel supported on the wheel dolly or by the knees before the last nut is removed. Wheel laid flat once off.",
-        residual: "low",
-        action: "Workshop Manager"
-      },
-      {
-        hazard: "Commercial wheel weight (over 50kg)",
-        who: "Employees",
-        how: "Back injury lifting the wheel off or onto the hub",
-        initial: "high",
-        controls: "Wheel dolly or wheel handler used for commercial wheels. Wheel rolled, not carried.",
-        residual: "low",
-        action: "Workshop Manager"
-      },
-      {
-        hazard: "Vehicle raised on a jack",
+        hazard: "Raised vehicle on a jack (vehicle weight)",
         who: "Employees",
         how: "Crushed if the vehicle falls from the jack",
         initial: "high",
-        controls: "Vehicle jacked only at the manufacturer's jacking points on level ground, with the wheels chocked. Axle stand in place before the wheel comes off. Never worked under on a jack alone.",
+        controls: "<strong>Isolate:</strong> Axle stand in place before the wheel comes off. Never worked under on a jack alone.<br><strong>Control:</strong> Vehicle jacked only at the manufacturer's jacking points on level ground, with the wheels chocked.<br><strong>Safe system:</strong> Wheel removal carried out to MS-26.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Trolley and transmission jacks thoroughly examined under LOLER at least every 12 months; axle stands inspected and withdrawn if damaged.","status":"have"}]
+      },
+      {
+        hazard: "Wheel (as it comes off the hub)",
+        who: "Employees",
+        how: "Wheel drops onto feet or legs, or rolls away",
+        initial: "medium",
+        controls: "<strong>Control:</strong> Nuts cracked loose with the vehicle on the ground. Wheel supported before the last nut is removed and laid flat once off.<br><strong>Safe system:</strong> Wheel removal carried out to MS-26.<br><strong>PPE:</strong> Safety footwear.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Commercial wheel (over 50kg)",
+        who: "Employees",
+        how: "Back injury lifting the wheel off or onto the hub",
+        initial: "high",
+        controls: "<strong>Reduce:</strong> Wheel dolly or wheel handler used for commercial wheels. Wheels rolled, not carried.<br><strong>Safe system:</strong> Wheel removal carried out to MS-26.<br><strong>PPE:</strong> Gloves.",
+        residual: "low",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -2206,28 +2234,37 @@ const SNIPPETS_RA = [
         who: "Employees",
         how: "Burns from oil at running temperature",
         initial: "medium",
-        controls: "Engine left to cool so the sump is warm, not hot. Drain plug removed with the arm to the side of the stream. Gloves and long sleeves worn.",
+        controls: "<strong>Reduce:</strong> Engine left to cool so the sump is warm, not hot.<br><strong>Safe system:</strong> Draining carried out to MS-27.<br><strong>PPE:</strong> Nitrile gloves and long sleeves.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Oil dripping onto the floor",
-        who: "Employees / Others nearby",
-        how: "Slip on oil around the vehicle",
-        initial: "medium",
-        controls: "Drain pan big enough for the sump capacity. Absorbent put down straight away on drips and swept up when the job is done.",
-        residual: "low",
-        action: "Workshop Manager"
-      },
-      {
-        hazard: "Used engine oil on the skin",
+        hazard: "Used engine oil (harmful to skin)",
         who: "Employees",
         how: "Repeated skin contact causes dermatitis; used oil contains harmful contaminants",
         initial: "medium",
-        controls: "Nitrile gloves worn. Hands washed before eating and at the end of the shift.",
+        controls: "<strong>Control:</strong> Washing facilities at hand. Hands washed before eating and at the end of the shift.<br><strong>Safe system:</strong> Draining carried out to MS-27.<br><strong>PPE:</strong> Nitrile gloves and eye protection.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Information","text":"COSHH assessment and SDS for used engine oil kept together and available in the workshop.","status":"have"}]
+      },
+      {
+        hazard: "Waste oil (slip hazard when spilt)",
+        who: "Employees / Others nearby",
+        how: "Slip on oil dripped around the vehicle",
+        initial: "medium",
+        controls: "<strong>Control:</strong> Drain pan big enough for the sump capacity. Absorbent put down straight away on any drips.<br><strong>Safe system:</strong> Draining carried out to MS-27.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Raised vehicle (vehicle weight)",
+        who: "Employees",
+        how: "Crushed if the vehicle falls from the ramp",
+        initial: "high",
+        controls: "<strong>Isolate:</strong> Ramp lowered onto its mechanical locks before anyone works underneath.<br><strong>Safe system:</strong> Draining carried out to MS-27.",
+        residual: "medium",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -2235,29 +2272,29 @@ const SNIPPETS_RA = [
     name: "RA — 28 — Installing and removing tracking seats",
     rows: [
       {
-        hazard: "Seat weight and the space inside the vehicle",
+        hazard: "Seats (weight, in the confined space of the vehicle)",
         who: "Employees",
-        how: "Back strain lifting seats in the confined space inside the vehicle",
+        how: "Back strain lifting seats inside the vehicle",
         initial: "medium",
-        controls: "Seats slid along the tracking and lifted out at the door, not carried down the aisle. Two people for double seats. Seats lifted down onto a trolley at the door.",
+        controls: "<strong>Reduce:</strong> Seats slid along the tracking and lifted out at the door onto a trolley, not carried down the aisle.<br><strong>Control:</strong> Two people for double seats.<br><strong>Safe system:</strong> Seat fitting and removal carried out to MS-28.<br><strong>PPE:</strong> Safety footwear.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Seat tracking and locking mechanism",
+        hazard: "Seat tracking and locks (moving parts)",
         who: "Employees",
-        how: "Fingers trapped between the seat base and rail",
+        how: "Fingers trapped between the seat base and the rail",
         initial: "medium",
-        controls: "Hands kept clear of the rail and lock while sliding the seat. Rigger gloves worn.",
+        controls: "<strong>Control:</strong> Hands kept clear of the rail and lock while the seat slides.<br><strong>Safe system:</strong> Seat fitting and removal carried out to MS-28.<br><strong>PPE:</strong> Gloves.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Seat not locked after refitting",
+        hazard: "Refitted seat (insecure if not locked)",
         who: "Passengers",
         how: "Seat moves in transit and the passenger is injured",
         initial: "high",
-        controls: "Each refitted seat pulled both ways to prove it is locked. Seat belt anchorages checked before the vehicle leaves the workshop.",
+        controls: "<strong>Control:</strong> Each refitted seat pulled both ways to prove it is locked. Seat belt anchorages checked before the vehicle leaves the workshop.<br><strong>Safe system:</strong> Seat fitting and removal carried out to MS-28.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Operatives shown how to fit and lock each seat type to the manufacturer's instructions.","status":"have"}]
@@ -2268,39 +2305,39 @@ const SNIPPETS_RA = [
     name: "RA — 29 — Valeting vehicles",
     rows: [
       {
-        hazard: "Valeting chemicals",
+        hazard: "Valeting chemicals (harmful substances)",
         who: "Employees",
         how: "Skin or eye contact causing dermatitis or burns",
         initial: "medium",
-        controls: "Products used diluted as the label states, not stronger. Nitrile gloves worn, and eye protection for spraying. Vehicle doors open when spraying inside.",
+        controls: "<strong>Reduce:</strong> Products used diluted as the label states, not stronger.<br><strong>Control:</strong> Vehicle doors open when spraying inside.<br><strong>Safe system:</strong> Valeting carried out to MS-29.<br><strong>PPE:</strong> Nitrile gloves, and eye protection for spraying.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Information","text":"COSHH assessment and SDS for each product kept together.","status":"have"}]
       },
       {
-        hazard: "Water and soap on the floor",
+        hazard: "Wet floor",
         who: "Employees / Others nearby",
         how: "Slip on a wet floor",
         initial: "medium",
-        controls: "Wash bay used, drains kept clear and floor squeegeed. Wet floor signs out. Footwear with grip worn.",
+        controls: "<strong>Control:</strong> Wash bay used, drains kept clear and the floor squeegeed. Wet floor signs out.<br><strong>Safe system:</strong> Valeting carried out to MS-29.<br><strong>PPE:</strong> Slip resistant safety footwear.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Pressure washer",
+        hazard: "Pressure washer (high pressure jet and electricity)",
         who: "Employees / Others nearby",
         how: "Skin injection injury from the jet, or electric shock from the supply",
         initial: "medium",
-        controls: "Lance never pointed at people. Supply through an RCD. Leads and plugs kept out of water and checked before use.",
+        controls: "<strong>Isolate:</strong> Supply through an RCD. Leads and plugs kept out of water.<br><strong>Control:</strong> Lance never pointed at people. Leads and plugs checked before use.<br><strong>Safe system:</strong> Valeting carried out to MS-29.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Sharps and bodily fluids left in vehicles",
+        hazard: "Sharps and bodily fluids (biological)",
         who: "Employees",
         how: "Needlestick injury or infection when cleaning a vehicle",
         initial: "medium",
-        controls: "Sharps never picked up by hand: litter picker and sharps box used. Bodily fluids cleaned up with the bodily fluids kit and gloves.",
+        controls: "<strong>Eliminate:</strong> Sharps never picked up by hand.<br><strong>Control:</strong> Litter picker and sharps box used for sharps. Bodily fluids cleaned up with the bodily fluids kit.<br><strong>Safe system:</strong> Valeting carried out to MS-29.<br><strong>PPE:</strong> Gloves.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2310,30 +2347,21 @@ const SNIPPETS_RA = [
     name: "RA — 30 — Young persons",
     rows: [
       {
-        hazard: "Workshop tasks given to a young person (under 18)",
+        hazard: "Workshop equipment and tasks beyond their experience",
         who: "Young person",
         how: "Injury because the young person lacks the experience to recognise the danger",
         initial: "high",
-        controls: "Young person not to operate ramps, presses, guillotine, spring compressors, welding or abrasive wheels, or work at the roadside, unless directly supervised as part of their training. Tasks agreed with them each day by the supervisor.",
+        controls: "<strong>Eliminate:</strong> No ramps, presses, guillotine, spring compressors, welding, abrasive wheels or roadside work unless directly supervised as part of their training.<br><strong>Control:</strong> Tasks agreed with them each day by the supervisor.<br><strong>Safe system:</strong> The young person's work carried out to MS-30.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Supervision","text":"Named supervisor responsible for the young person for each shift.","status":"have"},{"kind":"Information","text":"Young person's risk assessment completed before they start; parents told the key findings where under school leaving age.","status":"have"}]
       },
       {
-        hazard: "Working hours and fatigue",
-        who: "Young person",
-        how: "Tiredness and loss of concentration lead to injury",
-        initial: "medium",
-        controls: "No more than 8 hours a day or 40 hours a week. A 30-minute break after 4.5 hours, 12 hours' rest between working days and two days off each week.",
-        residual: "low",
-        action: "Workshop Manager"
-      },
-      {
-        hazard: "Manual handling by a young person",
+        hazard: "Manual handling loads",
         who: "Young person",
         how: "Injury lifting loads beyond their strength or experience",
         initial: "high",
-        controls: "Loads agreed with the supervisor for that person. No wheels, gearboxes, barrels or springs handled alone.",
+        controls: "<strong>Eliminate:</strong> No wheels, gearboxes, barrels or springs handled alone.<br><strong>Control:</strong> Loads agreed with the supervisor for that person.<br><strong>Safe system:</strong> The young person's work carried out to MS-30.",
         residual: "medium",
         action: "Workshop Manager"
       },
@@ -2342,8 +2370,17 @@ const SNIPPETS_RA = [
         who: "Young person",
         how: "Struck by a vehicle being moved",
         initial: "high",
-        controls: "Young person does not drive or move vehicles. Walks only on the marked walkways and is accompanied in the yard.",
+        controls: "<strong>Eliminate:</strong> Young person does not drive or move vehicles.<br><strong>Isolate:</strong> Marked walkways only, and accompanied in the yard.<br><strong>Safe system:</strong> The young person's work carried out to MS-30.",
         residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Working hours (fatigue)",
+        who: "Young person",
+        how: "Tiredness and loss of concentration lead to injury",
+        initial: "medium",
+        controls: "<strong>Control:</strong> No more than 8 hours a day or 40 hours a week. A 30-minute break after 4.5 hours, 12 hours' rest between working days and two days off each week.<br><strong>Safe system:</strong> The young person's work carried out to MS-30.",
+        residual: "low",
         action: "Workshop Manager"
       }
     ]
@@ -2352,30 +2389,30 @@ const SNIPPETS_RA = [
     name: "RA — 31 — Using an impact driver",
     rows: [
       {
-        hazard: "Impact driver vibration",
+        hazard: "Vibration (hand-arm)",
         who: "Employees",
         how: "Hand-arm vibration syndrome from regular use",
         initial: "medium",
-        controls: "Lowest vibration tool for the job used. Trigger time worked out from the tool's declared vibration figure and kept below the exposure action value where possible, never over the limit value. Hands kept warm and dry.",
+        controls: "<strong>Reduce:</strong> Lowest vibration tool for the job. Trigger time worked out from the tool's declared vibration figure and kept below the exposure action value where possible, never over the limit value.<br><strong>Control:</strong> Hands kept warm and dry.<br><strong>Safe system:</strong> Use of the impact driver carried out to MS-31.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"HAV health surveillance for regular users.","status":"have"},{"kind":"Equipment","text":"Tool maintenance records kept so the declared vibration figure stays valid.","status":"have"}]
       },
       {
-        hazard: "Impact noise",
+        hazard: "Noise (impact)",
         who: "Employees / Others nearby",
         how: "Hearing damage from repeated impact peaks",
         initial: "medium",
-        controls: "Hearing protection worn during use. Others kept away from the bay where possible.",
+        controls: "<strong>Isolate:</strong> Others kept away from the bay where possible.<br><strong>Safe system:</strong> Use of the impact driver carried out to MS-31.<br><strong>PPE:</strong> Hearing protection.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Tool slipping off the fastener",
+        hazard: "Rotating impact socket",
         who: "Employees",
-        how: "Hand struck or knuckles skinned when the socket slips",
+        how: "Socket slips off the fastener and the hand is struck or knuckles skinned",
         initial: "medium",
-        controls: "Correct impact socket for the fastener, seated fully. Free hand kept away from the socket.",
+        controls: "<strong>Control:</strong> Correct impact socket for the fastener, seated fully. Free hand kept away from the socket.<br><strong>Safe system:</strong> Use of the impact driver carried out to MS-31.<br><strong>PPE:</strong> Gloves and eye protection.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2385,30 +2422,30 @@ const SNIPPETS_RA = [
     name: "RA — 32a — Operating Ramp No1",
     rows: [
       {
-        hazard: "Vehicle on Ramp No1 (vehicle weight and lifting points)",
+        hazard: "Raised vehicle on Ramp No1 (vehicle weight)",
         who: "Employees / Others nearby",
         how: "Vehicle slips off the arms or pads and falls because it is off centre, the pads are not on the manufacturer's lifting points, or it is over the ramp's SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the vehicle manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and shaken by hand to check it sits square before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.",
+        controls: "<strong>Control:</strong> Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and checked before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32a.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Ramp thoroughly examined under LOLER at the interval in its examination scheme (at least every 12 months), with the report held.","status":"have"},{"kind":"Equipment","text":"Daily pre-use check sheet kept at the ramp.","status":"have"},{"kind":"Training","text":"Only operatives trained on this ramp operate it.","status":"have"}]
       },
       {
-        hazard: "Ramp platform or arms lowering (hydraulic or mechanical failure)",
-        who: "Employees",
-        how: "Operative under the vehicle is crushed if the ramp descends, or anyone near the arms is trapped as it lowers",
+        hazard: "Ramp platform and arms (lowering, hydraulic or mechanical failure)",
+        who: "Employees / Others nearby",
+        how: "Operative under the vehicle crushed if the ramp descends, or anyone near the arms trapped as it lowers",
         initial: "high",
-        controls: "Mechanical safety locks engaged and the ramp lowered onto them before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered; the operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.",
+        controls: "<strong>Isolate:</strong> Mechanical safety locks engaged, and the ramp lowered onto them, before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered.<br><strong>Control:</strong> Operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32a.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp arms and baseplates left in the walkway",
+        hazard: "Ramp arms and baseplates (trip hazard)",
         who: "Employees / Others nearby",
         how: "Trip over extended arms or the baseplate when walking round the vehicle",
         initial: "medium",
-        controls: "Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.",
+        controls: "<strong>Control:</strong> Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32a.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2418,30 +2455,30 @@ const SNIPPETS_RA = [
     name: "RA — 32b — Operating Ramp No2",
     rows: [
       {
-        hazard: "Vehicle on Ramp No2 (vehicle weight and lifting points)",
+        hazard: "Raised vehicle on Ramp No2 (vehicle weight)",
         who: "Employees / Others nearby",
         how: "Vehicle slips off the arms or pads and falls because it is off centre, the pads are not on the manufacturer's lifting points, or it is over the ramp's SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the vehicle manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and shaken by hand to check it sits square before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.",
+        controls: "<strong>Control:</strong> Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and checked before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32b.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Ramp thoroughly examined under LOLER at the interval in its examination scheme (at least every 12 months), with the report held.","status":"have"},{"kind":"Equipment","text":"Daily pre-use check sheet kept at the ramp.","status":"have"},{"kind":"Training","text":"Only operatives trained on this ramp operate it.","status":"have"}]
       },
       {
-        hazard: "Ramp platform or arms lowering (hydraulic or mechanical failure)",
-        who: "Employees",
-        how: "Operative under the vehicle is crushed if the ramp descends, or anyone near the arms is trapped as it lowers",
+        hazard: "Ramp platform and arms (lowering, hydraulic or mechanical failure)",
+        who: "Employees / Others nearby",
+        how: "Operative under the vehicle crushed if the ramp descends, or anyone near the arms trapped as it lowers",
         initial: "high",
-        controls: "Mechanical safety locks engaged and the ramp lowered onto them before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered; the operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.",
+        controls: "<strong>Isolate:</strong> Mechanical safety locks engaged, and the ramp lowered onto them, before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered.<br><strong>Control:</strong> Operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32b.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp arms and baseplates left in the walkway",
+        hazard: "Ramp arms and baseplates (trip hazard)",
         who: "Employees / Others nearby",
         how: "Trip over extended arms or the baseplate when walking round the vehicle",
         initial: "medium",
-        controls: "Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.",
+        controls: "<strong>Control:</strong> Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32b.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2451,30 +2488,30 @@ const SNIPPETS_RA = [
     name: "RA — 32c — Operating Ramp No3",
     rows: [
       {
-        hazard: "Vehicle on Ramp No3 (vehicle weight and lifting points)",
+        hazard: "Raised vehicle on Ramp No3 (vehicle weight)",
         who: "Employees / Others nearby",
         how: "Vehicle slips off the arms or pads and falls because it is off centre, the pads are not on the manufacturer's lifting points, or it is over the ramp's SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the vehicle manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and shaken by hand to check it sits square before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.",
+        controls: "<strong>Control:</strong> Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and checked before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32c.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Ramp thoroughly examined under LOLER at the interval in its examination scheme (at least every 12 months), with the report held.","status":"have"},{"kind":"Equipment","text":"Daily pre-use check sheet kept at the ramp.","status":"have"},{"kind":"Training","text":"Only operatives trained on this ramp operate it.","status":"have"}]
       },
       {
-        hazard: "Ramp platform or arms lowering (hydraulic or mechanical failure)",
-        who: "Employees",
-        how: "Operative under the vehicle is crushed if the ramp descends, or anyone near the arms is trapped as it lowers",
+        hazard: "Ramp platform and arms (lowering, hydraulic or mechanical failure)",
+        who: "Employees / Others nearby",
+        how: "Operative under the vehicle crushed if the ramp descends, or anyone near the arms trapped as it lowers",
         initial: "high",
-        controls: "Mechanical safety locks engaged and the ramp lowered onto them before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered; the operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.",
+        controls: "<strong>Isolate:</strong> Mechanical safety locks engaged, and the ramp lowered onto them, before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered.<br><strong>Control:</strong> Operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32c.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp arms and baseplates left in the walkway",
+        hazard: "Ramp arms and baseplates (trip hazard)",
         who: "Employees / Others nearby",
         how: "Trip over extended arms or the baseplate when walking round the vehicle",
         initial: "medium",
-        controls: "Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.",
+        controls: "<strong>Control:</strong> Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32c.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2484,30 +2521,30 @@ const SNIPPETS_RA = [
     name: "RA — 32d — Operating Ramp No4",
     rows: [
       {
-        hazard: "Vehicle on Ramp No4 (vehicle weight and lifting points)",
+        hazard: "Raised vehicle on Ramp No4 (vehicle weight)",
         who: "Employees / Others nearby",
         how: "Vehicle slips off the arms or pads and falls because it is off centre, the pads are not on the manufacturer's lifting points, or it is over the ramp's SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the vehicle manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and shaken by hand to check it sits square before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.",
+        controls: "<strong>Control:</strong> Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and checked before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32d.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Ramp thoroughly examined under LOLER at the interval in its examination scheme (at least every 12 months), with the report held.","status":"have"},{"kind":"Equipment","text":"Daily pre-use check sheet kept at the ramp.","status":"have"},{"kind":"Training","text":"Only operatives trained on this ramp operate it.","status":"have"}]
       },
       {
-        hazard: "Ramp platform or arms lowering (hydraulic or mechanical failure)",
-        who: "Employees",
-        how: "Operative under the vehicle is crushed if the ramp descends, or anyone near the arms is trapped as it lowers",
+        hazard: "Ramp platform and arms (lowering, hydraulic or mechanical failure)",
+        who: "Employees / Others nearby",
+        how: "Operative under the vehicle crushed if the ramp descends, or anyone near the arms trapped as it lowers",
         initial: "high",
-        controls: "Mechanical safety locks engaged and the ramp lowered onto them before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered; the operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.",
+        controls: "<strong>Isolate:</strong> Mechanical safety locks engaged, and the ramp lowered onto them, before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered.<br><strong>Control:</strong> Operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32d.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp arms and baseplates left in the walkway",
+        hazard: "Ramp arms and baseplates (trip hazard)",
         who: "Employees / Others nearby",
         how: "Trip over extended arms or the baseplate when walking round the vehicle",
         initial: "medium",
-        controls: "Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.",
+        controls: "<strong>Control:</strong> Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32d.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2517,30 +2554,30 @@ const SNIPPETS_RA = [
     name: "RA — 32e — Operating Ramp No5",
     rows: [
       {
-        hazard: "Vehicle on Ramp No5 (vehicle weight and lifting points)",
+        hazard: "Raised vehicle on Ramp No5 (vehicle weight)",
         who: "Employees / Others nearby",
         how: "Vehicle slips off the arms or pads and falls because it is off centre, the pads are not on the manufacturer's lifting points, or it is over the ramp's SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the vehicle manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and shaken by hand to check it sits square before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.",
+        controls: "<strong>Control:</strong> Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and checked before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32e.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Ramp thoroughly examined under LOLER at the interval in its examination scheme (at least every 12 months), with the report held.","status":"have"},{"kind":"Equipment","text":"Daily pre-use check sheet kept at the ramp.","status":"have"},{"kind":"Training","text":"Only operatives trained on this ramp operate it.","status":"have"}]
       },
       {
-        hazard: "Ramp platform or arms lowering (hydraulic or mechanical failure)",
-        who: "Employees",
-        how: "Operative under the vehicle is crushed if the ramp descends, or anyone near the arms is trapped as it lowers",
+        hazard: "Ramp platform and arms (lowering, hydraulic or mechanical failure)",
+        who: "Employees / Others nearby",
+        how: "Operative under the vehicle crushed if the ramp descends, or anyone near the arms trapped as it lowers",
         initial: "high",
-        controls: "Mechanical safety locks engaged and the ramp lowered onto them before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered; the operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.",
+        controls: "<strong>Isolate:</strong> Mechanical safety locks engaged, and the ramp lowered onto them, before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered.<br><strong>Control:</strong> Operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32e.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp arms and baseplates left in the walkway",
+        hazard: "Ramp arms and baseplates (trip hazard)",
         who: "Employees / Others nearby",
         how: "Trip over extended arms or the baseplate when walking round the vehicle",
         initial: "medium",
-        controls: "Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.",
+        controls: "<strong>Control:</strong> Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32e.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2550,30 +2587,30 @@ const SNIPPETS_RA = [
     name: "RA — 32f — Operating Ramp No6",
     rows: [
       {
-        hazard: "Vehicle on Ramp No6 (vehicle weight and lifting points)",
+        hazard: "Raised vehicle on Ramp No6 (vehicle weight)",
         who: "Employees / Others nearby",
         how: "Vehicle slips off the arms or pads and falls because it is off centre, the pads are not on the manufacturer's lifting points, or it is over the ramp's SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the vehicle manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and shaken by hand to check it sits square before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.",
+        controls: "<strong>Control:</strong> Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and checked before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32f.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Ramp thoroughly examined under LOLER at the interval in its examination scheme (at least every 12 months), with the report held.","status":"have"},{"kind":"Equipment","text":"Daily pre-use check sheet kept at the ramp.","status":"have"},{"kind":"Training","text":"Only operatives trained on this ramp operate it.","status":"have"}]
       },
       {
-        hazard: "Ramp platform or arms lowering (hydraulic or mechanical failure)",
-        who: "Employees",
-        how: "Operative under the vehicle is crushed if the ramp descends, or anyone near the arms is trapped as it lowers",
+        hazard: "Ramp platform and arms (lowering, hydraulic or mechanical failure)",
+        who: "Employees / Others nearby",
+        how: "Operative under the vehicle crushed if the ramp descends, or anyone near the arms trapped as it lowers",
         initial: "high",
-        controls: "Mechanical safety locks engaged and the ramp lowered onto them before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered; the operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.",
+        controls: "<strong>Isolate:</strong> Mechanical safety locks engaged, and the ramp lowered onto them, before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered.<br><strong>Control:</strong> Operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32f.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp arms and baseplates left in the walkway",
+        hazard: "Ramp arms and baseplates (trip hazard)",
         who: "Employees / Others nearby",
         how: "Trip over extended arms or the baseplate when walking round the vehicle",
         initial: "medium",
-        controls: "Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.",
+        controls: "<strong>Control:</strong> Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32f.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2583,30 +2620,30 @@ const SNIPPETS_RA = [
     name: "RA — 32g — Operating Ramp No7",
     rows: [
       {
-        hazard: "Vehicle on Ramp No7 (vehicle weight and lifting points)",
+        hazard: "Raised vehicle on Ramp No7 (vehicle weight)",
         who: "Employees / Others nearby",
         how: "Vehicle slips off the arms or pads and falls because it is off centre, the pads are not on the manufacturer's lifting points, or it is over the ramp's SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the vehicle manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and shaken by hand to check it sits square before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.",
+        controls: "<strong>Control:</strong> Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and checked before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32g.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Ramp thoroughly examined under LOLER at the interval in its examination scheme (at least every 12 months), with the report held.","status":"have"},{"kind":"Equipment","text":"Daily pre-use check sheet kept at the ramp.","status":"have"},{"kind":"Training","text":"Only operatives trained on this ramp operate it.","status":"have"}]
       },
       {
-        hazard: "Ramp platform or arms lowering (hydraulic or mechanical failure)",
-        who: "Employees",
-        how: "Operative under the vehicle is crushed if the ramp descends, or anyone near the arms is trapped as it lowers",
+        hazard: "Ramp platform and arms (lowering, hydraulic or mechanical failure)",
+        who: "Employees / Others nearby",
+        how: "Operative under the vehicle crushed if the ramp descends, or anyone near the arms trapped as it lowers",
         initial: "high",
-        controls: "Mechanical safety locks engaged and the ramp lowered onto them before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered; the operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.",
+        controls: "<strong>Isolate:</strong> Mechanical safety locks engaged, and the ramp lowered onto them, before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered.<br><strong>Control:</strong> Operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32g.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp arms and baseplates left in the walkway",
+        hazard: "Ramp arms and baseplates (trip hazard)",
         who: "Employees / Others nearby",
         how: "Trip over extended arms or the baseplate when walking round the vehicle",
         initial: "medium",
-        controls: "Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.",
+        controls: "<strong>Control:</strong> Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32g.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2616,30 +2653,30 @@ const SNIPPETS_RA = [
     name: "RA — 32h — Operating Ramp No8",
     rows: [
       {
-        hazard: "Vehicle on Ramp No8 (vehicle weight and lifting points)",
+        hazard: "Raised vehicle on Ramp No8 (vehicle weight)",
         who: "Employees / Others nearby",
         how: "Vehicle slips off the arms or pads and falls because it is off centre, the pads are not on the manufacturer's lifting points, or it is over the ramp's SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the vehicle manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and shaken by hand to check it sits square before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.",
+        controls: "<strong>Control:</strong> Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and checked before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32h.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Ramp thoroughly examined under LOLER at the interval in its examination scheme (at least every 12 months), with the report held.","status":"have"},{"kind":"Equipment","text":"Daily pre-use check sheet kept at the ramp.","status":"have"},{"kind":"Training","text":"Only operatives trained on this ramp operate it.","status":"have"}]
       },
       {
-        hazard: "Ramp platform or arms lowering (hydraulic or mechanical failure)",
-        who: "Employees",
-        how: "Operative under the vehicle is crushed if the ramp descends, or anyone near the arms is trapped as it lowers",
+        hazard: "Ramp platform and arms (lowering, hydraulic or mechanical failure)",
+        who: "Employees / Others nearby",
+        how: "Operative under the vehicle crushed if the ramp descends, or anyone near the arms trapped as it lowers",
         initial: "high",
-        controls: "Mechanical safety locks engaged and the ramp lowered onto them before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered; the operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.",
+        controls: "<strong>Isolate:</strong> Mechanical safety locks engaged, and the ramp lowered onto them, before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered.<br><strong>Control:</strong> Operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32h.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp arms and baseplates left in the walkway",
+        hazard: "Ramp arms and baseplates (trip hazard)",
         who: "Employees / Others nearby",
         how: "Trip over extended arms or the baseplate when walking round the vehicle",
         initial: "medium",
-        controls: "Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.",
+        controls: "<strong>Control:</strong> Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32h.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2649,30 +2686,30 @@ const SNIPPETS_RA = [
     name: "RA — 32i — Operating Ramp No9",
     rows: [
       {
-        hazard: "Vehicle on Ramp No9 (vehicle weight and lifting points)",
+        hazard: "Raised vehicle on Ramp No9 (vehicle weight)",
         who: "Employees / Others nearby",
         how: "Vehicle slips off the arms or pads and falls because it is off centre, the pads are not on the manufacturer's lifting points, or it is over the ramp's SWL",
         initial: "high",
-        controls: "Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the vehicle manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and shaken by hand to check it sits square before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.",
+        controls: "<strong>Control:</strong> Vehicle weight checked against the SWL marked on the ramp before it is driven on. Arm pads set on the manufacturer's lifting points, not on sills or floor pans. Vehicle raised a few inches, stopped and checked before going to full height. Ramp not used if the daily pre-use check finds a fault; it is tagged out and reported.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32i.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Ramp thoroughly examined under LOLER at the interval in its examination scheme (at least every 12 months), with the report held.","status":"have"},{"kind":"Equipment","text":"Daily pre-use check sheet kept at the ramp.","status":"have"},{"kind":"Training","text":"Only operatives trained on this ramp operate it.","status":"have"}]
       },
       {
-        hazard: "Ramp platform or arms lowering (hydraulic or mechanical failure)",
-        who: "Employees",
-        how: "Operative under the vehicle is crushed if the ramp descends, or anyone near the arms is trapped as it lowers",
+        hazard: "Ramp platform and arms (lowering, hydraulic or mechanical failure)",
+        who: "Employees / Others nearby",
+        how: "Operative under the vehicle crushed if the ramp descends, or anyone near the arms trapped as it lowers",
         initial: "high",
-        controls: "Mechanical safety locks engaged and the ramp lowered onto them before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered; the operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.",
+        controls: "<strong>Isolate:</strong> Mechanical safety locks engaged, and the ramp lowered onto them, before anyone goes underneath. Nobody under or beside the vehicle while the ramp is raised or lowered.<br><strong>Control:</strong> Operator keeps sight of the whole ramp throughout. Ramp not left raised and unattended with the controls live.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32i.<br><strong>PPE:</strong> Bump cap.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Ramp arms and baseplates left in the walkway",
+        hazard: "Ramp arms and baseplates (trip hazard)",
         who: "Employees / Others nearby",
         how: "Trip over extended arms or the baseplate when walking round the vehicle",
         initial: "medium",
-        controls: "Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.",
+        controls: "<strong>Control:</strong> Arms swung in and folded away when the ramp is not in use. Walkway past the ramp kept clear and marked. Lighting at the ramp kept working.<br><strong>Safe system:</strong> Ramp operation carried out to MS-32i.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2682,21 +2719,21 @@ const SNIPPETS_RA = [
     name: "RA — 32 — Using an air chisel / hammer",
     rows: [
       {
-        hazard: "Air chisel vibration",
+        hazard: "Vibration (hand-arm)",
         who: "Employees",
         how: "Hand-arm vibration syndrome from regular use",
         initial: "high",
-        controls: "Alternative method used where possible (cutting, heating or a press). Trigger time worked out from the tool's declared vibration figure and kept below the exposure limit value. Work shared between operatives on long jobs. Hands kept warm and dry.",
+        controls: "<strong>Eliminate:</strong> Another method (cutting, heating or a press) used wherever the job allows.<br><strong>Reduce:</strong> Trigger time worked out from the tool's declared vibration figure and kept below the exposure limit value. Work shared between operatives on long jobs.<br><strong>Control:</strong> Hands kept warm and dry.<br><strong>Safe system:</strong> Use of the air chisel carried out to MS-32.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"HAV health surveillance for regular users.","status":"have"},{"kind":"Equipment","text":"Tool maintenance records kept so the declared vibration figure stays valid.","status":"have"}]
       },
       {
-        hazard: "Air chisel noise",
+        hazard: "Noise (percussion)",
         who: "Employees / Others nearby",
         how: "Hearing damage from continuous percussion",
         initial: "high",
-        controls: "Hearing protection worn by the operator and anyone in the area. Others kept out of the bay while in use.",
+        controls: "<strong>Isolate:</strong> Others kept out of the bay while the tool is in use.<br><strong>Safe system:</strong> Use of the air chisel carried out to MS-32.<br><strong>PPE:</strong> Hearing protection for the operator and anyone in the area.",
         residual: "low",
         action: "Workshop Manager"
       },
@@ -2705,16 +2742,16 @@ const SNIPPETS_RA = [
         who: "Employees / Others nearby",
         how: "Fragments strike the eye or skin",
         initial: "medium",
-        controls: "Goggles to BS EN 166 worn, with a face shield for heavy work. Bystanders kept out of the bay or screened.",
+        controls: "<strong>Isolate:</strong> Bystanders kept out of the bay or screened.<br><strong>Safe system:</strong> Use of the air chisel carried out to MS-32.<br><strong>PPE:</strong> Goggles to BS EN 166 with a face shield.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Air hose and coupling",
+        hazard: "Compressed air (hose and coupling)",
         who: "Employees / Others nearby",
         how: "Hose whips, or the chisel is ejected, if a coupling fails or the tool is changed under pressure",
         initial: "medium",
-        controls: "Hose and couplings checked before use. Air turned off and the line bled before the chisel is changed.",
+        controls: "<strong>Isolate:</strong> Air turned off and the line bled before the chisel is changed.<br><strong>Control:</strong> Hose and couplings checked before use.<br><strong>Safe system:</strong> Use of the air chisel carried out to MS-32.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2724,51 +2761,60 @@ const SNIPPETS_RA = [
     name: "RA — 33 — Using an angle grinder",
     rows: [
       {
-        hazard: "Grinding or cutting disc",
+        hazard: "Abrasive disc (rotating, can burst)",
         who: "Employees / Others nearby",
-        how: "Disc shatters because it is the wrong type, damaged or under-rated for the grinder speed",
+        how: "Disc shatters or the grinder kicks back because the disc is the wrong type, damaged or under-rated",
         initial: "high",
-        controls: "Disc speed rating checked as equal to or above the grinder's speed. Disc checked for damage before fitting. Guard fitted and adjusted, side handle in use. Cutting discs not used for face grinding. Grinder held with both hands and not forced.",
+        controls: "<strong>Isolate:</strong> Guard fitted and adjusted. Side handle in use.<br><strong>Control:</strong> Disc speed rating checked as equal to or above the grinder's speed. Disc checked for damage before fitting. Cutting discs not used for face grinding. Grinder held with both hands and not forced.<br><strong>Safe system:</strong> Use of the grinder carried out to MS-33.<br><strong>PPE:</strong> Gloves.",
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Operatives trained in abrasive wheels before mounting discs.","status":"have"}]
       },
       {
-        hazard: "Particles and disc fragments",
-        who: "Employees",
+        hazard: "Flying particles and disc fragments",
+        who: "Employees / Others nearby",
         how: "Particles strike the eye",
         initial: "high",
-        controls: "Goggles to BS EN 166 with a face shield worn. Bystanders kept out of the area or screened.",
+        controls: "<strong>Isolate:</strong> Bystanders kept out of the area or screened.<br><strong>Safe system:</strong> Use of the grinder carried out to MS-33.<br><strong>PPE:</strong> Goggles to BS EN 166 with a face shield.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Hot sparks",
+        hazard: "Hot sparks (ignition source)",
         who: "Employees / Others nearby",
         how: "Sparks land on skin or combustibles and start a fire",
         initial: "high",
-        controls: "Combustibles cleared for 5m or covered. Sparks directed away from people, fuel and vehicles. Extinguisher within reach. Area checked for 60 minutes after use.",
+        controls: "<strong>Isolate:</strong> Combustibles cleared for 5m or covered. Sparks directed away from people, fuel and vehicles.<br><strong>Control:</strong> Extinguisher within reach. Area checked for 60 minutes after use.<br><strong>Safe system:</strong> Use of the grinder carried out to MS-33.",
         residual: "medium",
         action: "Workshop Manager"
       },
       {
-        hazard: "Grinder noise",
+        hazard: "Noise (grinding)",
         who: "Employees / Others nearby",
         how: "Hearing damage from regular use",
         initial: "medium",
-        controls: "Hearing protection worn by the operator and anyone close by.",
+        controls: "<strong>Safe system:</strong> Use of the grinder carried out to MS-33.<br><strong>PPE:</strong> Hearing protection for the operator and anyone close by.",
         residual: "low",
         action: "Workshop Manager"
       },
       {
-        hazard: "Grinder vibration",
+        hazard: "Vibration (hand-arm)",
         who: "Employees",
         how: "Hand-arm vibration syndrome from regular use",
         initial: "medium",
-        controls: "Trigger time worked out from the tool's declared vibration figure and kept below the exposure action value where possible, never over the limit value.",
+        controls: "<strong>Reduce:</strong> Trigger time worked out from the tool's declared vibration figure and kept below the exposure action value where possible, never over the limit value.<br><strong>Safe system:</strong> Use of the grinder carried out to MS-33.",
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"HAV health surveillance for regular users.","status":"have"}]
+      },
+      {
+        hazard: "Metal and abrasive dust",
+        who: "Employees",
+        how: "Breathing in grinding and cutting dust",
+        initial: "medium",
+        controls: "<strong>Safe system:</strong> Use of the grinder carried out to MS-33.<br><strong>PPE:</strong> FFP3 mask.",
+        residual: "low",
+        action: "Workshop Manager"
       }
     ]
   },
