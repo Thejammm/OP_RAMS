@@ -1313,6 +1313,24 @@ const SNIPPETS_RA = [
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Training","text":"Manual handling training current for operatives who decant fuel.","status":"have"}]
+      },
+      {
+        hazard: "Vehicles manoeuvring in the fuelling bay",
+        who: "Employees / Others nearby",
+        how: "Person struck or crushed by a vehicle reversing onto or pulling away from the fuelling point",
+        initial: "high",
+        controls: "Vehicle reversed onto the bay only with a banksman or reversing aid, and nobody stands behind a reversing vehicle. Nozzle hung up and the filler cap on before the vehicle moves. 5mph speed limit on site.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Diesel on the skin",
+        who: "Employees",
+        how: "Repeated skin contact with diesel causes dermatitis",
+        initial: "medium",
+        controls: "Nitrile gloves worn for fuelling. Any splash washed off with soap and water straight away.",
+        residual: "low",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -1369,6 +1387,25 @@ const SNIPPETS_RA = [
         controls: "Funnel used and fuel poured slowly. Only the quantity needed is decanted. Drip tray under the filler and any splash wiped off before the burner is relit. Spill kit to hand.",
         residual: "medium",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Fuel on the skin",
+        who: "Employees",
+        how: "Repeated skin contact with burner fuel causes dermatitis",
+        initial: "medium",
+        controls: "Nitrile gloves worn for re-fuelling. Any splash washed off with soap and water straight away.",
+        residual: "low",
+        action: "Workshop Manager",
+        notes: [{"kind":"Information","text":"COSHH assessment and SDS for the burner fuel kept together and available in the workshop.","status":"have"}]
+      },
+      {
+        hazard: "Full fuel container",
+        who: "Employees",
+        how: "Back strain carrying the container to the burner and lifting it to the filler",
+        initial: "medium",
+        controls: "Container moved on a trolley, not carried any distance. Filled only to the quantity needed so it can be lifted close to the body.",
+        residual: "low",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -1402,6 +1439,15 @@ const SNIPPETS_RA = [
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Equipment","text":"Tank bund and overfill alarm inspected and the result recorded.","status":"have"}]
+      },
+      {
+        hazard: "Delivery tanker manoeuvring on site",
+        who: "Employees / Public / Others",
+        how: "Person struck by the tanker as it reverses into or leaves the delivery area",
+        initial: "high",
+        controls: "Delivery area coned off before the tanker arrives. Tanker reverses only with a banksman. Pedestrians and other vehicles kept out of the area until the tanker has left.",
+        residual: "medium",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -1458,7 +1504,7 @@ const SNIPPETS_RA = [
         controls: "Spring checked for cracks and corrosion before it goes in. Correct size cups or plates fitted for the spring diameter, seated fully. Safety guard or retaining chain in place before full compression. Operative stands to the side, out of the release line, and nobody else in the bay while the spring is under load.",
         residual: "medium",
         action: "Workshop Manager",
-        notes: [{"kind":"Training","text":"Only operatives trained on the static compressor carry out this task.","status":"have"}]
+        notes: [{"kind":"Training","text":"Only operatives trained on the static compressor carry out this task.","status":"have"},{"kind":"Equipment","text":"Compressor checked before use; damaged cups or hooks taken out of use.","status":"have"}]
       },
       {
         hazard: "Compressor clamps and jaws",
@@ -1482,7 +1528,7 @@ const SNIPPETS_RA = [
         controls: "Static compressor used instead wherever the job allows. Where the vice unit has to be used, it is clamped firmly in the vice and the cups matched to the spring. Winding nut turned by hand tool only. DO NOT USE AN IMPACT DRIVER. Safety chain fitted before full compression and the operative stands out of the release line.",
         residual: "medium",
         action: "Workshop Manager",
-        notes: [{"kind":"Training","text":"Only operatives trained on spring compressors carry out this task.","status":"have"}]
+        notes: [{"kind":"Training","text":"Only operatives trained on spring compressors carry out this task.","status":"have"},{"kind":"Equipment","text":"Compressor checked before use; damaged cups or hooks taken out of use.","status":"have"}]
       },
       {
         hazard: "Spring and compressor cups",
@@ -1539,6 +1585,24 @@ const SNIPPETS_RA = [
         how: "Stack collapses and items fall onto feet or legs",
         initial: "medium",
         controls: "Heaviest items at the bottom and stacks kept stable and below shoulder height. Damaged pallets not used. Safety footwear worn.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Delivery vehicle in the yard",
+        who: "Employees / Others nearby",
+        how: "Person struck by the delivery vehicle while it manoeuvres or is unloaded",
+        initial: "high",
+        controls: "Delivery vehicle parked in the marked delivery area. Nobody stands behind it while it reverses. Unloading starts only once the engine is off and the handbrake is on.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Banding straps and packaging",
+        who: "Employees",
+        how: "Cuts from knives, or a strap recoiling when it is cut",
+        initial: "medium",
+        controls: "Strap cutter or safety knife used, never an open blade. Banding cut while standing to the side of the strap.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -1656,6 +1720,16 @@ const SNIPPETS_RA = [
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Information","text":"COSHH assessment for the material being ground.","status":"have"}]
+      },
+      {
+        hazard: "Abrasive wheel bursting",
+        who: "Employees / Others nearby",
+        how: "Bench grinder wheel shatters because it is damaged, over-speeded or the work is trapped in the gap",
+        initial: "high",
+        controls: "Wheel speed rating checked as equal to or above the grinder's speed. Wheel checked for damage before use. Tool rest set no more than 3mm from the wheel. Guard and visor fitted.",
+        residual: "medium",
+        action: "Workshop Manager",
+        notes: [{"kind":"Training","text":"Operatives trained in abrasive wheels before mounting wheels.","status":"have"}]
       }
     ]
   },
@@ -1698,6 +1772,24 @@ const SNIPPETS_RA = [
         controls: "Hot works permit issued. Combustibles cleared for 5m or covered. No welding within 6m of the fuel store or a vehicle fuel tank. Extinguisher at the work. Area checked for 60 minutes after work stops.",
         residual: "medium",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Gas cylinders and heating torch",
+        who: "Employees / Others nearby",
+        how: "Fire or explosion from a flashback, a leaking hose or a damaged cylinder",
+        initial: "high",
+        controls: "Flashback arrestors fitted at the regulator and the torch. Hoses checked for damage before use. Cylinders stored upright and chained, and valved off when not in use. Torch never left lit unattended.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Welding set electrical supply",
+        who: "Employees",
+        how: "Electric shock from damaged leads or from welding in wet conditions",
+        initial: "medium",
+        controls: "Welding set and leads checked before use. Return clamp fixed to the work close to the weld. No welding in wet conditions.",
+        residual: "low",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -1711,7 +1803,8 @@ const SNIPPETS_RA = [
         initial: "high",
         controls: "Chuck guard down before starting. Sleeves fastened, long hair tied back, no gloves near the chuck. Chuck key removed before the drill is switched on.",
         residual: "medium",
-        action: "Workshop Manager"
+        action: "Workshop Manager",
+        notes: [{"kind":"Training","text":"Only trained operatives use the pillar drill.","status":"have"},{"kind":"Equipment","text":"Chuck guard checked before use.","status":"have"}]
       },
       {
         hazard: "Hot swarf",
@@ -1763,6 +1856,15 @@ const SNIPPETS_RA = [
         controls: "Receiving tray kept in place to catch offcuts. Hearing protection worn during cutting runs. Safety footwear worn.",
         residual: "low",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Sharp sheet edges and offcuts",
+        who: "Employees",
+        how: "Cuts to the hands handling sheet metal and offcuts",
+        initial: "medium",
+        controls: "Cut-resistant gloves worn for handling sheet and offcuts. Offcuts cleared into the scrap bin, not left on the bed or the floor.",
+        residual: "low",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -1776,7 +1878,8 @@ const SNIPPETS_RA = [
         initial: "high",
         controls: "Hub and bearing fully supported on the press bed before pressure is applied. Hands off the work and away from the ram before pumping. Two-hand control used where fitted.",
         residual: "medium",
-        action: "Workshop Manager"
+        action: "Workshop Manager",
+        notes: [{"kind":"Training","text":"Only trained operatives use the press.","status":"have"},{"kind":"Equipment","text":"Press and hoses checked before use.","status":"have"}]
       },
       {
         hazard: "Bearing or packing under hydraulic pressure",
@@ -1799,7 +1902,8 @@ const SNIPPETS_RA = [
         initial: "high",
         controls: "Vehicle weight checked against the ramp SWL. Vehicle centred on the ramp and pads set on the manufacturer's lifting points. Raised a few inches, stopped and checked for stability before going to full height.",
         residual: "medium",
-        action: "Workshop Manager"
+        action: "Workshop Manager",
+        notes: [{"kind":"Equipment","text":"Ramps thoroughly examined under LOLER at least every 12 months, with the report held.","status":"have"},{"kind":"Training","text":"Ramps operated only by trained operatives.","status":"have"}]
       },
       {
         hazard: "Vehicle moving while positioned",
@@ -1807,6 +1911,15 @@ const SNIPPETS_RA = [
         how: "Person crushed by the vehicle as it is driven onto or settles on the ramp",
         initial: "high",
         controls: "One person drives the vehicle on, guided by one banksman standing to the side, not in front. Nobody else near the ramp. Handbrake on, in gear and key out once in position.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Ramp lowering onto a person or object",
+        who: "Employees / Others nearby",
+        how: "Person trapped, or a stand or tool crushed, as the ramp comes down",
+        initial: "high",
+        controls: "Area under and around the ramp checked clear, and stands and tools removed, before lowering. Operator keeps sight of the whole ramp while it moves.",
         residual: "medium",
         action: "Workshop Manager"
       }
@@ -1856,6 +1969,15 @@ const SNIPPETS_RA = [
         controls: "Load weight checked against the truck's rating plate. Load seated against the backrest and secured. Travel with the forks low and the mast tilted back. No raising or lowering while moving. No one walks under a raised load.",
         residual: "medium",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Truck overturning",
+        who: "Employees",
+        how: "Driver crushed if the truck tips over",
+        initial: "high",
+        controls: "Seat belt worn whenever the truck is driven. Truck used only on level, firm ground. No turning on slopes or with the load raised.",
+        residual: "medium",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -1880,6 +2002,24 @@ const SNIPPETS_RA = [
         residual: "low",
         action: "Workshop Manager",
         notes: [{"kind":"Monitoring","text":"Lone worker check in with the office at the start and finish of each roadside job.","status":"have"}]
+      },
+      {
+        hazard: "Vehicle supported on a jack at the roadside",
+        who: "Employees",
+        how: "Crushed if the vehicle falls from the jack",
+        initial: "high",
+        controls: "Vehicle jacked only on firm, level ground with the wheels chocked. Axle stand in place before any part of the body goes underneath. Never worked under on a jack alone.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Passengers on or near the broken-down vehicle",
+        who: "Passengers / Public",
+        how: "Passengers struck by passing traffic or hurt leaving the vehicle at the roadside",
+        initial: "high",
+        controls: "Passengers moved off the carriageway and behind the barrier where it is safe to do so; otherwise kept seated with belts on and a member of staff with them. Replacement vehicle arranged for vulnerable passengers.",
+        residual: "medium",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -1893,7 +2033,8 @@ const SNIPPETS_RA = [
         initial: "high",
         controls: "Passengers moved off the vehicle and away from the carriageway, behind a barrier where there is one. Recovery vehicle parked to protect the work area with beacons on. Operative stays on the side away from traffic as far as possible. Class 3 hi-vis worn.",
         residual: "medium",
-        action: "Workshop Manager"
+        action: "Workshop Manager",
+        notes: [{"kind":"Monitoring","text":"Lone worker check in with the office at the start and finish of each recovery job.","status":"have"}]
       },
       {
         hazard: "Tow strap under load (stored energy)",
@@ -1902,7 +2043,8 @@ const SNIPPETS_RA = [
         initial: "high",
         controls: "Strap checked for cuts and wear before use. Strap rating checked against the vehicle weight. Strap attached only to the manufacturer's towing points. Damper or blanket over the strap. Everyone kept back at least 1.5 times the strap length while it is loaded.",
         residual: "medium",
-        action: "Workshop Manager"
+        action: "Workshop Manager",
+        notes: [{"kind":"Equipment","text":"Tow straps inspected before use and withdrawn if damaged.","status":"have"}]
       },
       {
         hazard: "Attaching the strap under the vehicle",
@@ -1911,6 +2053,15 @@ const SNIPPETS_RA = [
         initial: "medium",
         controls: "Kneeling mat used and the strap fixed from the side nearest the towing point. Rear towing eye fitted by hand before the strap is pulled through.",
         residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Strap towing on the public road",
+        who: "Employees / Public / Others",
+        how: "Collision because the towed vehicle cannot brake or steer properly, or the strap is not seen",
+        initial: "high",
+        controls: "Strap tow used only over a short distance at low speed to a place of safety. Towed vehicle steered by a competent driver with the ignition on. Gap between the vehicles no more than 4.5m, and the strap flagged if the gap is over 1.5m. ON TOW sign displayed.",
+        residual: "medium",
         action: "Workshop Manager"
       }
     ]
@@ -1935,6 +2086,15 @@ const SNIPPETS_RA = [
         controls: "Vehicle on the ramp with the locks engaged, or on two axle stands rated for its weight. Wheels chocked. Never worked under on a jack alone.",
         residual: "medium",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Engine running during the inspection",
+        who: "Employees",
+        how: "Hands or sleeves caught by the fan or belts, burns from hot parts, or exhaust fumes breathed in",
+        initial: "medium",
+        controls: "Engine run only when the check needs it, with exhaust extraction connected indoors. Vehicle in neutral, handbrake on and wheels chocked. Hands, sleeves and tools kept clear of the fan, belts and exhaust.",
+        residual: "low",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -1957,7 +2117,8 @@ const SNIPPETS_RA = [
         initial: "medium",
         controls: "Transmission jack or trolley jack used to lower and raise the spring. Two people where it has to be handled. Spring weight checked first.",
         residual: "low",
-        action: "Workshop Manager"
+        action: "Workshop Manager",
+        notes: [{"kind":"Equipment","text":"Trolley and transmission jacks thoroughly examined under LOLER at least every 12 months; axle stands inspected and withdrawn if damaged.","status":"have"}]
       }
     ]
   },
@@ -1971,7 +2132,8 @@ const SNIPPETS_RA = [
         initial: "high",
         controls: "Transmission jack rated for the gearbox weight. Gearbox strapped to the jack cradle before the last bolts come out. Lowered slowly and nobody under or beside it on the low side.",
         residual: "medium",
-        action: "Workshop Manager"
+        action: "Workshop Manager",
+        notes: [{"kind":"Equipment","text":"Trolley and transmission jacks thoroughly examined under LOLER at least every 12 months; axle stands inspected and withdrawn if damaged.","status":"have"}]
       },
       {
         hazard: "Gearbox weight",
@@ -1979,6 +2141,24 @@ const SNIPPETS_RA = [
         how: "Back injury moving the gearbox off the jack",
         initial: "high",
         controls: "Gearbox moved on the jack to the bench and transferred with the crane or by sliding at matching height. Never lifted off the jack by hand.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Engine dropping when the gearbox mounts are removed",
+        who: "Employees",
+        how: "Crushed if the unsupported engine drops",
+        initial: "high",
+        controls: "Engine supported on a support bar or jack before any gearbox mount is undone.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Gearbox oil",
+        who: "Employees / Others nearby",
+        how: "Skin contact, or a slip on oil spilled as the gearbox comes out",
+        initial: "medium",
+        controls: "Gearbox drained before removal, with a drip tray underneath. Nitrile gloves worn. Spills covered with absorbent straight away.",
         residual: "low",
         action: "Workshop Manager"
       }
@@ -2004,6 +2184,16 @@ const SNIPPETS_RA = [
         controls: "Wheel dolly or wheel handler used for commercial wheels. Wheel rolled, not carried.",
         residual: "low",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Vehicle raised on a jack",
+        who: "Employees",
+        how: "Crushed if the vehicle falls from the jack",
+        initial: "high",
+        controls: "Vehicle jacked only at the manufacturer's jacking points on level ground, with the wheels chocked. Axle stand in place before the wheel comes off. Never worked under on a jack alone.",
+        residual: "medium",
+        action: "Workshop Manager",
+        notes: [{"kind":"Equipment","text":"Trolley and transmission jacks thoroughly examined under LOLER at least every 12 months; axle stands inspected and withdrawn if damaged.","status":"have"}]
       }
     ]
   },
@@ -2027,6 +2217,16 @@ const SNIPPETS_RA = [
         controls: "Drain pan big enough for the sump capacity. Absorbent put down straight away on drips and swept up when the job is done.",
         residual: "low",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Used engine oil on the skin",
+        who: "Employees",
+        how: "Repeated skin contact causes dermatitis; used oil contains harmful contaminants",
+        initial: "medium",
+        controls: "Nitrile gloves worn. Hands washed before eating and at the end of the shift.",
+        residual: "low",
+        action: "Workshop Manager",
+        notes: [{"kind":"Information","text":"COSHH assessment and SDS for used engine oil kept together and available in the workshop.","status":"have"}]
       }
     ]
   },
@@ -2050,6 +2250,16 @@ const SNIPPETS_RA = [
         controls: "Hands kept clear of the rail and lock while sliding the seat. Rigger gloves worn.",
         residual: "low",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Seat not locked after refitting",
+        who: "Passengers",
+        how: "Seat moves in transit and the passenger is injured",
+        initial: "high",
+        controls: "Each refitted seat pulled both ways to prove it is locked. Seat belt anchorages checked before the vehicle leaves the workshop.",
+        residual: "medium",
+        action: "Workshop Manager",
+        notes: [{"kind":"Training","text":"Operatives shown how to fit and lock each seat type to the manufacturer's instructions.","status":"have"}]
       }
     ]
   },
@@ -2074,6 +2284,24 @@ const SNIPPETS_RA = [
         controls: "Wash bay used, drains kept clear and floor squeegeed. Wet floor signs out. Footwear with grip worn.",
         residual: "low",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Pressure washer",
+        who: "Employees / Others nearby",
+        how: "Skin injection injury from the jet, or electric shock from the supply",
+        initial: "medium",
+        controls: "Lance never pointed at people. Supply through an RCD. Leads and plugs kept out of water and checked before use.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Sharps and bodily fluids left in vehicles",
+        who: "Employees",
+        how: "Needlestick injury or infection when cleaning a vehicle",
+        initial: "medium",
+        controls: "Sharps never picked up by hand: litter picker and sharps box used. Bodily fluids cleaned up with the bodily fluids kit and gloves.",
+        residual: "low",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -2089,6 +2317,33 @@ const SNIPPETS_RA = [
         residual: "medium",
         action: "Workshop Manager",
         notes: [{"kind":"Supervision","text":"Named supervisor responsible for the young person for each shift.","status":"have"},{"kind":"Information","text":"Young person's risk assessment completed before they start; parents told the key findings where under school leaving age.","status":"have"}]
+      },
+      {
+        hazard: "Working hours and fatigue",
+        who: "Young person",
+        how: "Tiredness and loss of concentration lead to injury",
+        initial: "medium",
+        controls: "No more than 8 hours a day or 40 hours a week. A 30-minute break after 4.5 hours, 12 hours' rest between working days and two days off each week.",
+        residual: "low",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Manual handling by a young person",
+        who: "Young person",
+        how: "Injury lifting loads beyond their strength or experience",
+        initial: "high",
+        controls: "Loads agreed with the supervisor for that person. No wheels, gearboxes, barrels or springs handled alone.",
+        residual: "medium",
+        action: "Workshop Manager"
+      },
+      {
+        hazard: "Moving vehicles in the workshop and yard",
+        who: "Young person",
+        how: "Struck by a vehicle being moved",
+        initial: "high",
+        controls: "Young person does not drive or move vehicles. Walks only on the marked walkways and is accompanied in the yard.",
+        residual: "medium",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -2452,6 +2707,15 @@ const SNIPPETS_RA = [
         controls: "Goggles to BS EN 166 worn, with a face shield for heavy work. Bystanders kept out of the bay or screened.",
         residual: "low",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Air hose and coupling",
+        who: "Employees / Others nearby",
+        how: "Hose whips, or the chisel is ejected, if a coupling fails or the tool is changed under pressure",
+        initial: "medium",
+        controls: "Hose and couplings checked before use. Air turned off and the line bled before the chisel is changed.",
+        residual: "low",
+        action: "Workshop Manager"
       }
     ]
   },
@@ -2494,6 +2758,16 @@ const SNIPPETS_RA = [
         controls: "Hearing protection worn by the operator and anyone close by.",
         residual: "low",
         action: "Workshop Manager"
+      },
+      {
+        hazard: "Grinder vibration",
+        who: "Employees",
+        how: "Hand-arm vibration syndrome from regular use",
+        initial: "medium",
+        controls: "Trigger time worked out from the tool's declared vibration figure and kept below the exposure action value where possible, never over the limit value.",
+        residual: "low",
+        action: "Workshop Manager",
+        notes: [{"kind":"Monitoring","text":"HAV health surveillance for regular users.","status":"have"}]
       }
     ]
   },
