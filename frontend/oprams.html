@@ -46,7 +46,10 @@
   /* State colours */
   --success:#1a7a4a; --success-bg:#e8f7ef; --success-brd:#a7e3c0;
   --warning:#b45309; --warning-bg:#fef3cd; --warning-brd:#fcd88a;
-  --danger:#b91c1c;  --danger-bg:#fee2e2;  --danger-brd:#fca5a5;
+  /* Destructive actions and errors read as serious without being red.
+     The HIGH risk badge below keeps its red: that is the risk scale, and
+     red/amber/green is what an assessor expects to see on a rating. */
+  --danger:#334155;  --danger-bg:#f1f5f9;  --danger-brd:#cbd5e1;
   --info:#1565c0;    --info-bg:#e3f0ff;    --info-brd:#90bef5;
   --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.10); --radius:12px;
   /* Risk badge colours */
