@@ -7382,6 +7382,33 @@ function _pdfRestorePlaceholders(){
   _pdfPlaceholderUndo = [];
 }
 
+/* A tick box that is NOT ticked still needs something to draw.
+
+   jsPDF builds a checkbox's normal appearance dictionary with an On
+   entry only. Set /AS to Off, as a box issued unticked must be, and
+   there is no appearance for that state at all: iPadOS Preview treats
+   the widget as broken, shows nothing and will not let it be ticked.
+
+   So give it an Off of its own: the same white fill the ticked state
+   paints beneath its tick, which leaves the box printed on the page
+   showing through.
+
+   The value has to be a FUNCTION. jsPDF calls it at write time with the
+   document as `this`, and that is when the stream is given its object
+   id; hand it a ready-made object and the file says "/Off undefined 0 R". */
+function _pdfTickOff(box){
+  const ns = window.jspdf || window;
+  const CB = ns.AcroFormAppearance && ns.AcroFormAppearance.CheckBox;
+  const asc = box.appearanceStreamContent;
+  if(!CB || !CB.OffPushDown || !asc || !asc.N) return false;
+  asc.N.Off = function(field){
+    const x = CB.OffPushDown.call(this, field);
+    x.stream = String(x.stream).replace(/^[\d.]+\s+g\b/, "1 g");
+    return x;
+  };
+  return true;
+}
+
 function _pdfFieldTargets(node, prefix){
   const ns = window.jspdf || window;
   if(!ns.AcroFormTextField) return [];
@@ -7480,7 +7507,10 @@ function _pdfPlaceFields(pdf, targets, canvas, nodeW,
     if(t.kind === "tick" && ns.AcroFormCheckBox){
       f = new ns.AcroFormCheckBox();
       f.appearanceState = "Off";
+      f.value = "Off";                       // jsPDF defaults V to On: iPad shows it ticked
+      f.fontSize = 8;                        // 0 = auto, which iPad draws as a giant tick
       f.caption = "4";                       // ZapfDingbats tick
+      _pdfTickOff(f);
     } else if(t.kind === "risk" && ns.AcroFormComboBox){
       /* a rating is one of three, so offer the three rather than a box
          somebody types "med" into */
@@ -9186,9 +9216,13 @@ function stampPdfFooters(pdf, activeTab){
         linkEnd = leftEnd + 1.6 + webW;
       }
     }
-    // Tall enough to take in the ring mark as well as the text, so the logo
-    // itself is clickable and not just the words beside it.
-    pdf.link(M, base - 4.2, linkEnd - M, 6.0, { url: AHS_URL });
+    /* The footer used to make this a clickable link. It cannot.
+       In jsPDF 2.5.1 a single pdf.link() on a page makes the annotations
+       plugin write that page's /Annots as an empty array, which throws
+       away every AcroForm widget on it. One link in this footer was
+       costing the risk assessment all 103 of its form fields, on every
+       page, so the exported PDF had nothing anyone could type into. The
+       name and the website are still printed; they are just not a link. */
 
     // Centre — prepared for. Trimmed with an ellipsis if it would still reach
     // the producer name on the left.
@@ -10228,6 +10262,7 @@ function draEditablePdf(withRA){
     c.value = "Off";               // jsPDF defaults V to On: iPad shows it ticked
     c.fontSize = 8;                // 0 = auto, which iPad draws as a giant tick
     c.caption = "4";               // ZapfDingbats tick
+    _pdfTickOff(c);                // an Off state to draw, or iPad shows nothing
     c.borderWidth = 0;
     d.addField(c); nFields++;
     ink();
