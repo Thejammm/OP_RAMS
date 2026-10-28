@@ -10225,6 +10225,8 @@ function draEditablePdf(withRA){
     c.Rect = [bx, y + 0.5, size, size];
     c.fieldName = name;
     c.appearanceState = "Off";
+    c.value = "Off";               // jsPDF defaults V to On: iPad shows it ticked
+    c.fontSize = 8;                // 0 = auto, which iPad draws as a giant tick
     c.caption = "4";               // ZapfDingbats tick
     c.borderWidth = 0;
     d.addField(c); nFields++;
