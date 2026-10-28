@@ -7382,6 +7382,19 @@ function _pdfRestorePlaceholders(){
   _pdfPlaceholderUndo = [];
 }
 
+/* An empty text field has nothing to draw either.
+
+   jsPDF only builds an appearance stream for a text field when the field
+   has a value: its writer starts `if (t.V || t.DV)`. Leave a field empty
+   and it goes into the file with no /AP at all, and jsPDF 2.5.1 has no
+   concept of /NeedAppearances to fall back on (the string does not appear
+   anywhere in the library), so nothing tells a reader to generate one.
+   iPadOS Preview then has no appearance for the field.
+
+   A single space is enough to make jsPDF write a real appearance stream,
+   and a space draws nothing, so the field still looks empty. */
+const PDF_EMPTY_FIELD = " ";
+
 /* A tick box that is NOT ticked still needs something to draw.
 
    jsPDF builds a checkbox's normal appearance dictionary with an On
@@ -7529,7 +7542,7 @@ function _pdfPlaceFields(pdf, targets, canvas, nodeW,
       /* inset by a hair so the field does not sit on the printed cell rule */
       f.Rect = [x + 0.3, y + 0.3, Math.max(w - 0.6, 1), Math.max(h - 0.6, 1)];
       f.fontSize = t.multiline ? 8.5 : 9.5;
-      f.value = "";
+      f.value = PDF_EMPTY_FIELD;     // or jsPDF writes no appearance at all
     }
     f.fieldName = t.name;
     f.borderWidth = 0;                       // the sheet already draws the box
@@ -8431,7 +8444,7 @@ function raActionsSheet(items){
     f.Rect = [x + 0.4, top + 0.4, w - 0.8, h - 0.8];
     f.fieldName = name;
     f.fontSize = multiline ? 9 : 10;
-    f.value = "";
+    f.value = PDF_EMPTY_FIELD;       // or jsPDF writes no appearance at all
     if(multiline) f.multiline = true;
     f.borderWidth = 0;
     doc.addField(f); nFields++;
@@ -10238,7 +10251,7 @@ function draEditablePdf(withRA){
     f.Rect = [x + 0.4, top + 0.4, w - 0.8, h - 0.8];
     f.fieldName = name;
     f.fontSize = opts.multiline ? 9 : 10;
-    f.value = opts.value || "";
+    f.value = opts.value || PDF_EMPTY_FIELD;   // or jsPDF writes no appearance
     if(opts.multiline) f.multiline = true;
     f.borderWidth = 0;
     d.addField(f); nFields++;
