@@ -10263,6 +10263,11 @@ function draViewList(){
         ? '<button type="button" class="btn btn-outline" id="draPrintFor">Fillable PDF for '
           + escapeHtml(ra.ref || "the open assessment") + '</button>'
         : '')
+    + '<button type="button" class="btn btn-outline" id="draHtmlBlank">Blank sheet, HTML for iPad</button>'
+    + (ra.hazards.length
+        ? '<button type="button" class="btn btn-outline" id="draHtmlFor">HTML for '
+          + escapeHtml(ra.ref || "the open assessment") + '</button>'
+        : '')
     + '<button type="button" class="btn btn-outline" id="draSend">Send '
       + (ra.hazards.length ? escapeHtml(ra.ref || "the open assessment") : 'a blank sheet')
       + ' to the office</button>'
@@ -10278,6 +10283,10 @@ function draViewList(){
           + 'into on a phone or a tablet and sent back, or printed blank and written on. Open an '
           + 'assessment on the Risk Assessment tab first and you also get one with its reference and '
           + 'hazards already on it.</p>')
+    + '<p class="dra-sub" style="margin:6px 0 0;">The HTML buttons save the same sheet as a '
+      + 'self-contained web page. Put it on the iPad, keep it in Files, open it from a Home '
+      + 'Screen shortcut and fill it in there, then use Save a copy. Nothing in it reaches the '
+      + 'network.</p>'
     + '</div>';
 
   if(recs.length){
@@ -10624,6 +10633,8 @@ function draWire(host){
   on("#draNew", "click", () => { draUI.view = "setup"; draUI.recId = null; draRender(); });
   on("#draPrintBlank", "click", () => draSaveEditablePdf(false));
   on("#draPrintFor", "click", () => draSaveEditablePdf(true));
+  on("#draHtmlBlank", "click", () => draSaveSheetHtml(false));
+  on("#draHtmlFor", "click", () => draSaveSheetHtml(true));
   on("#draSend", "click", () => draShareSheet(draLiveRA().hazards.length > 0));
   on("#draCancel", "click", () => { draUI.view = "list"; draUI.recId = null; draRender(); });
 
@@ -11257,6 +11268,253 @@ function draShareFallback(name, subject, body){
   if(host) host.insertBefore(box, host.firstChild);
   const close = box.querySelector(".dra-share-dismiss");
   if(close) close.addEventListener("click", () => box.remove());
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   THE SHEET AS A WEB PAGE
+
+   The same sheet as the fillable PDF, written out as one self-contained
+   .html file: no linked stylesheet, no library, no image, nothing that
+   reaches the network. It goes to the iPad in Files, opens from a Home
+   Screen shortcut and is typed into there.
+
+   A file:// page on iOS has no storage, so there is nowhere to save to.
+   Save a copy writes the answers back into the markup as ATTRIBUTES and
+   hands the whole page out as a new file. That is the same property vs
+   attribute trap that was losing the risk ratings, used deliberately this
+   time: only the attribute survives being serialised.
+   ──────────────────────────────────────────────────────────────────── */
+
+function _draHtmlEsc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function _draHex(a){
+  return "#" + a.map(n => ("0" + Math.max(0, Math.min(255, n | 0)).toString(16)).slice(-2)).join("");
+}
+
+function draSheetHtml(withRA){
+  const ra = withRA === true ? draLiveRA() : { hazards: [] };
+  const C  = _draBrandInk();
+  const P  = DRA_PDF;
+  const E  = _draHtmlEsc;
+
+  const accent = _draHex(C.accent), title = _draHex(C.title);
+  const ink = _draHex(P.ink), mute = _draHex(P.mute);
+  const rule = _draHex(P.rule), panel = _draHex(P.panel);
+
+  /* the same three pieces the PDF draws, in the same order */
+  const field = (name, label, value, opts) => {
+    opts = opts || {};
+    const v = E(value || "");
+    const inp = opts.multiline
+      ? '<textarea id="' + name + '" name="' + name + '" rows="' + (opts.rows || 3) + '"></textarea>'
+      : '<input type="' + (opts.type || "text") + '" id="' + name + '" name="' + name
+        + '" value="' + v + '">';
+    return '<div class="f' + (opts.indent ? " f-in" : "") + '">'
+      + '<label for="' + name + '">' + E(label) + '</label>' + inp + '</div>';
+  };
+
+  const tick = (name, text, opts) => {
+    opts = opts || {};
+    return '<label class="t' + (opts.bold ? " t-b" : "") + '">'
+      + '<input type="checkbox" id="' + name + '" name="' + name + '">'
+      + '<span>' + E(text) + '</span></label>';
+  };
+
+  const section = t => '<h2>' + E(t) + '</h2>';
+
+  const h = [];
+  h.push('<section class="who">');
+  h.push(field("name", "Your name", ""));
+  h.push(field("company", "Company (FAD or contractor)", ""));
+  h.push(field("site", "Site address", ""));
+  h.push(field("jobref", "Job reference", ""));
+  h.push(field("datetime", "Date and time", "", { type: "datetime-local" }));
+  h.push(field("raref", "Risk assessment reference you are working to", ra.ref || ""));
+  h.push('</section>');
+
+  h.push(section("1. Before you judge it"));
+  h.push(tick("read_ra", "I have read this risk assessment and the method statement for this job."));
+
+  h.push(section("2. Is the assessment still valid for what is in front of you?"));
+  h.push(tick("valid_yes", "Yes, it still holds. Start work. Nothing else to fill in.", { bold: true }));
+  h.push(tick("valid_no", "No, something is different. Write what, below, then answer 3.", { bold: true }));
+  h.push(field("whatdiff", "What is different", "", { multiline: true, rows: 3 }));
+
+  h.push(section("3. Does any of this apply? Any one of them stops the job."));
+  DRA_STOPS.forEach((t, i) => h.push(tick("stop_" + (i + 1), t)));
+  h.push(tick("stop_none", "None of these apply"));
+
+  h.push(section("4. If none of them apply, how are you dealing with it?"));
+  h.push(tick("route_control", "A control already written in this assessment covers it."));
+  h.push(field("route_control_detail", "Hazard number and the control", "",
+    { multiline: true, rows: 2, indent: true }));
+  h.push(tick("route_manager", "Called a senior manager."));
+  h.push(field("route_manager_detail", "Name, number, time, and what they authorised", "",
+    { multiline: true, rows: 2, indent: true }));
+  h.push(tick("route_stopped", "Stopped and left."));
+
+  h.push('<p class="rulebox">You cannot write your own control. If nothing in the assessment '
+    + 'covers it, the only routes are a senior manager or stop. Tell the office either way, so '
+    + 'the assessment can be reviewed.</p>');
+
+  h.push('<section class="who sign">');
+  h.push(field("signed", "Signed", ""));
+  h.push(field("signed_datetime", "Date and time", "", { type: "datetime-local" }));
+  h.push('</section>');
+
+  if(ra.hazards.length){
+    const sub = (ra.ref ? "  ·  " + ra.ref : "") + (ra.task ? "  ·  " + ra.task : "");
+    h.push('<h3>' + E("What this assessment covers" + sub) + '</h3>');
+    h.push('<p class="covers">'
+      + ra.hazards.map(z => E(z.no + ". " + z.name)).join('<span class="dot">·</span>')
+      + '</p>');
+  }
+
+  const fname = "Check before you start" + (ra.ref ? " " + ra.ref : "");
+
+  /* ── the page itself ── */
+  const css = [
+    ':root{--accent:' + accent + ';--title:' + title + ';--ink:' + ink + ';--mute:' + mute
+      + ';--rule:' + rule + ';--panel:' + panel + ';}',
+    '*{box-sizing:border-box;-webkit-text-size-adjust:100%;}',
+    'html,body{margin:0;background:#fff;color:var(--ink);}',
+    'body{font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;',
+    'padding:18px 16px 112px;max-width:820px;margin:0 auto;}',
+    'h1{font-size:23px;line-height:1.2;margin:0;color:var(--title);}',
+    '.lede{color:var(--mute);font-size:13px;margin:5px 0 0;}',
+    '.bar{height:3px;background:var(--accent);margin:11px 0 18px;}',
+    'h2{font-size:14px;margin:26px 0 10px;padding:8px 10px;background:var(--panel);',
+    'border-left:3px solid var(--accent);font-weight:700;}',
+    'h3{font-size:14px;margin:26px 0 6px;padding:0 0 6px;border-bottom:1px solid var(--rule);}',
+    '.who{display:grid;grid-template-columns:1fr 1fr;gap:12px;}',
+    '@media(max-width:560px){.who{grid-template-columns:1fr;}}',
+    '.f{margin:0 0 12px;}',
+    '.f-in{margin-left:30px;}',
+    'label{display:block;}',
+    '.f>label{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);',
+    'font-weight:700;margin:0 0 4px;}',
+    'input[type=text],input[type=datetime-local],textarea{width:100%;font:inherit;color:var(--ink);',
+    'background:#fff;border:1px solid var(--rule);border-radius:0;padding:9px 10px;',
+    'min-height:42px;-webkit-appearance:none;appearance:none;}',
+    'textarea{resize:vertical;line-height:1.4;}',
+    'input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-2px;}',
+    '.t{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #f1f1f1;',
+    'font-size:14px;}',
+    '.t-b{font-weight:700;}',
+    '.t input{flex:0 0 auto;width:24px;height:24px;margin:0;accent-color:var(--accent);}',
+    '.rulebox{margin:20px 0 24px;padding:11px 13px;background:#fefce8;border:1px solid #eab308;',
+    'color:#78530f;font-size:13px;line-height:1.45;}',
+    '.sign{margin-top:4px;}',
+    '.covers{font-size:12px;color:var(--mute);margin:0;line-height:1.7;}',
+    '.dot{padding:0 7px;color:var(--rule);}',
+    '.actions{position:fixed;left:0;right:0;bottom:0;background:#fff;',
+    'border-top:1px solid var(--rule);padding:11px 16px calc(11px + env(safe-area-inset-bottom));',
+    'display:flex;gap:11px;align-items:center;}',
+    'button{font:inherit;font-weight:700;border-radius:0;padding:12px 20px;cursor:pointer;',
+    'border:1px solid var(--accent);background:var(--accent);color:#fff;}',
+    'button.ghost{background:#fff;color:var(--ink);border-color:var(--rule);}',
+    '.said{font-size:12px;color:var(--mute);}',
+    'footer{margin:30px 0 0;padding:9px 0 0;border-top:1px solid var(--rule);font-size:11px;',
+    'color:var(--mute);display:flex;gap:7px;align-items:center;}',
+    'footer b{color:var(--ink);}',
+    'footer .ring{width:13px;height:13px;border:1.7px solid var(--accent);border-radius:50%;',
+    'flex:0 0 auto;}',
+    '@media print{.actions{display:none;}body{padding:0;}}'
+  ].join("");
+
+  /* The script that travels with the file. Everything it needs is here;
+     it never fetches and never stores. */
+  const js = [
+    '(function(){',
+    'function harvest(){',
+    ' var d=document;',
+    ' d.querySelectorAll("input[type=text],input[type=datetime-local]").forEach(function(el){',
+    '  el.setAttribute("value",el.value);});',
+    ' d.querySelectorAll("textarea").forEach(function(el){el.textContent=el.value;});',
+    ' d.querySelectorAll("input[type=checkbox]").forEach(function(el){',
+    '  if(el.checked)el.setAttribute("checked","checked");else el.removeAttribute("checked");});',
+    '}',
+    'function fname(){',
+    ' var v=function(id){var e=document.getElementById(id);return e?e.value.trim():"";};',
+    ' var bits=[v("jobref")||v("raref"),v("site")].filter(Boolean).join(" ");',
+    ' var stamp=(v("datetime")||new Date().toISOString()).slice(0,10);',
+    ' return ("Check before you start "+bits+" "+stamp).replace(/[\\\\/:*?"<>|]/g,"-")',
+    '  .replace(/\\s+/g," ").trim()+".html";',
+    '}',
+    'function say(t){var e=document.getElementById("said");if(e)e.textContent=t;}',
+    'function fallback(html,name){',
+    ' var a=document.createElement("a");',
+    ' var u=URL.createObjectURL(new Blob([html],{type:"text/html"}));',
+    ' a.href=u;a.download=name;a.rel="noopener";document.body.appendChild(a);a.click();',
+    ' setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(u);},4000);',
+    ' say("Saved as "+name);',
+    '}',
+    'document.getElementById("save").addEventListener("click",function(){',
+    /* share() must happen in the same tick as the tap or iOS refuses it,
+       so the page is built synchronously and nothing is awaited first */
+    ' harvest();',
+    ' var name=fname();',
+    ' var html="<!doctype html>\\n"+document.documentElement.outerHTML;',
+    ' var f=null;',
+    ' try{f=new File([html],name,{type:"text/html"});}catch(e){}',
+    ' if(f&&navigator.canShare&&navigator.canShare({files:[f]})){',
+    '  say("Saving a copy");',
+    '  navigator.share({files:[f],title:name}).then(function(){say("Saved as "+name);})',
+    '   .catch(function(err){',
+    /* a share sheet the surveyor closed is not a failure, so do not shove
+       a download at them as well: say so and leave the sheet alone */
+    '    if(err&&err.name==="AbortError"){say("Not saved");return;}',
+    '    fallback(html,name);});',
+    '  return;',
+    ' }',
+    ' fallback(html,name);',
+    '});',
+    'document.getElementById("print").addEventListener("click",function(){window.print();});',
+    '})();'
+  ].join("\n");
+
+  return '<!doctype html>\n'
+    + '<html lang="en-GB">\n<head>\n'
+    + '<meta charset="utf-8">\n'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
+    + '<meta name="robots" content="noindex,nofollow">\n'
+    + '<meta name="apple-mobile-web-app-capable" content="yes">\n'
+    + '<meta name="apple-mobile-web-app-status-bar-style" content="default">\n'
+    + '<meta name="apple-mobile-web-app-title" content="Check sheet">\n'
+    + '<title>' + E(fname) + '</title>\n'
+    + '<style>' + css + '</style>\n</head>\n<body>\n'
+    + '<h1>Check before you start</h1>\n'
+    + '<p class="lede">A review of the risk assessment for this job. Not a permit to work. '
+    + 'Fill it in, then Save a copy and send it to the office.</p>\n'
+    + '<div class="bar"></div>\n'
+    + h.join("\n") + "\n"
+    + '<footer><span class="ring"></span><b>' + E(AHS_PRODUCER) + '</b> · '
+    + E(AHS_WEBSITE) + '</footer>\n'
+    + '<div class="actions"><button type="button" id="save">Save a copy</button>'
+    + '<button type="button" class="ghost" id="print">Print</button>'
+    + '<span class="said" id="said"></span></div>\n'
+    + '<script>' + js + '<\/script>\n'
+    + '</body>\n</html>\n';
+}
+
+function draSaveSheetHtml(withRA){
+  let html;
+  try { html = draSheetHtml(withRA === true); }
+  catch(e){ toast("Could not build the sheet", "error"); return; }
+  const ra = withRA === true ? draLiveRA() : { hazards: [] };
+  const name = ("Check before you start" + (ra.ref ? " " + ra.ref : ""))
+    .replace(/[\\/:*?"<>|]/g, "-") + ".html";
+  const a = document.createElement("a");
+  const url = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+  a.href = url; a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 4000);
+  toast("Sheet saved as HTML", "ok");
 }
 
 function draSaveEditablePdf(withRA){
