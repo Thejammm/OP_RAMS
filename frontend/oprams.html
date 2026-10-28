@@ -449,6 +449,14 @@ body.ras-render #raActions{left:-99999px;}
   .seq-row-del, .seq-section-head { display:none !important; }
 }
 
+/* MS: risks read live from the RA. Built by renderMsRisks(), never typed into. */
+.ms-risks-auto{margin-top:10px;padding-top:8px;border-top:1px dashed var(--border);font-size:13px;line-height:1.45;}
+.ms-risks-auto:empty{display:none;}
+.ms-risks-auto .msr-head{font-weight:700;margin-bottom:4px;}
+.ms-risks-auto .msr-src{font-weight:400;color:var(--text-muted);font-size:11px;}
+.ms-risks-auto .msr-row{display:flex;gap:8px;}
+.ms-risks-auto .msr-no{min-width:18px;font-weight:700;color:var(--text-muted);}
+.ms-risks-auto .msr-none{color:var(--text-muted);font-style:italic;}
 /* MS sequence / emergency tables */
 .seq-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
 .seq-table th,.seq-table td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top;}
@@ -1098,6 +1106,7 @@ body.ras-render #raActions{left:-99999px;}
               <tr>
                 <td colspan="2">
                   <div class="editable-section" contenteditable="true" data-persist data-key="ms.page.1.training" style="min-height:140px;"></div>
+                  <div class="ms-risks-auto" data-ms-risks></div>
                 </td>
               </tr>
               <tr>
@@ -3803,7 +3812,7 @@ const SNIPPETS_RA = [
     group: ATT_GROUP,
     rows: [
       {
-        hazard: "01 Occupants and pets contained by the sealed doorway",
+        hazard: "Occupants and pets contained by the sealed doorway",
         who: "Residents, children, visitors, carers and pets",
         how: "The fan seals the door the household normally uses, so anyone who needs to get out, or a pet that panics, cannot simply walk out.",
         initial: "high",
@@ -3813,7 +3822,7 @@ const SNIPPETS_RA = [
         notes: [{"kind":"Information","text":"The designated room is agreed with the resident at booking, not on the doorstep.","status":"have"}]
       },
       {
-        hazard: "02 Restricted escape and fire precautions",
+        hazard: "Restricted escape and fire precautions",
         who: "Everyone in the dwelling and shared access areas",
         how: "Fan equipment blocks the sole exit or compromises communal escape during an emergency.",
         initial: "high",
@@ -3822,7 +3831,7 @@ const SNIPPETS_RA = [
         action: "Lead tester"
       },
       {
-        hazard: "03 Contact with the operating fan, or an unstable frame",
+        hazard: "Contact with the operating fan, or an unstable frame",
         who: "Testers, residents, children and pets",
         how: "Contact with rotating blades, intake suction or falling frame causes injury.",
         initial: "high",
@@ -3832,7 +3841,7 @@ const SNIPPETS_RA = [
         notes: [{"kind":"Equipment","text":"Fan, frame, fixings, guards and emergency stop inspected before every use.","status":"have"}]
       },
       {
-        hazard: "04 Electric shock and fire from the equipment",
+        hazard: "Electric shock and fire from the equipment",
         who: "Testers and occupants",
         how: "Faulty equipment, unsafe sockets, wet connections or overloaded leads cause shock, burns or fire.",
         initial: "high",
@@ -3842,7 +3851,7 @@ const SNIPPETS_RA = [
         notes: [{"kind":"Equipment","text":"Test equipment on an inspection and testing regime appropriate to its use.","status":"have"}]
       },
       {
-        hazard: "05 Trips, moving doors and fragile materials",
+        hazard: "Trips, moving doors and fragile materials",
         who: "Residents, visitors and testers",
         how: "Leads and hoses cause falls. Pressure changes slam doors or dislodge loose components.",
         initial: "medium",
@@ -3851,7 +3860,7 @@ const SNIPPETS_RA = [
         action: "Lead tester"
       },
       {
-        hazard: "06 Manual handling the fan, frame and cases",
+        hazard: "Manual handling the fan, frame and cases",
         who: "Testers and anyone near moving equipment",
         how: "Carrying fans, frames and cases over steps or stairs causes strain, falls or impact injury.",
         initial: "medium",
@@ -3861,7 +3870,7 @@ const SNIPPETS_RA = [
         notes: [{"kind":"Training","text":"Manual handling training current for every operative.","status":"have"}]
       },
       {
-        hazard: "07 Lone working, violent occupants and safeguarding",
+        hazard: "Lone working, violent occupants and safeguarding",
         who: "Testers and residents",
         how: "An operative becomes isolated, threatened or unable to summon help. Inadequate supervision creates safeguarding concerns.",
         initial: "high",
@@ -3877,133 +3886,127 @@ const SNIPPETS_RA = [
     group: PULSE_GROUP,
     rows: [
       {
-        hazard: "01 Stored compressed air in the tank",
+        hazard: "Stored compressed air in the tank",
         who: "The tester and anyone near the unit",
         how: "Uncontrolled release, injury from a failed fitting or valve",
-        initial: "medium",
-        controls: "Tank, valve and fittings inspected before use, and the unit not used if damaged. Tank vented before transport if the manual says so.",
+        initial: "high",
+        controls: "Inspect the tank, valve and fittings before use. Don't use if damaged. Maintain to the manufacturer's schedule and keep the service records. Vent the tank before transport if the manual says so.",
         residual: "medium",
-        action: "Tester",
-        notes: [{"kind":"Equipment","text":"Unit maintained to the manufacturer's schedule with the service records kept.","status":"have"},{"kind":"Information","text":"Check with BTS whether the unit needs a written scheme of examination under the Pressure Systems Safety Regulations 2000.","status":"todo"}]
+        action: "",
+        notes: [{"kind": "Information", "text": "Check with BTS whether the unit needs a written scheme of examination under the Pressure Systems Safety Regulations 2000. Work out how many air receivers the building needs and the charge pressure, using the BTS sizing guide: one receiver covers roughly 150m2 floor, 350m2 envelope or 350m3 volume, and up to ten receivers can be linked. Typical charge pressures run from 3 to 9 bar.", "status": "todo"}]
       },
       {
-        hazard: "02 Noise from the pulse and compressor",
+        hazard: "Noise from the pulse and compressor",
         who: "The tester, occupants and everyone in the building",
         how: "Startle, hearing damage on repeated tests",
-        initial: "medium",
-        controls: "Everyone in the building warned before each pulse. Hearing protection worn during pulses.",
-        residual: "low",
-        action: "Tester",
-        notes: [{"kind":"Information","text":"Check the noise level stated in the manual.","status":"todo"}]
+        initial: "high",
+        controls: "Wear hearing protection during pulses. Warn everyone in the building before each pulse. Check the noise level in the manual. Get pets outside.",
+        residual: "medium",
+        action: "",
+        notes: [{"kind": "Equipment", "text": "Ensure PPE is provided the equipment noise level is over the threshold and the operative understand noise isolation techniques for tenants and animals", "status": "todo"}]
       },
       {
-        hazard: "03 The unit's weight and the route to and from the vehicle",
+        hazard: "Manual handling",
         who: "The tester",
         how: "Back injury carrying the unit up stairs and to and from the vehicle",
         initial: "medium",
-        controls: "Unit's weight checked and the route planned before carrying. Backpack straps and handles used as designed. Two people for long or awkward carries.",
+        controls: "Use the backpack straps and handles as designed. Check the unit's weight and plan the route.",
         residual: "low",
-        action: "Tester"
+        action: "",
+        notes: [{"kind": "Training", "text": "Ensure operatives are trained in Manual handling techniques", "status": "todo"}]
       },
       {
-        hazard: "04 Electrical supply to the compressor",
+        hazard: "Electrical supply to the compressor",
         who: "The tester and occupants",
         how: "Shock, fire",
-        initial: "medium",
-        controls: "Lead plugged into a sound socket through an RCD. Adaptors not overloaded.",
-        residual: "medium",
-        action: "Tester",
-        notes: [{"kind":"Equipment","text":"Lead and compressor on a portable appliance inspection and test regime, in date.","status":"have"}]
+        initial: "high",
+        controls: "Use an in-date PAT-tested lead and an RCD. Use a sound socket and don't overload adaptors.",
+        residual: "low",
+        action: "",
+        notes: [{"kind": "Equipment", "text": "Ensure the operative has RCD protection devices for all electrical equipment that is to be plugged into the residential small power.", "status": "todo"}]
       },
       {
-        hazard: "05 Leads, hoses and tubes",
+        hazard: "Leads, hoses and tubes",
         who: "The tester and occupants",
         how: "Slips and trips",
         initial: "medium",
-        controls: "Routed away from walkways, taped down if needed, and the area kept clear.",
+        controls: "Route them away from walkways, tape them down if needed, and keep the area clear.",
         residual: "low",
-        action: "Tester"
+        action: ""
       },
       {
-        hazard: "06 Temporary seals left on vents and extract fans",
+        hazard: "Temporary seals left on vents and extract fans",
         who: "Occupants",
         how: "Loss of ventilation, condensation, carbon monoxide build-up",
-        initial: "medium",
-        controls: "Every seal fitted is recorded. All removed after the test and checked off against the list before leaving.",
-        residual: "medium",
-        action: "Tester"
+        initial: "high",
+        controls: "Record every seal fitted. Remove them all after the test and check against the list before leaving.",
+        residual: "low",
+        action: "",
+        notes: [{"kind": "Information", "text": "Operative to provide a check list while on site to ensure all blocked vents are uncovered on commencement", "status": "todo"}]
       },
       {
-        hazard: "07 Sealing high vents",
+        hazard: "Sealing high vents",
         who: "The tester",
         how: "Fall from height",
         initial: "medium",
-        controls: "Stepladders in good condition used, with three points of contact. No overreaching or standing on furniture.",
+        controls: "Use stepladders that are in good condition, with three points of contact. Don't overreach or stand on furniture.",
         residual: "low",
-        action: "Tester"
+        action: "",
+        notes: [{"kind": "Equipment", "text": "suitable hop up", "status": "todo"}]
       },
       {
-        hazard: "08 Air blast and dust",
-        who: "The tester, occupants and anyone near the outlet",
-        how: "Debris in the eyes",
-        initial: "medium",
-        controls: "Loose items and dust cleared from around the outlet. People kept back from the outlet when it fires.",
-        residual: "low",
-        action: "Tester"
-      },
-      {
-        hazard: "09 Occupied homes",
+        hazard: "Occupied homes",
         who: "Occupants, children, pets and the lone tester",
         how: "Startled occupants, children or pets near the unit, lone working",
         initial: "medium",
-        controls: "Test explained to the occupants before starting. Children and pets kept out of the room. Lone working procedure followed.",
+        controls: "Explain the test to the occupants before starting. Keep children and pets out of the room. Follow the lone working procedure.",
         residual: "low",
-        action: "Tester"
+        action: ""
       },
       {
-        hazard: "10 Transport",
+        hazard: "Transport",
         who: "The tester and other road users",
         how: "Load shifting in the vehicle",
         initial: "medium",
-        controls: "Unit secured upright in the vehicle with the tank vented in transit.",
+        controls: "Secure the unit upright in the vehicle and keep the tank vented in transit. Always carry the equipment empty.",
         residual: "low",
-        action: "Tester"
+        action: ""
       },
       {
-        hazard: "11 Very cold air nozzle",
+        hazard: "Very cold air nozzle",
         who: "The tester and anyone near the nozzle",
         how: "The nozzle reaches sub-zero temperatures during and after air release. Cold burn on contact.",
         initial: "medium",
         controls: "Keep all people and body parts away from the air nozzle during and after use.",
         residual: "low",
-        action: "Tester"
+        action: ""
       },
       {
-        hazard: "12 Objects toppled or projected by the air blast",
+        hazard: "Objects toppled or projected by the air blast",
         who: "The tester, occupants and anyone in the room",
         how: "The force of escaping air can topple objects or throw them.",
         initial: "medium",
         controls: "Do not block or place objects near the air nozzle. Clear the area around it before firing.",
         residual: "low",
-        action: "Tester"
+        action: ""
       },
       {
-        hazard: "13 Pets and animals distressed by the release",
+        hazard: "Pets and animals distressed by the release",
         who: "Pets and other animals, and the occupants",
         how: "The loud release can distress animals, and a moving animal also voids the test.",
-        initial: "medium",
+        initial: "high",
         controls: "Do not operate in the vicinity of pets or other animals. Keep them away from the air receiver.",
         residual: "low",
-        action: "Tester"
+        action: ""
       },
       {
-        hazard: "14 Equipment used wet, damaged or modified",
+        hazard: "Equipment used wet, damaged or modified",
         who: "The tester and occupants",
         how: "Shock, fire or failure of a pressurised component.",
-        initial: "medium",
+        initial: "high",
         controls: "Indoor use only, never in rain or moisture. Do not handle the plug with wet hands, spill liquid on it, insert metal into ports, remove covers or modify it. Take faulty or damaged equipment out of use, switch off and unplug, and contact BTS.",
-        residual: "medium",
-        action: "Tester"
+        residual: "low",
+        action: ""
       }
     ]
   },
@@ -7325,30 +7328,29 @@ const SNIPPETS_MS = [
     group: PULSE_GROUP,
     fields: {
       title: "Pulse air tightness testing of a dwelling",
-      equipment: "Pulse system: compressor, controller and air receiver(s) with built-in shoulder straps. Air hose, interconnect cable and mains leads. Vibration mat for hard floors. In-date PAT-tested mains lead and an RCD. Ear protection or earplugs. Anemometer to record wind speed. Tape measure or laser for volume and envelope area. Air sealing tape for ventilation openings and a seal record sheet. Signs for external doors. USB stick. The Pulse documentation and sizing guide.",
+      equipment: "Pulse system: compressor, controller and air receiver(s) with built-in shoulder straps. Air hose, interconnect cable and mains leads. Vibration mat for hard floors. In-date PAT-tested mains lead and an RCD. Ear protection or earplugs. Tape measure or laser for volume and envelope area. Air sealing tape for ventilation openings and a seal record sheet.",
       ppe: "Ear protection or earplugs whenever the equipment is used, and especially across a day of repeated tests. Footwear suitable for the property. Anything further the equipment specification requires.",
       raRef: "",
-      procedure: "**1 BEFORE GOING TO SITE**\ncheck the unit, leads and hoses for damage, and that the service and PAT records are in date. Do not use equipment suspected faulty or damaged. Work out how many air receivers the building needs and the charge pressure, using the BTS sizing guide: one receiver covers roughly 150m2 floor, 350m2 envelope or 350m3 volume, and up to ten receivers can be linked. Typical charge pressures run from 3 to 9 bar. Equipment is for indoor use only and must be allowed to reach room temperature before operating if it has been below 0C.\n\n**2 ON ARRIVAL, ASSESS THE SITE**\nintroduce yourself to the occupants or site contact and explain the test, including the noise and the gush of air. Agree which rooms you will enter. Check for an asbestos survey if the building is pre-2000. Measure and record the wind speed: tests should only be run below 6 m/s, about 13 mph. Higher is possible but needs greater caution and is not recommended.\n\n**3 CARRY THE KIT IN AND SET IT UP**\na system with one air receiver is a single person carry on the built-in shoulder straps. Seek manual handling training before moving the unit, and if you are unsure you can move it safely, do not: get help or a lifting aid. Stand the air receiver roughly central on the ground floor with clear air around it and not immediately against a wall. Vibration mat under the compressor on hard floors. Connect the air hose, the interconnect cable and the mains last. The air receiver is the power hub, so the system runs from one sound, RCD protected socket. Route every cable and hose so nothing is strained, damaged or left as a trip hazard. Never handle the plug with wet hands.\n\n**4 CHARGE THE AIR RECEIVERS**\ncharge to the pressure the sizing guide gives for this building, watching the on-screen tank pressure or the mechanical gauge on top of the receiver. Smaller buildings need a lower charge pressure to avoid overpressurising. Stay with the unit while it charges.\n\n**5 PREPARE THE BUILDING WHILE IT CHARGES**\nopen all interior doors and openings so air can move between rooms. Close or seal up any intentionally provided ventilation to the protocol being followed, for example CIBSE TM23 or an IAA Background Ventilation Assessment: intermittent extract fans, passive vents and mechanical ventilation outlets, using air sealing tape. Record every seal. Measure the internal volume and the envelope area accurately. Tell the occupants testing is about to start and warn them about the noise. Consider signs on external doors so nobody walks in and voids the test. Keep pets away from the air receiver. For a room only test, open a single external door or large window instead, so the pressure difference is between the room and the rest of the building.\n\n**6 ENTER THE TEST DETAILS**\ntester ID, date and time, address, weather conditions, notable site conditions and the sealing protocol followed. Enter the building geometry, volume and envelope area, and the test type.\n\n**7 RUN THE TEST**\ntell the occupants the test is starting, that there will be noise and a gush of air, and ask that movement is kept to a minimum. Put on ear protection. Keep everyone, and every part of yourself, away from the air nozzle. Press go: there is a five second countdown, during which the operator steps away from the unit as well. A two step cycle samples background pressure for two seconds, releases air for 1.5 seconds, samples for 1.5, releases again more gently, then samples for 2.5. A three step test adds one more release. A three step test takes about fifteen seconds. Nobody, including animals, should move about during it.\n\n**8 CHECK THE RESULT IS VALID**\nthe screen gives the air leakage rate, air permeability, air changes per hour and effective leakage area, with the achieved pressure range beside them. For a valid result the coefficient of determination R2 must be greater than 0.96 and the air flow exponent n between 0.5 and 1.0.\n\n**9 RESTORE THE BUILDING**\nremove every seal and tick it off against the record sheet, so no ventilation opening is left covered. Confirm with the occupants that everything is as it was.\n\n**10 PACK DOWN**\nswitch the compressor off, switch off at the wall and unplug. Release the air hose by pressing the green button on the side of the socket first, never by pulling it, or the compressor or connector will be damaged. Disconnect the interconnect cable and refit the dust caps. Coil the cables and hoses without twisting them. Close and latch the controller lid.\n\n**11 DRAIN AND TRANSPORT**\ndrain the air receivers outside, using the drain valve, because condensed water can come out with the air and damage carpets or flooring. Air receivers are transported empty of air for safety. Strap them in place in the vehicle. Report any defect before the next use.\n\n**REFERENCE**\nThis method follows the manufacturer’s own documentation: Build Test Solutions Pulse documentation, docs.pulseairtest.com. Specifically the Important safety information, Site assessment, Preparing the building or room, Test procedure and results, and Disassembly and transport pages, read with the equipment specification for the unit in use.\nBuild Test Solutions state plainly that they cannot be held liable for damage or injury from improper use, handling or moving of the equipment, and that a thorough risk assessment must be carried out for the job being undertaken.",
-      training: "Manual handling training before moving the unit, as the manufacturer requires. If you are unsure you can move it safely, do not: get help or a lifting aid. The equipment is for professional use only and the documentation must be read and understood before use.",
-      risks: "01 Stored compressed air in the tank; 02 Noise from the pulse and compressor; 03 Manual handling; 04 Electrical supply to the compressor; 05 Leads, hoses and tubes; 06 Temporary seals left on vents and extract fans; 07 Sealing high vents; 08 Air blast and dust; 09 Occupied homes; 10 Transport; 11 Very cold air nozzle; 12 Objects toppled or projected by the air blast; 13 Pets and animals distressed by the release; 14 Equipment used wet, damaged or modified",
+      procedure: "**1 BEFORE GOING TO SITE**\ncheck the unit, leads and hoses for damage, and that the service and PAT records are in date. Do not use equipment suspected faulty or damaged. Equipment is for indoor use only and must be allowed to reach room temperature before operating if it has been below 0C.\n\n**2 ON ARRIVAL, ASSESS THE SITE**\nintroduce yourself to the occupants or site contact and explain the test, including the noise and the gush of air. Agree which rooms you will enter. Measure and record the wind speed: tests should only be run below 6 m/s, about 13 mph. Higher is possible but needs greater caution and is not recommended.\n\n**3 CARRY THE KIT IN AND SET IT UP**\na system with one air receiver is a single person carry on the built-in shoulder straps. Seek manual handling training before moving the unit, and if you are unsure you can move it safely, do not: get help or a lifting aid. Stand the air receiver roughly central on the ground floor with clear air around it and not immediately against a wall. Vibration mat under the compressor on hard floors. Connect the air hose, the interconnect cable and the mains last. The air receiver is the power hub, so the system runs from one sound, RCD protected socket. Route every cable and hose so nothing is strained, damaged or left as a trip hazard. Never handle the plug with wet hands.\n\n**4 CHARGE THE AIR RECEIVERS**\ncharge to the pressure the sizing guide gives for this building, watching the on-screen tank pressure or the mechanical gauge on top of the receiver. Smaller buildings need a lower charge pressure to avoid overpressurising. Stay with the unit while it charges.\n\n**5 PREPARE THE BUILDING WHILE IT CHARGES**\nopen all interior doors and openings so air can move between rooms. Close or seal up any intentionally provided ventilation to the protocol being followed, for example CIBSE TM23 or an IAA Background Ventilation Assessment: intermittent extract fans, passive vents and mechanical ventilation outlets, using air sealing tape. Record every seal. Measure the internal volume and the envelope area accurately. Tell the occupants testing is about to start and warn them about the noise. Consider signs on external doors so nobody walks in and voids the test. Keep pets away from the air receiver. For a room only test, open a single external door or large window instead, so the pressure difference is between the room and the rest of the building.\n\n**6 ENTER THE TEST DETAILS**\ntester ID, date and time, address, weather conditions, notable site conditions and the sealing protocol followed. Enter the building geometry, volume and envelope area, and the test type.\n\n**7 RUN THE TEST**\ntell the occupants the test is starting, that there will be noise and a gush of air, and ask that movement is kept to a minimum. Put on ear protection. Keep everyone, and every part of yourself, away from the air nozzle. Press go: there is a five second countdown, during which the operator steps away from the unit as well. A two step cycle samples background pressure for two seconds, releases air for 1.5 seconds, samples for 1.5, releases again more gently, then samples for 2.5. A three step test adds one more release. A three step test takes about fifteen seconds. Nobody, including animals, should move about during it.\n\n**8 CHECK THE RESULT IS VALID**\nthe screen gives the air leakage rate, air permeability, air changes per hour and effective leakage area, with the achieved pressure range beside them. For a valid result the coefficient of determination R2 must be greater than 0.96 and the air flow exponent n between 0.5 and 1.0.\n\n**9 PACK DOWN**\nswitch the compressor off, switch off at the wall and unplug. Release the air hose by pressing the green button on the side of the socket first, never by pulling it, or the compressor or connector will be damaged. Disconnect the interconnect cable and refit the dust caps. Coil the cables and hoses without twisting them. Close and latch the controller lid.\n\n**10 RESTORE THE BUILDING**\nremove every seal and tick it off against the record sheet, so no ventilation opening is left covered. Confirm with the occupants that everything is as it was.\n\n**11 DRAIN AND TRANSPORT**\ndrain the air receivers outside, using the drain valve, because condensed water can come out with the air and damage carpets or flooring. Air receivers are transported empty of air for safety. Strap them in place in the vehicle. Report any defect before the next use.\n\n**REFERENCE**\nThis method follows the manufacturer’s own documentation: Build Test Solutions Pulse documentation, docs.pulseairtest.com. Specifically the Important safety information, Site assessment, Preparing the building or room, Test procedure and results, and Disassembly and transport pages, read with the equipment specification for the unit in use.\nBuild Test Solutions state plainly that they cannot be held liable for damage or injury from improper use, handling or moving of the equipment, and that a thorough risk assessment must be carried out for the job being undertaken.",
+      training: "Manual handling training before moving the unit. If you are unsure you can move it safely, do not: get help or a lifting aid. The equipment is for professional use only and the documentation must be read and understood before use.",
       sequence: [
-          { step: "1 Before going to site", detail: "check the unit, leads and hoses for damage, and that the service and PAT records are in date. Do not use equipment suspected faulty or damaged. Work out how many air receivers the building needs and the charge pressure, using the BTS sizing guide: one receiver covers roughly 150m2 floor, 350m2 envelope or 350m3 volume, and up to ten receivers can be linked. Typical charge pressures run from 3 to 9 bar. Equipment is for indoor use only and must be allowed to reach room temperature before operating if it has been below 0C." },
-          { step: "2 On arrival, assess the site", detail: "introduce yourself to the occupants or site contact and explain the test, including the noise and the gush of air. Agree which rooms you will enter. Check for an asbestos survey if the building is pre-2000. Measure and record the wind speed: tests should only be run below 6 m/s, about 13 mph. Higher is possible but needs greater caution and is not recommended." },
-          { step: "3 Carry the kit in and set it up", detail: "a system with one air receiver is a single person carry on the built-in shoulder straps. Seek manual handling training before moving the unit, and if you are unsure you can move it safely, do not: get help or a lifting aid. Stand the air receiver roughly central on the ground floor with clear air around it and not immediately against a wall. Vibration mat under the compressor on hard floors. Connect the air hose, the interconnect cable and the mains last. The air receiver is the power hub, so the system runs from one sound, RCD protected socket. Route every cable and hose so nothing is strained, damaged or left as a trip hazard. Never handle the plug with wet hands." },
-          { step: "4 Charge the air receivers", detail: "charge to the pressure the sizing guide gives for this building, watching the on-screen tank pressure or the mechanical gauge on top of the receiver. Smaller buildings need a lower charge pressure to avoid overpressurising. Stay with the unit while it charges." },
-          { step: "5 Prepare the building while it charges", detail: "open all interior doors and openings so air can move between rooms. Close or seal up any intentionally provided ventilation to the protocol being followed, for example CIBSE TM23 or an IAA Background Ventilation Assessment: intermittent extract fans, passive vents and mechanical ventilation outlets, using air sealing tape. Record every seal. Measure the internal volume and the envelope area accurately. Tell the occupants testing is about to start and warn them about the noise. Consider signs on external doors so nobody walks in and voids the test. Keep pets away from the air receiver. For a room only test, open a single external door or large window instead, so the pressure difference is between the room and the rest of the building." },
-          { step: "6 Enter the test details", detail: "tester ID, date and time, address, weather conditions, notable site conditions and the sealing protocol followed. Enter the building geometry, volume and envelope area, and the test type." },
-          { step: "7 Run the test", detail: "tell the occupants the test is starting, that there will be noise and a gush of air, and ask that movement is kept to a minimum. Put on ear protection. Keep everyone, and every part of yourself, away from the air nozzle. Press go: there is a five second countdown, during which the operator steps away from the unit as well. A two step cycle samples background pressure for two seconds, releases air for 1.5 seconds, samples for 1.5, releases again more gently, then samples for 2.5. A three step test adds one more release. A three step test takes about fifteen seconds. Nobody, including animals, should move about during it." },
-          { step: "8 Check the result is valid", detail: "the screen gives the air leakage rate, air permeability, air changes per hour and effective leakage area, with the achieved pressure range beside them. For a valid result the coefficient of determination R2 must be greater than 0.96 and the air flow exponent n between 0.5 and 1.0." },
-          { step: "9 Restore the building", detail: "remove every seal and tick it off against the record sheet, so no ventilation opening is left covered. Confirm with the occupants that everything is as it was." },
-          { step: "10 Pack down", detail: "switch the compressor off, switch off at the wall and unplug. Release the air hose by pressing the green button on the side of the socket first, never by pulling it, or the compressor or connector will be damaged. Disconnect the interconnect cable and refit the dust caps. Coil the cables and hoses without twisting them. Close and latch the controller lid." },
-          { step: "11 Drain and transport", detail: "drain the air receivers outside, using the drain valve, because condensed water can come out with the air and damage carpets or flooring. Air receivers are transported empty of air for safety. Strap them in place in the vehicle. Report any defect before the next use." },
+          { step: "Before going to site", detail: "check the unit, leads and hoses for damage, and that the service and PAT records are in date. Do not use equipment suspected faulty or damaged. Equipment is for indoor use only and must be allowed to reach room temperature before operating if it has been below 0C." },
+          { step: "On arrival, assess the site", detail: "introduce yourself to the occupants or site contact and explain the test, including the noise and the gush of air. Agree which rooms you will enter. Measure and record the wind speed: tests should only be run below 6 m/s, about 13 mph. Higher is possible but needs greater caution and is not recommended." },
+          { step: "Carry the kit in and set it up", detail: "a system with one air receiver is a single person carry on the built-in shoulder straps. Seek manual handling training before moving the unit, and if you are unsure you can move it safely, do not: get help or a lifting aid. Stand the air receiver roughly central on the ground floor with clear air around it and not immediately against a wall. Vibration mat under the compressor on hard floors. Connect the air hose, the interconnect cable and the mains last. The air receiver is the power hub, so the system runs from one sound, RCD protected socket. Route every cable and hose so nothing is strained, damaged or left as a trip hazard. Never handle the plug with wet hands." },
+          { step: "Charge the air receivers", detail: "charge to the pressure the sizing guide gives for this building, watching the on-screen tank pressure or the mechanical gauge on top of the receiver. Smaller buildings need a lower charge pressure to avoid overpressurising. Stay with the unit while it charges." },
+          { step: "Prepare the building while it charges", detail: "open all interior doors and openings so air can move between rooms. Close or seal up any intentionally provided ventilation to the protocol being followed, for example CIBSE TM23 or an IAA Background Ventilation Assessment: intermittent extract fans, passive vents and mechanical ventilation outlets, using air sealing tape. Record every seal. Measure the internal volume and the envelope area accurately. Tell the occupants testing is about to start and warn them about the noise. Consider signs on external doors so nobody walks in and voids the test. Keep pets away from the air receiver. For a room only test, open a single external door or large window instead, so the pressure difference is between the room and the rest of the building." },
+          { step: "Enter the test details", detail: "tester ID, date and time, address, weather conditions, notable site conditions and the sealing protocol followed. Enter the building geometry, volume and envelope area, and the test type." },
+          { step: "Run the test", detail: "tell the occupants the test is starting, that there will be noise and a gush of air, and ask that movement is kept to a minimum. Put on ear protection. Keep everyone, and every part of yourself, away from the air nozzle. Press go: there is a five second countdown, during which the operator steps away from the unit as well. A two step cycle samples background pressure for two seconds, releases air for 1.5 seconds, samples for 1.5, releases again more gently, then samples for 2.5. A three step test adds one more release. A three step test takes about fifteen seconds. Nobody, including animals, should move about during it." },
+          { step: "Check the result is valid", detail: "the screen gives the air leakage rate, air permeability, air changes per hour and effective leakage area, with the achieved pressure range beside them. For a valid result the coefficient of determination R2 must be greater than 0.96 and the air flow exponent n between 0.5 and 1.0." },
+          { step: "Pack down", detail: "switch the compressor off, switch off at the wall and unplug. Release the air hose by pressing the green button on the side of the socket first, never by pulling it, or the compressor or connector will be damaged. Disconnect the interconnect cable and refit the dust caps. Coil the cables and hoses without twisting them. Close and latch the controller lid." },
+          { step: "Restore the building", detail: "remove every seal and tick it off against the record sheet, so no ventilation opening is left covered. Confirm with the occupants that everything is as it was." },
+          { step: "Drain and transport", detail: "drain the air receivers outside, using the drain valve, because condensed water can come out with the air and damage carpets or flooring. Air receivers are transported empty of air for safety. Strap them in place in the vehicle. Report any defect before the next use." },
           { step: "Reference", detail: "Build Test Solutions Pulse documentation, docs.pulseairtest.com. A risk assessment for the job is required by the manufacturer, not optional." }
       ],
       firstaid: "To be completed before issue.",
       fire: "To be completed before issue.",
-      spill: "Condensed water can come out of an air receiver when it is drained, which is why draining is done outside. To be completed before issue.",
-      contacts: "Supervisor — TBC | Client or site contact — TBC | Build Test Solutions technical support — TBC | Emergency 999"
+      spill: "Condensed water can come out of an air receiver when it is drained, which is why draining is done outside.",
+      contacts: "Supervisor — 01274 712 041 | Client or site contact — TBC FAD Office to provide | Emergency 999"
     }
   }
 
@@ -7676,6 +7678,7 @@ function persistField(el){
   const value = rich ? el.innerHTML : (el.value !== undefined ? el.value : el.innerHTML);
   lsSet(k, value || "");
   flagSaving();
+  scheduleMsRisks();
 }
 /* The open note editor is furniture, not work. It is a <tr> inside the
    hazards tbody, so without this it gets saved along with the rows and
@@ -7706,6 +7709,7 @@ function persistContainer(el){
   const k = el.getAttribute("data-key"); if(!k) return;
   lsSet(k, _htmlForSave(el));
   flagSaving();
+  scheduleMsRisks();
 }
 function restoreField(el){
   const k = el.getAttribute("data-key"); if(!k) return;
@@ -8091,7 +8095,7 @@ function _buildHazardRow(row){
       + '</div></td>';
   };
   const cell = (txt) => '<td><div class="editable" contenteditable="true">' + (txt || "") + '</div></td>';
-  return cell(row.hazard) + cell(row.who) + cell(row.how)
+  return cell(_raStripNo(row.hazard)) + cell(row.who) + cell(row.how)
     + riskCell(initial)
     + cell(row.controls)
     + riskCell(residual)
@@ -8714,6 +8718,134 @@ document.addEventListener("focusin", e=>{
   if(cell) lastFocusedMsCell = cell;
 });
 
+
+/* ════════════════════════════════════════════════════════════════════
+   HAZARD NUMBERS AND THE MS RISK LIST
+   The hazard number is the row's position, drawn by the CSS counter on the
+   hazards table. It is the only number. Some snippet libraries used to type
+   a number into the hazard text ("08 Air blast"), which went out of step as
+   soon as a row was deleted or moved, so those typed numbers are stripped.
+
+   The MS "Risks" list is not typed either. It is read from the RA every
+   time either document changes, numbered by the same row positions, so the
+   MS always reads the finished assessment.
+   ════════════════════════════════════════════════════════════════════ */
+const RA_TYPED_NO = /^\s*\d{2}[.)]?\s+/;
+function _raStripNo(t){ return String(t || "").replace(RA_TYPED_NO, ""); }
+
+/* Strip a typed "01 " from the start of each saved hazard cell. Returns
+   true if anything changed, so the caller can save once. */
+function cleanHazardNumbers(scope){
+  let changed = false;
+  $$(".hazardsTable tbody tr", scope || document)
+    .filter(tr => !tr.classList.contains("note-edit"))
+    .forEach(tr => {
+      const cell = tr.querySelector("td .editable");
+      if(!cell || !RA_TYPED_NO.test(cell.textContent.replace(/ /g, " "))) return;
+      const walker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT);
+      let n;
+      while((n = walker.nextNode())){
+        if(!n.nodeValue.trim()) continue;
+        const v = n.nodeValue.replace(/ /g, " ");
+        if(RA_TYPED_NO.test(v)){ n.nodeValue = v.replace(RA_TYPED_NO, ""); changed = true; }
+        break;
+      }
+    });
+  if(changed) $$(".hazardsTable tbody[data-persist-container]").forEach(persistContainer);
+  return changed;
+}
+
+function _raFormRef(form){
+  const el = form.querySelector('[data-key^="ra.meta.reference"]');
+  const t = el ? (el.value !== undefined ? el.value : el.textContent).trim() : "";
+  return (!t || /^Add /i.test(t)) ? "" : t;
+}
+function _refKey(t){ return String(t || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+
+/* The RA form(s) an MS page reads from: the one whose reference matches the
+   MS "RA Ref", or the only RA there is, or all of them. */
+function _msRiskSources(msPage){
+  const forms = $$("#raForms .form-page");
+  const refEl = msPage.querySelector('[data-key$=".raRef"]');
+  const want = refEl ? (refEl.textContent || "").trim() : "";
+  const key = _refKey(/^Add /i.test(want) ? "" : want);
+  if(key){
+    const hit = forms.filter(f => {
+      const k = _refKey(_raFormRef(f));
+      return k && (key.indexOf(k) !== -1 || k.indexOf(key) !== -1);
+    });
+    if(hit.length) return hit;
+  }
+  return forms;
+}
+
+function renderMsRisks(){
+  $$("#msPages .ms-page").forEach(page => {
+    let host = page.querySelector("[data-ms-risks]");
+    if(!host){
+      // Pages saved before this block existed: add it under Training.
+      const tr = page.querySelector('[data-key$=".training"]');
+      if(!tr) return;
+      host = document.createElement("div");
+      host.className = "ms-risks-auto";
+      host.setAttribute("data-ms-risks", "");
+      tr.parentNode.insertBefore(host, tr.nextSibling);
+    }
+    const forms = _msRiskSources(page);
+    const multi = forms.length > 1;
+    let body = "";
+    forms.forEach(f => {
+      const items = $$(".hazardsTable tbody tr", f)
+        .filter(tr => !tr.classList.contains("note-edit"))
+        .map((tr, i) => {
+          const c = tr.querySelector("td .editable");
+          return { no: i + 1, name: _raStripNo(c ? c.textContent.replace(/ /g, " ").trim() : "") };
+        })
+        .filter(x => x.name);
+      if(!items.length) return;
+      if(multi) body += '<div class="msr-src">' + escapeHtml(_raFormRef(f) || "Risk assessment") + '</div>';
+      body += items.map(x => '<div class="msr-row"><span class="msr-no">' + x.no
+        + '</span><span>' + escapeHtml(x.name) + '</span></div>').join("");
+    });
+    const ref = forms.length === 1 ? _raFormRef(forms[0]) : "";
+    host.innerHTML = '<div class="msr-head">Risks'
+      + (ref ? ' <span class="msr-src">from ' + escapeHtml(ref) + ', numbered as on the assessment</span>' : '')
+      + '</div>'
+      + (body || '<div class="msr-none">No hazards on the risk assessment yet.</div>');
+  });
+}
+let _msRisksTimer = null;
+function scheduleMsRisks(){
+  clearTimeout(_msRisksTimer);
+  _msRisksTimer = setTimeout(() => { try{ renderMsRisks(); }catch(e){ console.warn(e); } }, 150);
+}
+
+/* Training cells saved before this change carry a typed "Risks:" list.
+   That list is now drawn from the RA, so the typed copy is removed. */
+function migrateMsTraining(){
+  $$('#msPages [data-key$=".training"]').forEach(cell => {
+    const mark = $$("strong, b", cell).find(b => /^\s*Risks:?\s*$/i.test(b.textContent));
+    if(!mark) return;
+    const r = document.createRange();
+    r.setStartBefore(mark);
+    r.setEndAfter(cell.lastChild);
+    r.deleteContents();
+    // tidy the line breaks and empty wrappers the cut leaves behind
+    const trim = el => {
+      while(el.lastChild){
+        const l = el.lastChild;
+        if(l.nodeType === 3 && !l.nodeValue.replace(/ /g, " ").trim()){ l.remove(); continue; }
+        if(l.nodeName === "BR"){ l.remove(); continue; }
+        if(l.nodeType === 1 && !l.textContent.replace(/ /g, " ").trim() && !l.querySelector("img")){ l.remove(); continue; }
+        if(l.nodeType === 1){ trim(l); }
+        break;
+      }
+    };
+    trim(cell);
+    persistField(cell);
+  });
+}
+
 /* ─── MS HTML helpers (ported verbatim from scriptms.js) ───────── */
 function _msEscapeHtml(s){
   return String(s).replace(/[&<>"']/g, (m)=> ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
@@ -8752,13 +8884,21 @@ function populateMethodStatementTable(fields, page){
   setHTML("raRef",     fields.raRef || fields.associated);
   setHTML("procedure", fields.method || fields.procedure);
 
-  // Training cell can hold combined training + risks block
-  if(fields.training || fields.risks){
-    const combined = [
-      fields.training ? "<strong>Training:</strong><br>" + fields.training : "",
-      fields.risks    ? "<strong>Risks:</strong><br>" + fields.risks       : ""
-    ].filter(Boolean).join("<br><br>");
-    setHTML("training", combined);
+  // Training only. The risks are no longer pasted in from the snippet: they
+  // are read live from the RA by renderMsRisks(), so they always match the
+  // assessment as it stands after rows are added, moved or deleted.
+  if(fields.training){
+    setHTML("training", "<strong>Training:</strong><br>" + fields.training);
+  }
+  // RA Ref left blank by the snippet: take it from the assessment.
+  const refEl = page.querySelector('[data-key$=".raRef"]');
+  if(refEl){
+    const cur = (refEl.textContent || "").trim();
+    if(!cur || /^Add /i.test(cur)){
+      const forms = $$("#raForms .form-page");
+      const r = forms.length === 1 ? _raFormRef(forms[0]) : "";
+      if(r){ refEl.innerHTML = "<p>" + escapeHtml(r) + "</p>"; persistField(refEl); }
+    }
   }
 
   // Sequence of operations: array of {step, detail} (or strings)
@@ -11145,6 +11285,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // Rows restored from a saved blob carry their notes with them; rebuild the
   // printed blocks and the pin states from what came back.
   $$(".hazardsTable tbody tr").filter(tr => !tr.classList.contains("note-edit")).forEach(paintRowNote);
+  cleanHazardNumbers(document);
+  migrateMsTraining();
+  renderMsRisks();
   renderAllArrangements();
   renderArisings();
   ensureSheetFooters();
