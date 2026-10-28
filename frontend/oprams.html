@@ -36,6 +36,9 @@
   --accent:#4bbfd6;
   --accent-light:#E4F5F9;
   --accent-dark:#3E9DAF;
+  /* Chrome. The brand paints the DOCUMENT; the tool stays AHS, so a
+     client colour never ends up on the buttons, tabs or header. */
+  --ui-accent:#4bbfd6; --ui-accent-light:#E4F5F9; --ui-accent-dark:#3E9DAF;
   --text:#111827; --text-muted:#6B7280;
   /* Form chrome */
   --border:#E5E7EB;
@@ -55,7 +58,7 @@
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
 
 /* ── Sticky app header ────────────────────────────────── */
-.app-header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:3px solid var(--accent);box-shadow:0 1px 8px rgba(0,0,0,.06);}
+.app-header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:3px solid var(--ui-accent);box-shadow:0 1px 8px rgba(0,0,0,.06);}
 .header-inner{max-width:1200px;margin:0 auto;padding:8px 20px;min-height:64px;display:flex;
   align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
 .header-brand{display:flex;align-items:center;gap:12px;flex-shrink:1;min-width:0;}
@@ -91,7 +94,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
   appearance:none;
   -webkit-appearance:none;
 }
-.lh-date-input:focus{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+.lh-date-input:focus{outline:2px solid var(--ui-accent);outline-offset:2px;border-radius:4px;}
 .lh-date-input::-webkit-calendar-picker-indicator{
   cursor:pointer;
   filter:opacity(.7);
@@ -114,7 +117,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .tab-bar-inner::-webkit-scrollbar{display:none;}
 .tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:14px 16px 11px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;white-space:nowrap;margin-bottom:-2px;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:6px;}
 .tab-btn:hover{color:var(--text);}
-.tab-btn.active{color:var(--accent-dark);border-bottom-color:var(--accent);}
+.tab-btn.active{color:var(--ui-accent-dark);border-bottom-color:var(--ui-accent);}
 
 /* ── Main / panels ───────────────────────────────────── */
 main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
@@ -123,8 +126,8 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 
 /* ── Buttons ─────────────────────────────────────────── */
 .btn{display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:8px;padding:9px 16px;border:1.5px solid transparent;cursor:pointer;transition:all .15s;min-height:40px;white-space:nowrap;background:transparent;color:var(--text);}
-.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--primary);}
-.btn-primary:hover{background:var(--accent-dark);border-color:var(--accent-dark);color:#fff;}
+.btn-primary{background:var(--ui-accent);border-color:var(--ui-accent);color:var(--primary);}
+.btn-primary:hover{background:var(--ui-accent-dark);border-color:var(--ui-accent-dark);color:#fff;}
 .btn-outline{background:transparent;border-color:var(--border);color:var(--text);}
 .btn-outline:hover{border-color:var(--primary);}
 .btn-ghost{background:transparent;border-color:transparent;color:var(--text-muted);}
@@ -178,7 +181,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .sheet-footer .sf-center{text-align:center;font-style:italic;}
 .sheet-footer .sf-right{text-align:right;white-space:nowrap;}
 .sheet-footer .sf-page{font-weight:700;color:var(--text);}
-.sheet-footer [contenteditable]:focus{outline:none;background:var(--accent-light);border-radius:3px;}
+.sheet-footer [contenteditable]:focus{outline:none;background:var(--ui-accent-light);border-radius:3px;}
 @media print{ .sheet-footer{margin-top:14px;} }
 .lh-title{font-size:22px;font-weight:700;color:var(--primary);letter-spacing:-.01em;}
 .lh-subtitle{font-size:13px;color:var(--text-muted);margin-top:2px;}
@@ -199,7 +202,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .meta > div{display:flex;flex-direction:column;gap:3px;}
 .meta .label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);font-weight:700;}
 .meta strong{font-size:13px;font-weight:600;color:var(--text);min-height:18px;outline:none;}
-.meta strong:focus{background:#fff;border-radius:4px;box-shadow:0 0 0 2px var(--accent);}
+.meta strong:focus{background:#fff;border-radius:4px;box-shadow:0 0 0 2px var(--ui-accent);}
 @media(max-width:760px){.meta{grid-template-columns:1fr 1fr;}}
 @media(max-width:480px){.meta{grid-template-columns:1fr;}}
 
@@ -240,8 +243,8 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .hazardsTable .row-pin:hover,
 .hazardsTable .row-pin:focus{display:inline-flex;}
 /* A row that already carries a note keeps its pin showing, filled in. */
-.hazardsTable tr.has-note .row-pin{display:inline-flex;background:var(--accent-light);
-  border-color:var(--accent);color:var(--accent-dark);}
+.hazardsTable tr.has-note .row-pin{display:inline-flex;background:var(--ui-accent-light);
+  border-color:var(--ui-accent);color:var(--ui-accent-dark);}
 .hazardsTable tr.has-note.note-todo .row-pin{background:var(--warning-bg);
   border-color:var(--warning-brd);color:var(--warning);}
 .row-note{display:none;}
@@ -267,7 +270,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .ne-item.todo .ne-item-st,.ne-item.todo .ne-item-kind{color:var(--warning);}
 .ne-flip,.ne-del{background:none;border:none;cursor:pointer;font-size:14px;line-height:1;
   color:var(--text-muted);padding:2px 4px;}
-.ne-flip:hover{color:var(--accent-dark);} .ne-del:hover{color:var(--danger);}
+.ne-flip:hover{color:var(--ui-accent-dark);} .ne-del:hover{color:var(--danger);}
 
 /* Actions arising: screen only */
 /* Actions arising tab */
@@ -292,7 +295,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 .arising-text{flex:1;min-width:0;color:var(--text);line-height:1.45;}
 .arising-text .arr-kind{display:block;margin-bottom:1px;}
 .arising-haz{display:block;font-size:11.5px;color:var(--text-muted);margin-top:2px;}
-.arising-foot{padding-top:12px;margin-top:4px;border-top:2px solid var(--accent);
+.arising-foot{padding-top:12px;margin-top:4px;border-top:2px solid var(--ui-accent);
   display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 
 /* The line on the assessment that points at the actions sheet. Prints. */
@@ -304,7 +307,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 20px 56px;}
 #raActions{position:absolute;left:-99999px;top:0;width:760px;background:#fff;
   padding:4px 2px;box-sizing:border-box;font-family:'Inter',sans-serif;color:var(--text);}
 body.ras-render #raActions{left:-99999px;}
-#raActions .ras-head{border-bottom:3px solid var(--accent);padding-bottom:8px;margin-bottom:10px;}
+#raActions .ras-head{border-bottom:3px solid var(--ui-accent);padding-bottom:8px;margin-bottom:10px;}
 #raActions .ras-title{font-size:19px;font-weight:700;color:var(--primary);}
 #raActions .ras-sub{font-size:11.5px;color:var(--text-muted);margin-top:3px;}
 #raActions .ras-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px 14px;
@@ -356,7 +359,7 @@ body.ras-render #raActions{left:-99999px;}
 .table thead th .muted{color:rgba(255,255,255,.78);}
 .table .w-10{width:10%;} .table .w-12{width:12%;} .table .w-20{width:20%;}
 .table .editable{outline:none;min-height:22px;}
-.table .editable:focus{background:var(--accent-light);}
+.table .editable:focus{background:var(--ui-accent-light);}
 
 /* Eval intro table */
 .eval-wrap .eval-table tbody td{font-size:12px;}
@@ -432,14 +435,14 @@ body.ras-render #raActions{left:-99999px;}
 .seq-table .editable li,
 .hazardsTable .editable li{margin:2px 0;}
 .method-table .editable-section strong{display:inline-block;margin-bottom:2px;}
-.method-table .editable-section:focus{background:var(--accent-light);}
+.method-table .editable-section:focus{background:var(--ui-accent-light);}
 
 /* MS Sequence-of-Operations toggleable section */
 .seq-section{margin:16px 0;}
 .seq-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;}
 .seq-toggle{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);cursor:pointer;user-select:none;padding:4px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);}
-.seq-toggle:hover{border-color:var(--accent);color:var(--text);}
-.seq-toggle input[type="checkbox"]{width:14px;height:14px;accent-color:var(--accent-dark);cursor:pointer;}
+.seq-toggle:hover{border-color:var(--ui-accent);color:var(--text);}
+.seq-toggle input[type="checkbox"]{width:14px;height:14px;accent-color:var(--ui-accent-dark);cursor:pointer;}
 .seq-section.excluded .seq-section-body{opacity:.35;}
 .seq-section.excluded .seq-section-body::after{content:"Excluded from report";display:block;text-align:center;font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.05em;margin-top:6px;}
 .seq-row-del{background:var(--danger-bg);border:1.5px solid var(--danger-brd);color:var(--danger);border-radius:50%;width:22px;height:22px;font-size:14px;font-weight:700;line-height:1;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center;}
@@ -462,7 +465,7 @@ body.ras-render #raActions{left:-99999px;}
 .seq-table th,.seq-table td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top;}
 .seq-table thead th{background:var(--primary);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
 .seq-table td .editable{outline:none;min-height:24px;}
-.seq-table td .editable:focus{background:var(--accent-light);}
+.seq-table td .editable:focus{background:var(--ui-accent-light);}
 
 /* Page break header (between RA forms) */
 .headersplitter{margin:24px 0 12px;border-top:2px solid var(--primary);position:relative;height:0;}
@@ -473,13 +476,13 @@ body.ras-render #raActions{left:-99999px;}
 .sig{background:var(--muted-bg);border:1.5px solid var(--border);border-radius:8px;padding:10px;}
 .sig .label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--text-muted);}
 .sig-value{font-size:13px;font-weight:600;margin-top:3px;outline:none;min-height:20px;}
-.sig-value:focus{background:var(--accent-light);border-radius:3px;}
+.sig-value:focus{background:var(--ui-accent-light);border-radius:3px;}
 @media(max-width:700px){.sig-grid{grid-template-columns:1fr 1fr;}}
 
 /* H1 / H2 in sheet */
 .sheet h1{font-size:20px;font-weight:700;color:var(--primary);margin:14px 0 8px;}
 .sheet h1 [contenteditable]{outline:none;}
-.sheet h1 [contenteditable]:focus{background:var(--accent-light);}
+.sheet h1 [contenteditable]:focus{background:var(--ui-accent-light);}
 .sheet h2{font-size:14px;font-weight:700;color:var(--primary);margin:18px 0 6px;text-transform:uppercase;letter-spacing:.05em;}
 
 [contenteditable="true"]:focus{outline:none;}
@@ -600,131 +603,7 @@ body.ras-render #raActions{left:-99999px;}
   text-transform:uppercase;letter-spacing:.05em;}
 .dra-card > .dra-sub{font-size:12.5px;color:var(--text-muted);margin:0 0 14px;line-height:1.5;}
 
-.dra-note{border-left:4px solid var(--warning-brd);background:var(--warning-bg);color:var(--warning);
-  padding:10px 12px;border-radius:6px;font-size:12.5px;line-height:1.5;margin-bottom:14px;}
-.dra-note strong{color:var(--warning);}
-.dra-note.info{border-left-color:var(--info-brd);background:var(--info-bg);color:var(--info);}
-.dra-note.stop{border-left-color:var(--danger-brd);background:var(--danger-bg);color:var(--danger);}
-.dra-note.ok{border-left-color:var(--success-brd);background:var(--success-bg);color:var(--success);}
-
-/* Visit details */
-.dra-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.dra-field{display:flex;flex-direction:column;gap:4px;}
-.dra-field label{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;
-  color:var(--text-muted);font-weight:700;}
-.dra-field input,.dra-field textarea,.dra-field select{font:inherit;font-size:13px;padding:8px 10px;
-  border:1.5px solid var(--border);border-radius:6px;background:var(--input-bg);color:var(--text);}
-.dra-field input:focus,.dra-field textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
-.dra-field.wide{grid-column:1 / -1;}
-@media(max-width:620px){ .dra-fields{grid-template-columns:1fr;} }
-
-/* Activity pickers */
-.dra-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-@media(max-width:620px){ .dra-acts{grid-template-columns:1fr;} }
-.dra-act-pick{display:flex;align-items:flex-start;gap:9px;border:1.5px solid var(--border);
-  border-radius:8px;padding:10px 12px;font-size:13px;cursor:pointer;background:var(--surface);}
-.dra-act-pick:hover{border-color:var(--accent);}
-.dra-act-pick input{margin-top:2px;width:16px;height:16px;flex-shrink:0;}
-.dra-act-pick.fixed{background:var(--muted-bg);cursor:default;color:var(--text-muted);}
-.dra-act-pick .dra-act-always{font-size:10px;text-transform:uppercase;letter-spacing:.06em;
-  font-weight:700;color:var(--text-muted);}
-
-/* Questions */
-.dra-group{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;}
-.dra-group-head{background:var(--primary);color:#fff;padding:9px 14px;font-size:12px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;gap:10px;}
-.dra-group-head .dra-group-count{font-weight:400;opacity:.85;}
-.dra-q{border-top:1.5px solid var(--border);padding:14px;}
-.dra-q:first-of-type{border-top:none;}
-.dra-q.answered{background:var(--muted-bg);}
-.dra-q.flag{background:var(--danger-bg);}
-.dra-q-top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;}
-.dra-q-haz{font-size:13.5px;font-weight:700;color:var(--text);line-height:1.4;}
-.dra-q-meta{font-size:11.5px;color:var(--text-muted);margin-top:3px;line-height:1.45;}
-.dra-q-ref{font-size:10.5px;font-weight:700;color:var(--text-muted);white-space:nowrap;letter-spacing:.04em;}
-.dra-hs{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  background:var(--danger-bg);color:var(--danger);border:1.5px solid var(--danger-brd);
-  border-radius:4px;padding:2px 6px;margin-left:8px;vertical-align:middle;}
-
-.dra-answers{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap;}
-.dra-ans{flex:1 1 160px;font:inherit;font-size:12.5px;font-weight:600;text-align:left;padding:9px 11px;
-  border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);cursor:pointer;}
-.dra-ans:hover{border-color:var(--accent);}
-.dra-ans[aria-pressed="true"]{border-width:2px;padding:8px 10px;}
-.dra-ans.none[aria-pressed="true"]{background:var(--success-bg);border-color:var(--success);color:var(--success);}
-.dra-ans.ctrl[aria-pressed="true"]{background:var(--accent-light);border-color:var(--accent-dark);color:var(--accent-dark);}
-.dra-ans.fail[aria-pressed="true"]{background:var(--danger-bg);border-color:var(--danger);color:var(--danger);}
-
-.dra-controls{margin-top:11px;border:1.5px solid var(--accent);border-radius:8px;
-  background:var(--accent-light);padding:11px 12px;}
-.dra-controls > p{margin:0 0 8px;font-size:11.5px;font-weight:700;color:var(--accent-dark);
-  text-transform:uppercase;letter-spacing:.05em;}
-.dra-ctl{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.45;
-  padding:5px 0;cursor:pointer;color:var(--text);}
-.dra-ctl input{margin-top:2px;width:16px;height:16px;flex-shrink:0;}
-.dra-controls .dra-ctl-warn{font-size:11.5px;color:var(--danger);margin:7px 0 0;font-weight:600;
-  text-transform:none;letter-spacing:normal;}
-
 .dra-extra{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;}
-.dra-extra input[type=text]{flex:1 1 220px;font:inherit;font-size:12.5px;padding:7px 9px;
-  border:1.5px solid var(--border);border-radius:6px;background:var(--input-bg);}
-.dra-photo-tag{font-size:11.5px;color:var(--success);font-weight:700;}
-.dra-thumb{height:46px;width:auto;border:1.5px solid var(--border);border-radius:4px;display:block;}
-
-/* Progress + actions */
-.dra-bar{position:sticky;bottom:0;background:var(--surface);border-top:2px solid var(--accent);
-  padding:11px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
-  box-shadow:0 -2px 8px rgba(16,24,40,.07);z-index:20;margin:0 -20px -18px;border-radius:0 0 var(--radius) var(--radius);}
-.dra-bar .dra-prog{font-size:12.5px;color:var(--text-muted);font-weight:600;}
-.dra-bar .dra-prog b{color:var(--text);}
-.dra-bar .dra-spacer{margin-left:auto;}
-
-/* Records list */
-.dra-rec{display:flex;gap:12px;align-items:center;border:1.5px solid var(--border);border-radius:8px;
-  padding:11px 13px;margin-bottom:8px;cursor:pointer;background:var(--surface);}
-.dra-rec:hover{border-color:var(--accent);}
-.dra-rec-main{flex:1;min-width:0;}
-.dra-rec-t{font-size:13.5px;font-weight:700;color:var(--text);}
-.dra-rec-s{font-size:11.5px;color:var(--text-muted);margin-top:2px;}
-.dra-status{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  padding:3px 8px;border-radius:4px;border:1.5px solid;white-space:nowrap;}
-.dra-status.open{background:var(--muted-bg);color:var(--text-muted);border-color:var(--border);}
-.dra-status.proceeding{background:var(--success-bg);color:var(--success);border-color:var(--success-brd);}
-.dra-status.escalated{background:var(--warning-bg);color:var(--warning);border-color:var(--warning-brd);}
-.dra-status.aborted{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-brd);}
-.dra-status.complete{background:var(--info-bg);color:var(--info);border-color:var(--info-brd);}
-
-/* Escalation */
-.dra-mgr{display:flex;gap:12px;align-items:center;justify-content:space-between;
-  border:1.5px solid var(--border);border-radius:8px;padding:11px 13px;margin-bottom:8px;}
-.dra-mgr-n{font-size:13.5px;font-weight:700;color:var(--text);}
-.dra-mgr-p{font-size:13px;color:var(--accent-dark);font-weight:700;}
-
-/* Round history */
-.dra-round{border:1.5px solid var(--border);border-radius:8px;padding:11px 13px;margin-bottom:8px;
-  font-size:12.5px;line-height:1.5;}
-.dra-round h4{margin:0 0 5px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--primary);}
-.dra-round ul{margin:6px 0 0 18px;padding:0;}
-
-/* The assessment being checked against, and the hazard prompt */
-.dra-ra-ref{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 14px;background:var(--muted-bg);
-  border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:4px;}
-@media(max-width:620px){.dra-ra-ref{grid-template-columns:1fr;}}
-.dra-ra-i{display:flex;flex-direction:column;gap:2px;min-width:0;}
-.dra-ra-i span{font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;
-  color:var(--text-muted);font-weight:700;}
-.dra-ra-i strong{font-size:12.5px;font-weight:600;}
-.dra-haz-list{margin:0;padding-left:22px;}
-.dra-haz-list li{font-size:13px;line-height:1.5;padding:2px 0;color:var(--text);}
-.dra-confirm{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--border);
-  border-radius:8px;padding:10px 12px;margin-bottom:7px;font-size:13px;line-height:1.45;cursor:pointer;}
-.dra-confirm:hover{border-color:var(--accent);}
-.dra-confirm input{margin-top:2px;width:17px;height:17px;flex-shrink:0;}
-.dra-confirm.on{background:var(--accent-light);border-color:var(--accent-dark);}
-.dra-confirm.stop.on{background:var(--danger-bg);border-color:var(--danger);color:var(--danger);}
-.dra-sel{width:100%;font:inherit;font-size:13px;padding:8px 10px;border:1.5px solid var(--border);
-  border-radius:6px;background:var(--surface);color:var(--text);}
-.dra-ctl-pick{margin-top:10px;}
 
 /* Print preview: the page as it will be cut, with the cuts draggable. */
 .prev-back{position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:9000;
@@ -738,15 +617,15 @@ body.ras-render #raActions{left:-99999px;}
 .prev-body{padding:18px;background:var(--muted-bg);}
 .prev-sheet{position:relative;margin:0 auto 22px;width:794px;max-width:100%;
   background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.16);}
-.prev-cut{position:absolute;left:0;right:0;height:0;border-top:2px dashed var(--accent);
+.prev-cut{position:absolute;left:0;right:0;height:0;border-top:2px dashed var(--ui-accent);
   z-index:3;}
 .prev-cut.manual{border-top-color:var(--danger);}
 .prev-tag{position:absolute;right:6px;top:-9px;font-size:10px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.06em;background:var(--accent);color:#fff;
+  text-transform:uppercase;letter-spacing:.06em;background:var(--ui-accent);color:#fff;
   padding:1px 6px;}
 .prev-cut.manual .prev-tag{background:var(--danger);}
 .prev-grip{position:absolute;left:6px;top:-11px;width:54px;height:20px;cursor:ns-resize;
-  background:var(--accent);opacity:.9;}
+  background:var(--ui-accent);opacity:.9;}
 .prev-cut.manual .prev-grip{background:var(--danger);}
 .prev-grip::after{content:"drag";position:absolute;inset:0;display:flex;align-items:center;
   justify-content:center;font-size:9.5px;font-weight:700;color:#fff;letter-spacing:.06em;
@@ -10116,22 +9995,7 @@ function purgeStaleStructureIfNeeded(){
    and that nothing on site contradicts it.
    ════════════════════════════════════════════════════════════════════ */
 
-/* ── PLACEHOLDERS — Simon to supply, see the Phase 2 review sheet ──────
-   Everything in DRA_CONFIG is a placeholder and shows on screen as one.
-   Nothing here is real FAD content. */
-/* ── Who to call, and the stop list ───────────────────────────────────
-   PLACEHOLDERS. Simon to supply. They show on screen as placeholders.
-
-   The stop list is the reg 8 procedure for serious and imminent danger.
-   It is a fixed, named set of circumstances, deliberately NOT drawn from
-   the risk assessment wording, so editing an assessment can never change
-   what stops a job. */
-const DRA_CONFIG = {
-  // Left blank on purpose. Simon: filled in on site, not pre-printed.
-  managers: [],
-  loneWorking: "lone working procedure"
-};
-
+/* The things that stop the job, listed in section 3 of the sheet. */
 const DRA_STOPS = [
   "Asbestos disturbed, or suspected and not surveyed",
   "Structure, floor or stairs not safe to walk on",
@@ -10140,39 +10004,6 @@ const DRA_STOPS = [
   "Lone working check-in not running",
   "I cannot get out quickly from where I would be working"
 ];
-
-/* ── Storage ──────────────────────────────────────────────────────────
-   Records live in localStorage under the app's own LS_PREFIX, so the
-   existing Cloud Save picks them up with the rest of the state and they
-   reach the server without a new backend route. Offline they simply sit
-   on the device until the next save. */
-const DRA_KEY = "dra.records";
-
-function draLoad(){
-  try { const v = JSON.parse(lsGet(DRA_KEY) || "[]"); return Array.isArray(v) ? v : []; }
-  catch(e){ return []; }
-}
-function draSave(recs){
-  try { lsSet(DRA_KEY, JSON.stringify(recs)); flagSaving(); return true; }
-  catch(e){
-    toast("Could not save on this device. Storage may be full.", "error");
-    return false;
-  }
-}
-function draGet(id){ return draLoad().find(r => r.id === id) || null; }
-function draPut(rec){
-  const recs = draLoad();
-  const i = recs.findIndex(r => r.id === rec.id);
-  rec.updated = Date.now();
-  rec.sent = false;
-  if(i === -1) recs.unshift(rec); else recs[i] = rec;
-  return draSave(recs);
-}
-function draNewId(){ return "dra_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,7); }
-
-/* Screen state. Not persisted: a half-finished round is held on the record
-   itself, so closing the tab loses nothing that was answered. */
-const draUI = { view: "list", recId: null, roundIdx: -1 };
 
 /* ── Question helpers ─────────────────────────────────────────────── */
 /* ── The assessment this check is made against ────────────────────────
@@ -10216,43 +10047,17 @@ function draLiveRA(){
   };
 }
 
-function draRound(rec){ return rec.rounds[rec.rounds.length - 1]; }
-
 /* ── Rendering ────────────────────────────────────────────────────── */
 function draRender(){
   const host = $("#draBody");
   if(!host) return;
-  // Answering a question re-renders the whole check, so hold the scroll
-  // position unless the screen itself has changed. A 41 question form that
-  // jumps back to the top on every tap is unusable on a phone.
-  const sameScreen = draUI.view === draUI._lastView && draUI.recId === draUI._lastRec;
-  const keepY = window.scrollY;
-  const rec = draUI.recId ? draGet(draUI.recId) : null;
-  // "setup" is the only screen that legitimately has no record yet.
-  if(draUI.view !== "list" && draUI.view !== "setup" && !rec){ draUI.view = "list"; draUI.recId = null; }
-  if(draUI.view === "list")   host.innerHTML = draViewList();
-  else if(draUI.view === "setup")  host.innerHTML = draViewSetup(rec);
-  else if(draUI.view === "check")  host.innerHTML = draViewCheck(rec);
-  else if(draUI.view === "escalate") host.innerHTML = draViewEscalate(rec);
-  else if(draUI.view === "abort")  host.innerHTML = draViewAbort(rec);
-  else if(draUI.view === "planned") host.innerHTML = draViewPlanned(rec);
-  else if(draUI.view === "feedback") host.innerHTML = draViewFeedback(rec);
-  else host.innerHTML = draViewList();
+  host.innerHTML = draViewList();
   draWire(host);
-  draUI._lastView = draUI.view;
-  draUI._lastRec = draUI.recId;
-  window.scrollTo(0, sameScreen ? keepY : 0);
-}
-
-function draPlaceholderNote(){
-  return '';   // nothing outstanding on this tab any more
 }
 
 function draViewList(){
-  const recs = draLoad();
-  const pending = recs.filter(r => !r.sent).length;
   const ra = draLiveRA();
-  let h = '<div class="dra-card">'
+  return '<div class="dra-card">'
     + '<h2>Check before you start</h2>'
     + '<p class="dra-sub">The risk assessment is held in the office. This is the sheet the surveyor '
     + 'takes with them and fills in on site: has anything changed, and does it stop the job. '
@@ -10263,16 +10068,6 @@ function draViewList(){
         ? '<button type="button" class="btn btn-outline" id="draPrintFor">Fillable PDF for '
           + escapeHtml(ra.ref || "the open assessment") + '</button>'
         : '')
-    + '<button type="button" class="btn btn-outline" id="draHtmlBlank">Blank sheet, HTML for iPad</button>'
-    + (ra.hazards.length
-        ? '<button type="button" class="btn btn-outline" id="draHtmlFor">HTML for '
-          + escapeHtml(ra.ref || "the open assessment") + '</button>'
-        : '')
-    + '<button type="button" class="btn btn-outline" id="draSend">Send '
-      + (ra.hazards.length ? escapeHtml(ra.ref || "the open assessment") : 'a blank sheet')
-      + ' to the office</button>'
-    + '<span class="dra-spacer"></span>'
-    + '<button type="button" class="btn btn-ghost" id="draNew">Fill one in on this device</button>'
     + '</div>'
     + (ra.hazards.length
         ? '<p class="dra-sub" style="margin:10px 0 0;">Both sheets are fillable PDFs: they can be typed '
@@ -10283,644 +10078,14 @@ function draViewList(){
           + 'into on a phone or a tablet and sent back, or printed blank and written on. Open an '
           + 'assessment on the Risk Assessment tab first and you also get one with its reference and '
           + 'hazards already on it.</p>')
-    + '<p class="dra-sub" style="margin:6px 0 0;">The HTML buttons save the same sheet as a '
-      + 'self-contained web page. Put it on the iPad, keep it in Files, open it from a Home '
-      + 'Screen shortcut and fill it in there, then use Save a copy. Nothing in it reaches the '
-      + 'network.</p>'
     + '</div>';
-
-  if(recs.length){
-    h += '<div class="dra-card"><div class="dra-extra"><span class="dra-prog">'
-      + (pending ? '<b>' + pending + '</b> not yet sent to the server' : 'All sent')
-      + '</span></div></div>';
-  }
-
-  if(!recs.length){
-    h += '<div class="dra-card"><p class="dra-sub" style="margin:0;">No checks on this device yet.</p></div>';
-    return h;
-  }
-  h += '<div class="dra-card"><h2>Checks on this device</h2><p class="dra-sub">'
-    + 'Saved here first so the form keeps working with no signal. They go to the server on Cloud Save.'
-    + '</p>';
-  recs.forEach(r => {
-    const when = r.rounds && r.rounds.length ? new Date(r.rounds[0].startedAt) : new Date(r.created);
-    h += '<div class="dra-rec" data-rec="' + escapeHtml(r.id) + '">'
-      + '<div class="dra-rec-main">'
-      +   '<div class="dra-rec-t">' + escapeHtml(r.jobRef || "No job reference") + '  '
-      +     escapeHtml(r.site || "") + '</div>'
-      +   '<div class="dra-rec-s">' + escapeHtml(r.operative || "") + ' &middot; '
-      +     escapeHtml(r.company || "") + ' &middot; ' + when.toLocaleDateString("en-GB")
-      +     ' ' + when.toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"})
-      +     ' &middot; ' + (r.rounds ? r.rounds.length : 0) + ' round(s)'
-      +     (r.sent ? '' : ' &middot; not sent') + '</div>'
-      + '</div>'
-      + '<span class="dra-status ' + escapeHtml(r.status) + '">' + escapeHtml(r.status) + '</span>'
-      + '</div>';
-  });
-  h += '</div>';
-  return h;
-}
-
-function draViewSetup(rec){
-  const last = {
-    operative: lsGet("dra.last.operative") || "",
-    company:   lsGet("dra.last.company")   || ""
-  };
-  const r = rec || { operative: last.operative, company: last.company, site: "", jobRef: "", activities: [] };
-  let h = '<div class="dra-card"><h2>Visit details</h2>'
-    + '<p class="dra-sub">Everyone uses this same form, FAD staff and contractor surveyors alike.</p>'
-    + '<div class="dra-fields">'
-    + draField("draOperative", "Your name", r.operative)
-    + draField("draCompany", "Company (FAD or contractor name)", r.company)
-    + draField("draSite", "Site address", r.site, true)
-    + draField("draJobRef", "Job reference", r.jobRef)
-    + '</div></div>';
-
-  const ra = draLiveRA();
-  h += '<div class="dra-card"><h2>The assessment you are working to</h2>'
-    + (ra.hazards.length
-        ? '<div class="dra-ra-ref"><div class="dra-ra-i"><span>Assessment</span><strong>'
-          + escapeHtml(ra.ref || "no reference set") + '</strong></div>'
-          + (ra.task ? '<div class="dra-ra-i"><span>Task or activity</span><strong>'
-            + escapeHtml(ra.task) + '</strong></div>' : '')
-          + '<div class="dra-ra-i"><span>Hazards assessed</span><strong>'
-          + ra.hazards.length + '</strong></div></div>'
-        : '<p class="dra-sub" style="margin:0;">No assessment is open in this app, which is normal: '
-          + 'it is held in the office. You will be asked for its reference on the next screen.</p>')
-    + '<div class="dra-bar">'
-    + '<button type="button" class="btn btn-ghost" id="draCancel">Back</button>'
-    + '<span class="dra-spacer"></span>'
-    + '<button type="button" class="btn btn-primary" id="draStart">Start the check</button>'
-    + '</div></div>';
-  return h;
-}
-
-function draField(id, label, val, wide){
-  return '<div class="dra-field' + (wide ? ' wide' : '') + '">'
-    + '<label for="' + id + '">' + escapeHtml(label) + '</label>'
-    + '<input type="text" id="' + id + '" value="' + escapeHtml(val || "") + '">'
-    + '</div>';
-}
-
-/* The check itself. One screen, one judgement.
-
-   MHSWR 1999 reg 3(3): an assessment is reviewed if there is reason to
-   suspect it is no longer valid, or there has been a significant change in
-   the matters to which it relates. That is the question being asked here.
-   It is a review of the assessment, not a re-run of it, which is why there
-   is one question and not one per hazard. The hazard list above it is a
-   prompt so the judgement is not made from memory.
-
-   reg 10 gives the duty to inform, hence the confirmation that it has been
-   read. reg 8 gives the stop route. reg 14 puts the duty on the operative
-   to report what they find, which is what feeds the next reg 3(3) review. */
-function draViewCheck(rec){
-  const round = draRound(rec);
-  const ra = draLiveRA();
-  const again = rec.rounds.length > 1;
-
-  let h = '<div class="dra-card">'
-    + '<h2>' + (again ? "Re-check, something has changed" : "Check before you start") + '</h2>'
-    + '<p class="dra-sub">' + escapeHtml(rec.jobRef || "") + (rec.jobRef && rec.site ? " &middot; " : "")
-    + escapeHtml(rec.site || "") + '</p>';
-
-  // The assessment normally lives in the office, not in this app. If one
-  // happens to be loaded its details and hazards are shown; if not, the
-  // surveyor writes the reference they were issued with and carries on.
-  h += ra.hazards.length ? '<div class="dra-ra-ref">'
-    : '<div class="dra-field wide" style="margin-top:6px;"><label for="draRaRef">'
-      + 'Risk assessment reference you were issued with</label>'
-      + '<input type="text" id="draRaRef" value="' + escapeHtml(round.raRefTyped || "")
-      + '" placeholder="For example RA-FL-12"></div><div style="display:none;">';
-  h += ''
-    + '<div class="dra-ra-i"><span>Assessment</span><strong>'
-    +   escapeHtml(ra.ref || "no reference set") + '</strong></div>'
-    + (ra.task ? '<div class="dra-ra-i"><span>Task or activity</span><strong>'
-    +   escapeHtml(ra.task) + '</strong></div>' : '')
-    + (ra.site ? '<div class="dra-ra-i"><span>Location</span><strong>'
-    +   escapeHtml(ra.site) + '</strong></div>' : '')
-    + '</div></div>';
-
-  // The prompt, only where the assessment is actually to hand.
-  if(ra.hazards.length){
-    h += '<div class="dra-card"><h2>What this assessment covers</h2>'
-      + '<p class="dra-sub">A reminder, not a checklist. Read it, then make one judgement below.</p>'
-      + '<ol class="dra-haz-list">'
-      + ra.hazards.map(z => '<li>' + escapeHtml(z.name) + '</li>').join("")
-      + '</ol></div>';
-  }
-
-  // reg 10
-  h += '<div class="dra-card"><h2>Before you judge it</h2>'
-    + '<label class="dra-confirm' + (round.read ? " on" : "") + '">'
-    +   '<input type="checkbox" id="draRead"' + (round.read ? " checked" : "") + '>'
-    +   '<span>I have read this risk assessment and the method statement for this job.</span>'
-    + '</label></div>';
-
-  // reg 3(3)
-  h += '<div class="dra-card"><h2>Is it still valid for what is in front of you?</h2>'
-    + '<p class="dra-sub">Does the site match the assessment, or is there anything here it did not '
-    + 'allow for? If anything makes you doubt it, the answer is no.</p>'
-    + '<div class="dra-answers">'
-    + '<button type="button" class="dra-ans none" data-valid="yes" aria-pressed="'
-    +   (round.valid === "yes") + '">Yes, it still holds</button>'
-    + '<button type="button" class="dra-ans fail" data-valid="no" aria-pressed="'
-    +   (round.valid === "no") + '">No, something is different</button>'
-    + '</div>';
-
-  if(round.valid === "no"){
-    h += '<div class="dra-field wide" style="margin-top:14px;">'
-      + '<label for="draDiff">What is different?</label>'
-      + '<textarea id="draDiff" rows="3" placeholder="In your words. What is here that the assessment '
-      +   'did not allow for.">' + escapeHtml(round.difference || "") + '</textarea></div>'
-      + '<div class="dra-extra">'
-      +   '<button type="button" class="btn btn-outline btn-sm" id="draDiffPhoto">'
-      +     (round.photo ? "Replace photo" : "Add photo") + '</button>'
-      +   (round.photo ? '<img class="dra-thumb" src="' + round.photo + '" alt="">' : '')
-      + '</div>';
-  }
-  h += '</div>';
-
-  if(round.valid === "no"){
-    // reg 8
-    h += '<div class="dra-card"><h2>Does any of this apply?</h2>'
-      + '<p class="dra-sub">Any one of these stops the job. There is no way past them.</p>';
-    DRA_STOPS.forEach((t, i) => {
-      h += '<label class="dra-confirm stop' + ((round.stops || []).indexOf(i) !== -1 ? " on" : "") + '">'
-        + '<input type="checkbox" class="dra-stop" data-i="' + i + '"'
-        + ((round.stops || []).indexOf(i) !== -1 ? " checked" : "") + '>'
-        + '<span>' + escapeHtml(t) + '</span></label>';
-    });
-    h += '<label class="dra-confirm' + (round.noStops ? " on" : "") + '">'
-      + '<input type="checkbox" id="draNoStops"' + (round.noStops ? " checked" : "") + '>'
-      + '<span>None of these apply</span></label></div>';
-
-    if(round.noStops && !(round.stops || []).length){
-      h += '<div class="dra-card"><h2>How are you dealing with it?</h2>'
-        + '<div class="dra-answers">'
-        + (ra.hazards.length
-            ? '<button type="button" class="dra-ans ctrl" data-route="control" aria-pressed="'
-              + (round.route === "control") + '">A control in this assessment covers it</button>'
-            : '')
-        + '<button type="button" class="dra-ans" data-route="escalate" aria-pressed="'
-        +   (round.route === "escalate") + '">Call a senior manager</button>'
-        + '<button type="button" class="dra-ans fail" data-route="stop" aria-pressed="'
-        +   (round.route === "stop") + '">Stop anyway</button>'
-        + '</div>';
-
-      if(round.route === "control"){
-        h += '<div class="dra-controls" style="margin-top:12px;"><p>Which hazard, and which control?</p>'
-          + '<select id="draCtlHaz" class="dra-sel"><option value="">Pick the hazard it falls under</option>'
-          + ra.hazards.map(z => '<option value="' + z.no + '"'
-          +   (round.controlHazardNo === z.no ? " selected" : "") + '>'
-          +   z.no + '. ' + escapeHtml(z.name) + '</option>').join("")
-          + '</select>';
-        const haz = ra.hazards.find(z => z.no === round.controlHazardNo);
-        if(haz){
-          h += '<div class="dra-ctl-pick">'
-            + (haz.controls.length
-                ? haz.controls.map((c, i) =>
-                    '<label class="dra-ctl"><input type="radio" name="draCtl" class="dra-ctl-opt" '
-                  + 'data-i="' + i + '"' + (round.controlText === c ? " checked" : "") + '>'
-                  + '<span>' + escapeHtml(c) + '</span></label>').join("")
-                : '<p class="dra-ctl-warn">That hazard has no controls written against it yet. '
-                  + 'Call a senior manager instead.</p>')
-            + '</div>';
-        }
-        h += '<p class="dra-ctl-warn" id="draCtlWarn"' + (round.controlText ? ' style="display:none;"' : '')
-          + '>Pick the control you are relying on. If none of them fits, you cannot write your own: '
-          + 'call a senior manager or stop.</p></div>';
-      }
-      h += '</div>';
-    }
-  }
-
-  h += '<div class="dra-card"><div class="dra-bar">'
-    + '<button type="button" class="btn btn-ghost" id="draCancel">Leave for now</button>'
-    + '<span class="dra-spacer"></span>'
-    + '<button type="button" class="btn btn-primary" id="draSubmit">Finish the check</button>'
-    + '</div></div>';
-  return h;
-}
-
-function draViewEscalate(rec){
-  const round = draRound(rec);
-  let h = '<div class="dra-card"><h2>Call a senior manager</h2>'
-    + '<p class="dra-sub">Nothing in the assessment covers what you have found, and you cannot write '
-    + 'your own control. A senior manager decides whether you carry on and on what terms, or whether '
-    + 'you stop.</p>'
-    + '<div class="dra-note"><strong>What you found:</strong><br>'
-    + escapeHtml(round.difference || "not recorded")
-    + (round.raRef ? '<br><br>Checked against ' + escapeHtml(round.raRef) : '')
-    + '</div>';
-  if(DRA_CONFIG.managers.length){
-    DRA_CONFIG.managers.forEach(m => {
-      h += '<div class="dra-mgr"><div class="dra-mgr-n">' + escapeHtml(m.name) + '</div>'
-        + '<div class="dra-mgr-p">' + escapeHtml(m.phone) + '</div></div>';
-    });
-  }
-  h += '</div>';
-
-  h += '<div class="dra-card"><h2>What did they say?</h2>'
-    + '<div class="dra-fields">'
-    + draField("draMgrName", "Who did you speak to?", (round.escalation && round.escalation.manager) || "")
-    + draField("draMgrTime", "Time of the call", (round.escalation && round.escalation.calledAt)
-        || new Date().toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"}))
-    + '<div class="dra-field wide"><label for="draMgrAuth">What did they authorise?</label>'
-    + '<textarea id="draMgrAuth" rows="3" placeholder="The control they told you to apply, in their words">'
-    + escapeHtml((round.escalation && round.escalation.authorised) || "") + '</textarea></div>'
-    + '</div>'
-    + '<div class="dra-bar">'
-    + '<button type="button" class="btn btn-danger" id="draEscAbort">They said stop</button>'
-    + '<span class="dra-spacer"></span>'
-    + '<button type="button" class="btn btn-primary" id="draEscGo">They authorised the work</button>'
-    + '</div></div>';
-  return h;
-}
-
-function draViewAbort(rec){
-  const round = draRound(rec);
-  let h = '<div class="dra-card"><h2>Visit stopped</h2>'
-    + '<div class="dra-note stop"><strong>Stop and leave.</strong> Do not start or carry on with the survey.</div>'
-    + '<p class="dra-sub">Reason recorded: ' + escapeHtml(round.abortReason || "") + '</p>'
-    + '<div class="dra-note">Close the visit under the ' + escapeHtml(DRA_CONFIG.loneWorking)
-    + ' as well, so nobody is left expecting you to check in.</div>'
-    + '<div class="dra-field wide"><label for="draAbortPhoto">Photo (required)</label>'
-    + '<button type="button" class="btn btn-outline" id="draAbortPhoto">'
-    + (round.abortPhoto ? "Replace photo" : "Add photo") + '</button>'
-    + (round.abortPhoto ? '<img class="dra-thumb" style="height:120px;margin-top:8px;" src="'
-        + round.abortPhoto + '" alt="">' : '')
-    + '</div>'
-    + '<div class="dra-bar">'
-    + '<span class="dra-spacer"></span>'
-    + '<button type="button" class="btn btn-primary" id="draAbortNext">Go to feedback</button>'
-    + '</div></div>';
-  return h;
-}
-
-function draViewPlanned(rec){
-  const round = draRound(rec);
-  let h = '<div class="dra-card"><h2>Work as planned</h2>'
-    + '<div class="dra-note ok">The site matches the risk assessment, or the controls that fix the '
-    + 'difference are in place. Carry on with the survey.</div>';
-  if(round.escalation && round.escalation.authorised){
-    h += '<div class="dra-note"><strong>Authorised by ' + escapeHtml(round.escalation.manager || "")
-      + '</strong> at ' + escapeHtml(round.escalation.calledAt || "") + '<br>'
-      + escapeHtml(round.escalation.authorised) + '</div>';
-  }
-  h += '<p class="dra-sub">If anything changes while you are there, come back and re-check. '
-    + 'It adds to this same record.</p>'
-    + '<div class="dra-bar">'
-    + '<button type="button" class="btn btn-outline" id="draChanged">Conditions changed, re-check</button>'
-    + '<span class="dra-spacer"></span>'
-    + '<button type="button" class="btn btn-primary" id="draComplete">Work complete</button>'
-    + '</div></div>';
-  h += draRoundHistory(rec);
-  return h;
-}
-
-function draViewFeedback(rec){
-  const aborted = rec.status === "aborted";
-  let h = '<div class="dra-card"><h2>Feedback</h2>'
-    + '<p class="dra-sub">' + (aborted
-        ? 'Every abort is reviewed. Tell head office what stopped the visit.'
-        : 'Even a clean visit goes to feedback. Anything you noticed, any near miss, anything the risk '
-          + 'assessment did not cover.') + '</p>'
-    + '<div class="dra-note info">This goes to head office and drives the review of the generic risk '
-    + 'assessment.</div>'
-    + '<div class="dra-field wide"><label for="draFeedback">What should head office know?</label>'
-    + '<textarea id="draFeedback" rows="5" placeholder="Leave blank if there is nothing to say">'
-    + escapeHtml((rec.feedback && rec.feedback.text) || "") + '</textarea></div>'
-    + '<div class="dra-bar">'
-    + '<span class="dra-spacer"></span>'
-    + '<button type="button" class="btn btn-primary" id="draFeedbackSave">Finish</button>'
-    + '</div></div>';
-  h += draRoundHistory(rec);
-  return h;
-}
-
-function draRoundHistory(rec){
-  if(!rec.rounds || !rec.rounds.length) return "";
-  let h = '<div class="dra-card"><h2>This visit so far</h2>';
-  rec.rounds.forEach((rd, i) => {
-    const t = rd.submittedAt ? new Date(rd.submittedAt) : new Date(rd.startedAt);
-    const said = rd.valid === "yes" ? "Assessment still valid"
-               : rd.valid === "no"  ? "Something different: " + (rd.difference || "not recorded")
-               : "not answered";
-    h += '<div class="dra-round"><h4>Round ' + (i + 1) + '  '
-      + t.toLocaleDateString("en-GB") + ' ' + t.toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"})
-      + (rd.outcome ? '  ' + escapeHtml(rd.outcome) : '') + '</h4>'
-      + escapeHtml(said)
-      + (rd.raRef ? '<br>Checked against ' + escapeHtml(rd.raRef) : '')
-      + (rd.controlText ? '<br>Relied on, from hazard ' + rd.controlHazardNo + ': '
-          + escapeHtml(rd.controlText) : '');
-    if(rd.location) h += '<br>Location: ' + escapeHtml(rd.location);
-    if(rd.escalation && rd.escalation.manager){
-      h += '<br>Called ' + escapeHtml(rd.escalation.manager) + ' at ' + escapeHtml(rd.escalation.calledAt || "")
-        + '. Authorised: ' + escapeHtml(rd.escalation.authorised || "nothing recorded");
-    }
-    if(rd.abortReason) h += '<br>Aborted: ' + escapeHtml(rd.abortReason);
-    h += '</div>';
-  });
-  h += '</div>';
-  return h;
 }
 
 /* ── Wiring ───────────────────────────────────────────────────────── */
 function draWire(host){
   const on = (sel, ev, fn) => $$(sel, host).forEach(el => el.addEventListener(ev, fn));
-
-  on("#draNew", "click", () => { draUI.view = "setup"; draUI.recId = null; draRender(); });
   on("#draPrintBlank", "click", () => draSaveEditablePdf(false));
   on("#draPrintFor", "click", () => draSaveEditablePdf(true));
-  on("#draHtmlBlank", "click", () => draSaveSheetHtml(false));
-  on("#draHtmlFor", "click", () => draSaveSheetHtml(true));
-  on("#draSend", "click", () => draShareSheet(draLiveRA().hazards.length > 0));
-  on("#draCancel", "click", () => { draUI.view = "list"; draUI.recId = null; draRender(); });
-
-  on(".dra-rec", "click", e => {
-    const rec = draGet(e.currentTarget.dataset.rec);
-    if(!rec) return;
-    draUI.recId = rec.id;
-    draUI.view = rec.status === "aborted" || rec.status === "complete"
-      ? "feedback"
-      : (rec.status === "proceeding" ? "planned" : "check");
-    draRender();
-  });
-
-  on("#draStart", "click", () => {
-    const val = id => (($("#" + id, host) || {}).value || "").trim();
-    if(!val("draOperative") || !val("draSite")){
-      toast("Your name and the site address are needed", "error"); return;
-    }
-    lsSet("dra.last.operative", val("draOperative"));
-    lsSet("dra.last.company", val("draCompany"));
-    const rec = {
-      id: draNewId(), created: Date.now(), updated: Date.now(), sent: false,
-      operative: val("draOperative"), company: val("draCompany"),
-      site: val("draSite"), jobRef: val("draJobRef"),
-      status: "open", rounds: [], feedback: null
-    };
-    rec.rounds.push({ startedAt: Date.now(), answers: {} });
-    if(draPut(rec)){ draUI.recId = rec.id; draUI.view = "check"; draRender(); }
-  });
-
-  // reg 10: read confirmation
-  on("#draRead", "change", e => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    draRound(rec).read = e.currentTarget.checked;
-    draPut(rec); draRender();
-  });
-
-  // reg 3(3): the one judgement
-  on(".dra-ans[data-valid]", "click", e => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    const round = draRound(rec);
-    const want = e.currentTarget.dataset.valid;
-    if(round.valid === want) return;
-    round.valid = want;
-    if(want === "yes"){
-      delete round.difference; delete round.photo; delete round.stops;
-      delete round.noStops; delete round.route;
-      delete round.controlHazardNo; delete round.controlText;
-    }
-    draPut(rec); draRender();
-  });
-
-  on("#draDiff", "change", e => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    draRound(rec).difference = e.currentTarget.value;
-    draPut(rec);
-  });
-  on("#draDiffPhoto", "click", () => draPickPhoto(url => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    draRound(rec).photo = url; draPut(rec); draRender();
-  }));
-
-  // reg 8: the stop list
-  on(".dra-stop", "change", () => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    const round = draRound(rec);
-    round.stops = $$(".dra-stop:checked", host).map(c => +c.dataset.i);
-    if(round.stops.length) round.noStops = false;
-    draPut(rec); draRender();
-  });
-  on("#draNoStops", "change", e => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    const round = draRound(rec);
-    round.noStops = e.currentTarget.checked;
-    if(round.noStops) round.stops = [];
-    draPut(rec); draRender();
-  });
-
-  // The route, and the control it rests on, read live from the assessment
-  on(".dra-ans[data-route]", "click", e => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    const round = draRound(rec);
-    round.route = e.currentTarget.dataset.route;
-    if(round.route !== "control"){ delete round.controlHazardNo; delete round.controlText; }
-    draPut(rec); draRender();
-  });
-  on("#draCtlHaz", "change", e => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    const round = draRound(rec);
-    round.controlHazardNo = +e.currentTarget.value || 0;
-    delete round.controlText;
-    draPut(rec); draRender();
-  });
-  on(".dra-ctl-opt", "change", e => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    const round = draRound(rec);
-    const haz = draLiveRA().hazards.find(z => z.no === round.controlHazardNo);
-    if(haz) round.controlText = haz.controls[+e.currentTarget.dataset.i] || "";
-    draPut(rec);
-    const w = $("#draCtlWarn", host); if(w) w.style.display = round.controlText ? "none" : "";
-  });
-
-  on("#draSubmit", "click", draSubmitRound);
-
-  // Escalation
-  on("#draEscGo", "click", () => draFinishEscalation(host, true));
-  on("#draEscAbort", "click", () => draFinishEscalation(host, false));
-
-  // Abort
-  on("#draAbortPhoto", "click", () => {
-    draPickPhoto(dataUrl => {
-      const rec = draGet(draUI.recId); if(!rec) return;
-      draRound(rec).abortPhoto = dataUrl;
-      draPut(rec); draRender();
-    });
-  });
-  on("#draAbortNext", "click", () => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    if(!draRound(rec).abortPhoto){ toast("A photo is required on an abort", "error"); return; }
-    draUI.view = "feedback"; draRender();
-  });
-
-  // Work as planned
-  on("#draChanged", "click", () => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    rec.rounds.push({ startedAt: Date.now(), answers: {} });
-    rec.status = "open";
-    draPut(rec);
-    draUI.view = "check"; draRender();
-    toast("Re-check added to the same record");
-  });
-  on("#draComplete", "click", () => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    rec.status = "complete";
-    draPut(rec);
-    draUI.view = "feedback"; draRender();
-  });
-
-  on("#draFeedbackSave", "click", () => {
-    const rec = draGet(draUI.recId); if(!rec) return;
-    const t = (($("#draFeedback", host) || {}).value || "").trim();
-    rec.feedback = { text: t, submittedAt: Date.now() };
-    draPut(rec);
-    draUI.view = "list"; draUI.recId = null; draRender();
-    toast("Saved on this device. Use Cloud Save to send it.");
-  });
-}
-
-/* ── Photo capture. Resized hard, because these sit in localStorage
-   alongside the rest of the state and have to survive being sent up
-   inside one JSON blob. ─────────────────────────────────────────── */
-function draPickPhoto(cb){
-  const inp = document.createElement("input");
-  inp.type = "file"; inp.accept = "image/*"; inp.capture = "environment";
-  inp.addEventListener("change", () => {
-    const f = inp.files && inp.files[0]; if(!f) return;
-    const rd = new FileReader();
-    rd.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        const max = 1280;
-        let w = img.width, h = img.height;
-        if(w > max || h > max){ const s = max / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
-        const c = document.createElement("canvas");
-        c.width = w; c.height = h;
-        c.getContext("2d").drawImage(img, 0, 0, w, h);
-        try { cb(c.toDataURL("image/jpeg", 0.6)); }
-        catch(e){ toast("Could not read that photo", "error"); }
-      };
-      img.onerror = () => toast("Could not read that photo", "error");
-      img.src = rd.result;
-    };
-    rd.readAsDataURL(f);
-  });
-  inp.click();
-}
-
-/* ── Finishing a round ────────────────────────────────────────────── */
-function draSubmitRound(){
-  const rec = draGet(draUI.recId); if(!rec) return;
-  const round = draRound(rec);
-  const ra = draLiveRA();
-
-  if(!round.read){ toast("Confirm you have read the assessment first", "error"); return; }
-  const typed = $("#draRaRef");
-  if(typed) round.raRefTyped = typed.value.trim();
-  if(!round.valid){ toast("Answer whether the assessment still holds", "error"); return; }
-
-  round.submittedAt = Date.now();
-  round.raRef = ra.ref || round.raRefTyped || "";
-  round.raTask = ra.task;
-  round.hazardCount = ra.hazards.length;
-  draStampLocation(round);
-
-  if(round.valid === "yes"){
-    round.outcome = "assessment still valid, work as planned";
-    rec.status = "proceeding";
-    draPut(rec); draUI.view = "planned"; draRender(); return;
-  }
-
-  if(!(round.difference || "").trim()){
-    toast("Say what is different", "error");
-    const el = $("#draDiff"); if(el) el.focus();
-    return;
-  }
-
-  const stops = round.stops || [];
-  if(stops.length){
-    round.outcome = "stopped";
-    round.abortReason = stops.map(i => DRA_STOPS[i]).join("; ");
-    rec.status = "aborted";
-    draPut(rec); draUI.view = "abort"; draRender(); return;
-  }
-  if(!round.noStops){
-    toast("Tick the ones that apply, or None of these", "error"); return;
-  }
-
-  if(round.route === "control"){
-    if(!round.controlHazardNo || !round.controlText){
-      toast("Pick the hazard and the control you are relying on", "error"); return;
-    }
-    round.outcome = "covered by a control already in the assessment";
-    rec.status = "proceeding";
-    draPut(rec); draUI.view = "planned"; draRender(); return;
-  }
-  if(round.route === "escalate"){
-    round.outcome = "escalated";
-    rec.status = "escalated";
-    draPut(rec); draUI.view = "escalate"; draRender(); return;
-  }
-  if(round.route === "stop"){
-    round.outcome = "stopped";
-    round.abortReason = "Stopped by the surveyor: " + (round.difference || "");
-    rec.status = "aborted";
-    draPut(rec); draUI.view = "abort"; draRender(); return;
-  }
-  toast("Say how you are dealing with it", "error");
-}
-
-function draFinishEscalation(host, authorised){
-  const rec = draGet(draUI.recId); if(!rec) return;
-  const round = draRound(rec);
-  const v = id => (($("#" + id, host) || {}).value || "").trim();
-  if(!v("draMgrName")){ toast("Record who you spoke to", "error"); return; }
-  if(authorised && !v("draMgrAuth")){
-    toast("Record what they authorised", "error"); return;
-  }
-  round.escalation = {
-    manager: v("draMgrName"),
-    calledAt: v("draMgrTime"),
-    authorised: authorised ? v("draMgrAuth") : "",
-    decision: authorised ? "continue" : "abort"
-  };
-  if(authorised){
-    round.outcome = "work as planned, authorised";
-    rec.status = "proceeding";
-    draPut(rec);
-    draUI.view = "planned";
-  } else {
-    round.outcome = "aborted";
-    round.abortReason = "Senior manager stopped the visit: " + v("draMgrName");
-    rec.status = "aborted";
-    draPut(rec);
-    draUI.view = "abort";
-  }
-  draRender();
-}
-
-/* Best effort location on submit. Never blocks the form: if the device
-   says no, the round records that instead of a position. */
-function draStampLocation(round){
-  if(round.location) return;
-  round.location = "not recorded";
-  if(!navigator.geolocation) return;
-  const recId = draUI.recId;
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      const rec = draGet(recId); if(!rec) return;
-      const rd = rec.rounds[rec.rounds.length - 1]; if(!rd) return;
-      rd.location = pos.coords.latitude.toFixed(5) + ", " + pos.coords.longitude.toFixed(5)
-        + " (to within " + Math.round(pos.coords.accuracy) + "m)";
-      draPut(rec);
-    },
-    () => {},
-    { enableHighAccuracy: false, timeout: 8000, maximumAge: 120000 }
-  );
 }
 
 /* ── Blank paper version ──────────────────────────────────────────── */
@@ -11192,345 +10357,6 @@ function draEditablePdf(withRA){
 
   _draPdfFooter(d, page);
   return { doc: d, pages: page, fields: nFields, ref: ra.ref || "" };
-}
-
-/* ════════════════════════════════════════════════════════════════════
-   SEND THE SHEET
-
-   The surveyor needs the Check before you start sheet on their phone, and
-   the office needs it back once it is filled in. One button, handing the
-   PDF straight to whatever the phone shares with: WhatsApp, Mail, Teams,
-   anything.
-
-   The PDF is built synchronously and share() is called in the same tick as
-   the tap. On an iPad, a share() that happens after an await has lost the
-   user gesture and Safari refuses it, which is the kind of thing that only
-   shows up on the actual device.
-   ──────────────────────────────────────────────────────────────────── */
-
-function draSheetName(withRA){
-  const ref = withRA === true ? (draLiveRA().ref || "").trim() : "";
-  /* the office files these by reference, so the reference goes in the name */
-  return "Check before you start" + (ref ? " " + ref.replace(/[\\/:*?"<>|]/g, "-") : "") + ".pdf";
-}
-
-function draShareSheet(withRA){
-  const out = draEditablePdf(withRA === true);
-  if(!out) return;
-  const name = draSheetName(withRA);
-  const ref  = withRA === true ? (out.ref || "").trim() : "";
-  const subject = "Check before you start" + (ref ? " — " + ref : "");
-  const body = "Attached is the Check before you start sheet"
-    + (ref ? " for " + ref : "")
-    + ". Fill it in on site, then send it back to the office.";
-
-  let file = null;
-  try {
-    file = new File([out.doc.output("blob")], name, { type: "application/pdf" });
-  } catch(e){ file = null; }
-
-  /* The phone's own share sheet, which is where WhatsApp and Mail live.
-     Called straight away, still inside the tap. */
-  if(file && navigator.canShare && navigator.canShare({ files: [file] })){
-    navigator.share({ files: [file], title: subject, text: body })
-      .then(()  => toast("Sheet sent"))
-      .catch(err => { if(err && err.name !== "AbortError") toast("Could not share: " + err.message, "error"); });
-    return;
-  }
-
-  /* No file sharing here, so do the next most useful thing: save the sheet
-     and open a draft with the wording ready, for them to attach it to. */
-  out.doc.save(name);
-  draShareFallback(name, subject, body);
-}
-
-/* Desktop and anything else that cannot attach a file to a share. The file
-   is already downloaded; this just opens the message. */
-function draShareFallback(name, subject, body){
-  const old = $(".dra-share-fallback");
-  if(old) old.remove();
-  const wa = "https://wa.me/?text=" + encodeURIComponent(subject + "\n" + body);
-  const mail = "mailto:?subject=" + encodeURIComponent(subject)
-             + "&body=" + encodeURIComponent(body + "\n\n(" + name + " is in your downloads, attach it here.)");
-  const box = document.createElement("div");
-  box.className = "dra-card dra-share-fallback";
-  box.innerHTML =
-      '<h2>' + escapeHtml(name) + ' saved</h2>'
-    + '<p class="dra-sub">This device cannot attach a file to a share, so the sheet has been '
-    +   'saved to your downloads. Open a message below and attach it.</p>'
-    + '<div class="dra-extra">'
-    +   '<a class="btn btn-primary" target="_blank" rel="noopener" href="' + wa + '">WhatsApp</a>'
-    +   '<a class="btn btn-outline" href="' + mail + '">Email</a>'
-    +   '<span class="dra-spacer"></span>'
-    +   '<button type="button" class="btn btn-ghost dra-share-dismiss">Close</button>'
-    + '</div>';
-  const host = $("#draBody");
-  if(host) host.insertBefore(box, host.firstChild);
-  const close = box.querySelector(".dra-share-dismiss");
-  if(close) close.addEventListener("click", () => box.remove());
-}
-
-/* ════════════════════════════════════════════════════════════════════
-   THE SHEET AS A WEB PAGE
-
-   The same sheet as the fillable PDF, written out as one self-contained
-   .html file: no linked stylesheet, no library, no image, nothing that
-   reaches the network. It goes to the iPad in Files, opens from a Home
-   Screen shortcut and is typed into there.
-
-   A file:// page on iOS has no storage, so there is nowhere to save to.
-   Save a copy writes the answers back into the markup as ATTRIBUTES and
-   hands the whole page out as a new file. That is the same property vs
-   attribute trap that was losing the risk ratings, used deliberately this
-   time: only the attribute survives being serialised.
-   ──────────────────────────────────────────────────────────────────── */
-
-function _draHtmlEsc(s){
-  return String(s == null ? "" : s)
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function _draHex(a){
-  return "#" + a.map(n => ("0" + Math.max(0, Math.min(255, n | 0)).toString(16)).slice(-2)).join("");
-}
-
-function draSheetHtml(withRA){
-  const ra = withRA === true ? draLiveRA() : { hazards: [] };
-  const C  = _draBrandInk();
-  const P  = DRA_PDF;
-  const E  = _draHtmlEsc;
-
-  const accent = _draHex(C.accent), title = _draHex(C.title);
-  const ink = _draHex(P.ink), mute = _draHex(P.mute);
-  const rule = _draHex(P.rule), panel = _draHex(P.panel);
-
-  /* The client's own mark heads the sheet, the same brand the PDFs take.
-     Only a data: logo goes in: a linked one would make the sheet fetch
-     something, and the whole point is that it reaches nothing. */
-  const ls = k => { try { return localStorage.getItem(k) || ""; } catch(e){ return ""; } };
-  const logo = /^data:image\//i.test(ls("brand.logo")) ? ls("brand.logo") : "";
-  const client = ls("brand.name");
-
-  /* the same three pieces the PDF draws, in the same order */
-  const field = (name, label, value, opts) => {
-    opts = opts || {};
-    const v = E(value || "");
-    const inp = opts.multiline
-      ? '<textarea id="' + name + '" name="' + name + '" rows="' + (opts.rows || 3) + '"></textarea>'
-      : '<input type="' + (opts.type || "text") + '" id="' + name + '" name="' + name
-        + '" value="' + v + '">';
-    return '<div class="f' + (opts.indent ? " f-in" : "") + '">'
-      + '<label for="' + name + '">' + E(label) + '</label>' + inp + '</div>';
-  };
-
-  const tick = (name, text, opts) => {
-    opts = opts || {};
-    return '<label class="t' + (opts.bold ? " t-b" : "") + '">'
-      + '<input type="checkbox" id="' + name + '" name="' + name + '">'
-      + '<span>' + E(text) + '</span></label>';
-  };
-
-  const section = t => '<h2>' + E(t) + '</h2>';
-
-  const h = [];
-  h.push('<section class="who">');
-  h.push(field("name", "Your name", ""));
-  h.push(field("company", "Company (FAD or contractor)", ""));
-  h.push(field("site", "Site address", ""));
-  h.push(field("jobref", "Job reference", ""));
-  h.push(field("datetime", "Date and time", "", { type: "datetime-local" }));
-  h.push(field("raref", "Risk assessment reference you are working to", ra.ref || ""));
-  h.push('</section>');
-
-  h.push(section("1. Before you judge it"));
-  h.push(tick("read_ra", "I have read this risk assessment and the method statement for this job."));
-
-  h.push(section("2. Is the assessment still valid for what is in front of you?"));
-  h.push(tick("valid_yes", "Yes, it still holds. Start work. Nothing else to fill in.", { bold: true }));
-  h.push(tick("valid_no", "No, something is different. Write what, below, then answer 3.", { bold: true }));
-  h.push(field("whatdiff", "What is different", "", { multiline: true, rows: 3 }));
-
-  h.push(section("3. Does any of this apply? Any one of them stops the job."));
-  DRA_STOPS.forEach((t, i) => h.push(tick("stop_" + (i + 1), t)));
-  h.push(tick("stop_none", "None of these apply"));
-
-  h.push(section("4. If none of them apply, how are you dealing with it?"));
-  h.push(tick("route_control", "A control already written in this assessment covers it."));
-  h.push(field("route_control_detail", "Hazard number and the control", "",
-    { multiline: true, rows: 2, indent: true }));
-  h.push(tick("route_manager", "Called a senior manager."));
-  h.push(field("route_manager_detail", "Name, number, time, and what they authorised", "",
-    { multiline: true, rows: 2, indent: true }));
-  h.push(tick("route_stopped", "Stopped and left."));
-
-  h.push('<p class="rulebox">You cannot write your own control. If nothing in the assessment '
-    + 'covers it, the only routes are a senior manager or stop. Tell the office either way, so '
-    + 'the assessment can be reviewed.</p>');
-
-  h.push('<section class="who sign">');
-  h.push(field("signed", "Signed", ""));
-  h.push(field("signed_datetime", "Date and time", "", { type: "datetime-local" }));
-  h.push('</section>');
-
-  if(ra.hazards.length){
-    const sub = (ra.ref ? "  ·  " + ra.ref : "") + (ra.task ? "  ·  " + ra.task : "");
-    h.push('<h3>' + E("What this assessment covers" + sub) + '</h3>');
-    h.push('<p class="covers">'
-      + ra.hazards.map(z => E(z.no + ". " + z.name)).join('<span class="dot">·</span>')
-      + '</p>');
-  }
-
-  const fname = "Check before you start" + (ra.ref ? " " + ra.ref : "");
-
-  /* ── the page itself ── */
-  const css = [
-    ':root{--accent:' + accent + ';--title:' + title + ';--ink:' + ink + ';--mute:' + mute
-      + ';--rule:' + rule + ';--panel:' + panel + ';}',
-    '*{box-sizing:border-box;-webkit-text-size-adjust:100%;}',
-    'html,body{margin:0;background:#fff;color:var(--ink);}',
-    'body{font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;',
-    'padding:18px 16px 112px;max-width:820px;margin:0 auto;}',
-    'h1{font-size:23px;line-height:1.2;margin:0;color:var(--title);}',
-    '.hd{display:flex;gap:14px;align-items:center;}',
-    '.hd img{max-height:48px;max-width:190px;width:auto;height:auto;flex:0 0 auto;}',
-    '.client{margin:0 0 3px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;',
-    'color:var(--title);font-weight:700;}',
-    '.lede{color:var(--mute);font-size:13px;margin:5px 0 0;}',
-    '.bar{height:3px;background:var(--accent);margin:11px 0 18px;}',
-    'h2{font-size:14px;margin:26px 0 10px;padding:8px 10px;background:var(--panel);',
-    'border-left:3px solid var(--accent);font-weight:700;}',
-    'h3{font-size:14px;margin:26px 0 6px;padding:0 0 6px;border-bottom:1px solid var(--rule);}',
-    '.who{display:grid;grid-template-columns:1fr 1fr;gap:12px;}',
-    '@media(max-width:560px){.who{grid-template-columns:1fr;}}',
-    '.f{margin:0 0 12px;}',
-    '.f-in{margin-left:30px;}',
-    'label{display:block;}',
-    '.f>label{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);',
-    'font-weight:700;margin:0 0 4px;}',
-    'input[type=text],input[type=datetime-local],textarea{width:100%;font:inherit;color:var(--ink);',
-    'background:#fff;border:1px solid var(--rule);border-radius:0;padding:9px 10px;',
-    'min-height:42px;-webkit-appearance:none;appearance:none;}',
-    'textarea{resize:vertical;line-height:1.4;}',
-    'input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-2px;}',
-    '.t{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #f1f1f1;',
-    'font-size:14px;}',
-    '.t-b{font-weight:700;}',
-    '.t input{flex:0 0 auto;width:24px;height:24px;margin:0;accent-color:var(--accent);}',
-    '.rulebox{margin:20px 0 24px;padding:11px 13px;background:#fefce8;border:1px solid #eab308;',
-    'color:#78530f;font-size:13px;line-height:1.45;}',
-    '.sign{margin-top:4px;}',
-    '.covers{font-size:12px;color:var(--mute);margin:0;line-height:1.7;}',
-    '.dot{padding:0 7px;color:var(--rule);}',
-    '.actions{position:fixed;left:0;right:0;bottom:0;background:#fff;',
-    'border-top:1px solid var(--rule);padding:11px 16px calc(11px + env(safe-area-inset-bottom));',
-    'display:flex;gap:11px;align-items:center;}',
-    'button{font:inherit;font-weight:700;border-radius:0;padding:12px 20px;cursor:pointer;',
-    'border:1px solid var(--accent);background:var(--accent);color:#fff;}',
-    'button.ghost{background:#fff;color:var(--ink);border-color:var(--rule);}',
-    '.said{font-size:12px;color:var(--mute);}',
-    'footer{margin:30px 0 0;padding:9px 0 0;border-top:1px solid var(--rule);font-size:11px;',
-    'color:var(--mute);display:flex;gap:7px;align-items:center;}',
-    'footer b{color:var(--ink);}',
-    'footer .ring{width:13px;height:13px;border:1.7px solid var(--accent);border-radius:50%;',
-    'flex:0 0 auto;}',
-    '@media print{.actions{display:none;}body{padding:0;}}'
-  ].join("");
-
-  /* The script that travels with the file. Everything it needs is here;
-     it never fetches and never stores. */
-  const js = [
-    '(function(){',
-    'function harvest(){',
-    ' var d=document;',
-    ' d.querySelectorAll("input[type=text],input[type=datetime-local]").forEach(function(el){',
-    '  el.setAttribute("value",el.value);});',
-    ' d.querySelectorAll("textarea").forEach(function(el){el.textContent=el.value;});',
-    ' d.querySelectorAll("input[type=checkbox]").forEach(function(el){',
-    '  if(el.checked)el.setAttribute("checked","checked");else el.removeAttribute("checked");});',
-    '}',
-    'function fname(){',
-    ' var v=function(id){var e=document.getElementById(id);return e?e.value.trim():"";};',
-    ' var bits=[v("jobref")||v("raref"),v("site")].filter(Boolean).join(" ");',
-    ' var stamp=(v("datetime")||new Date().toISOString()).slice(0,10);',
-    ' return ("Check before you start "+bits+" "+stamp).replace(/[\\\\/:*?"<>|]/g,"-")',
-    '  .replace(/\\s+/g," ").trim()+".html";',
-    '}',
-    'function say(t){var e=document.getElementById("said");if(e)e.textContent=t;}',
-    'function fallback(html,name){',
-    ' var a=document.createElement("a");',
-    ' var u=URL.createObjectURL(new Blob([html],{type:"text/html"}));',
-    ' a.href=u;a.download=name;a.rel="noopener";document.body.appendChild(a);a.click();',
-    ' setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(u);},4000);',
-    ' say("Saved as "+name);',
-    '}',
-    'document.getElementById("save").addEventListener("click",function(){',
-    /* share() must happen in the same tick as the tap or iOS refuses it,
-       so the page is built synchronously and nothing is awaited first */
-    ' harvest();',
-    ' var name=fname();',
-    ' var html="<!doctype html>\\n"+document.documentElement.outerHTML;',
-    ' var f=null;',
-    ' try{f=new File([html],name,{type:"text/html"});}catch(e){}',
-    ' if(f&&navigator.canShare&&navigator.canShare({files:[f]})){',
-    '  say("Saving a copy");',
-    '  navigator.share({files:[f],title:name}).then(function(){say("Saved as "+name);})',
-    '   .catch(function(err){',
-    /* a share sheet the surveyor closed is not a failure, so do not shove
-       a download at them as well: say so and leave the sheet alone */
-    '    if(err&&err.name==="AbortError"){say("Not saved");return;}',
-    '    fallback(html,name);});',
-    '  return;',
-    ' }',
-    ' fallback(html,name);',
-    '});',
-    'document.getElementById("print").addEventListener("click",function(){window.print();});',
-    '})();'
-  ].join("\n");
-
-  return '<!doctype html>\n'
-    + '<html lang="en-GB">\n<head>\n'
-    + '<meta charset="utf-8">\n'
-    + '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
-    + '<meta name="robots" content="noindex,nofollow">\n'
-    + '<meta name="apple-mobile-web-app-capable" content="yes">\n'
-    + '<meta name="apple-mobile-web-app-status-bar-style" content="default">\n'
-    + '<meta name="apple-mobile-web-app-title" content="Check sheet">\n'
-    + '<title>' + E(fname) + '</title>\n'
-    + '<style>' + css + '</style>\n</head>\n<body>\n'
-    + '<header class="hd">'
-    + (logo ? '<img src="' + E(logo) + '" alt="">' : '')
-    + '<div>'
-    + (client ? '<p class="client">' + E(client) + '</p>' : '')
-    + '<h1>Check before you start</h1>'
-    + '</div></header>\n'
-    + '<p class="lede">A review of the risk assessment for this job. Not a permit to work. '
-    + 'Fill it in, then Save a copy and send it to the office.</p>\n'
-    + '<div class="bar"></div>\n'
-    + h.join("\n") + "\n"
-    + '<footer><span class="ring"></span><b>' + E(AHS_PRODUCER) + '</b> · '
-    + E(AHS_WEBSITE) + '</footer>\n'
-    + '<div class="actions"><button type="button" id="save">Save a copy</button>'
-    + '<button type="button" class="ghost" id="print">Print</button>'
-    + '<span class="said" id="said"></span></div>\n'
-    + '<script>' + js + '<\/script>\n'
-    + '</body>\n</html>\n';
-}
-
-function draSaveSheetHtml(withRA){
-  let html;
-  try { html = draSheetHtml(withRA === true); }
-  catch(e){ toast("Could not build the sheet", "error"); return; }
-  const ra = withRA === true ? draLiveRA() : { hazards: [] };
-  const name = ("Check before you start" + (ra.ref ? " " + ra.ref : ""))
-    .replace(/[\\/:*?"<>|]/g, "-") + ".html";
-  const a = document.createElement("a");
-  const url = URL.createObjectURL(new Blob([html], { type: "text/html" }));
-  a.href = url; a.download = name;
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 4000);
-  toast("Sheet saved as HTML", "ok");
 }
 
 function draSaveEditablePdf(withRA){
