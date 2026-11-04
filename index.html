@@ -9621,8 +9621,43 @@ function msPreviewOpen(){
    every word is text Word can edit. Covers the Risk Assessment and Method
    Statement tabs, the two documents the PDF button makes from the sheets.
    ════════════════════════════════════════════════════════════════════ */
-const WORD_INK = "111827", WORD_MUTED = "6B7280", WORD_GREY = "757575",
-      WORD_TEAL = "4BBFD6", WORD_RULE = "E5E7EB", WORD_PALE = "F1F5F9";
+const WORD_MUTED = "6B7280", WORD_RULE = "E5E7EB", WORD_PALE = "F1F5F9";
+const WORD_AHS_INK = "111827", WORD_AHS_GREY = "757575", WORD_AHS_TEAL = "4BBFD6";
+/* The document's colours follow the client brand the sheet is wearing
+   (brand.primary / brand.accent / brand.text), the same as the PDF, and go
+   back to AHS when there is none. Set by _wApplyBrand() at the start of
+   every export. The footer is the producer's mark and keeps the AHS ink. */
+let WORD_INK = WORD_AHS_INK, WORD_GREY = WORD_AHS_GREY, WORD_TEAL = WORD_AHS_TEAL, WORD_TEAL_LIGHT = "E4F5F9";
+function _wHex(v, fallback){
+  const m = /^#?([0-9a-f]{6})$/i.exec((v || "").trim());
+  return m ? m[1].toUpperCase() : fallback;
+}
+/* Mix a colour with white: keep is the share of the colour kept (0 to 1). */
+function _wTint(hex, keep){
+  const n = parseInt(hex, 16), ch = c => Math.round(255 - (255 - c) * keep);
+  return [ch(n >> 16 & 255), ch(n >> 8 & 255), ch(n & 255)].map(x => x.toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+function _wApplyBrand(){
+  WORD_GREY = _wHex(localStorage.getItem("brand.primary"), WORD_AHS_GREY);
+  WORD_TEAL = _wHex(localStorage.getItem("brand.accent"), WORD_AHS_TEAL);
+  WORD_INK  = _wHex(localStorage.getItem("brand.text"), WORD_AHS_INK);
+  WORD_TEAL_LIGHT = _wTint(WORD_TEAL, 0.2);
+}
+/* The brand logo as the letterhead shows it (60px high, 120px wide at the
+   most), drawn through a canvas so any image type becomes a PNG Word
+   accepts, at twice the size for print. Null when the sheet has no logo. */
+function _wLogo(tab){
+  const img = tab.querySelector(".brand-letterhead-logo");
+  if(!img || !img.src || img.style.display === "none" || !img.naturalWidth || !img.naturalHeight) return null;
+  let h = 60, w = Math.round(60 * img.naturalWidth / img.naturalHeight);
+  if(w > 120){ w = 120; h = Math.round(120 * img.naturalHeight / img.naturalWidth); }
+  const c = document.createElement("canvas"); c.width = w * 2; c.height = h * 2;
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  const bin = atob(c.toDataURL("image/png").split(",")[1]);
+  const bytes = new Uint8Array(bin.length);
+  for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return { data: bytes, width: w, height: h };
+}
 const WORD_RISK = { low: ["E8F7EF", "1A7A4A"], med: ["FEF3CD", "B45309"], high: ["FEE2E2", "B91C1C"] };
 const WORD_MARGIN = 567;                 // 10mm, as the PDF
 const WORD_W_LANDSCAPE = 16838 - 2 * WORD_MARGIN;
@@ -9748,13 +9783,17 @@ function _wLetterhead(tab, W){
   const sub = _wKey(tab, ra ? "ra.lh.subtitle" : "ms.lh.subtitle");
   const date = footerDateStr(tab);
   const w = [Math.floor(W * 0.25), Math.floor(W * 0.5)]; w.push(W - w[0] - w[1]);
+  const logo = _wLogo(tab);
+  const left = [];
+  if(logo) left.push(new D.Paragraph({ spacing: { after: 80 }, children: [new D.ImageRun({ type: "png", data: logo.data, transformation: { width: logo.width, height: logo.height } })] }));
+  left.push(_wP("Produced by", { caps: true, size: 14, color: WORD_MUTED, after: 0 }),
+            _wP(AHS_PRODUCER, { bold: true, size: 22, color: WORD_GREY, after: 0 }));
   const row = new D.TableRow({ children: [
-    _wCell([_wP("Produced by", { caps: true, size: 14, color: WORD_MUTED, after: 0 }),
-            _wP(AHS_PRODUCER, { bold: true, size: 22, color: WORD_GREY, after: 0 })], { w: w[0], noBorder: true, valign: D.VerticalAlign.BOTTOM }),
+    _wCell(left, { w: w[0], noBorder: true, valign: D.VerticalAlign.BOTTOM }),
     _wCell([_wP(title, { bold: true, size: 30, color: WORD_GREY, align: D.AlignmentType.CENTER, after: 0 }),
             _wP(sub, { size: 20, color: WORD_MUTED, align: D.AlignmentType.CENTER, after: 0 })], { w: w[1], noBorder: true, valign: D.VerticalAlign.CENTER }),
-    _wCell([_wP("Date", { caps: true, size: 14, color: "1E8FA6", align: D.AlignmentType.CENTER, after: 0 }),
-            _wP(date || " ", { bold: true, size: 20, color: WORD_GREY, align: D.AlignmentType.CENTER, after: 0 })], { w: w[2], noBorder: true, fill: "E4F5F9", valign: D.VerticalAlign.CENTER })
+    _wCell([_wP("Date", { caps: true, size: 14, color: WORD_TEAL, align: D.AlignmentType.CENTER, after: 0 }),
+            _wP(date || " ", { bold: true, size: 20, color: WORD_GREY, align: D.AlignmentType.CENTER, after: 0 })], { w: w[2], noBorder: true, fill: WORD_TEAL_LIGHT, valign: D.VerticalAlign.CENTER })
   ] });
   return [
     _wTable([row], w, { noBorder: true }),
@@ -9771,9 +9810,9 @@ function _wFooter(tab, W){
     border: { top: { style: D.BorderStyle.SINGLE, size: 4, color: "D1D5DB", space: 4 } },
     tabStops: [{ type: D.TabStopType.RIGHT, position: W }],
     children: [
-      new D.TextRun({ text: AHS_PRODUCER, bold: true, size: 15, color: WORD_INK }),
+      new D.TextRun({ text: AHS_PRODUCER, bold: true, size: 15, color: WORD_AHS_INK }),
       new D.TextRun({ text: "  ·  " + AHS_WEBSITE, size: 14, color: WORD_MUTED }),
-      new D.TextRun({ children: ["\tPage ", D.PageNumber.CURRENT, " of ", D.PageNumber.TOTAL_PAGES], bold: true, size: 14, color: WORD_INK }),
+      new D.TextRun({ children: ["\tPage ", D.PageNumber.CURRENT, " of ", D.PageNumber.TOTAL_PAGES], bold: true, size: 14, color: WORD_AHS_INK }),
       new D.TextRun({ text: date ? "  ·  " + date : "", size: 14, color: WORD_MUTED })
     ]
   })] });
@@ -10022,6 +10061,7 @@ window.exportWord = async function(){
   }
   toast("Generating Word document…", "info");
   try {
+    _wApplyBrand();
     const doc = activeTab.id === "tab-ra" ? _wordRa(activeTab) : _wordMs(activeTab);
     const blob = await window.docx.Packer.toBlob(doc);
     const tabName = activeTab.id === "tab-ra" ? "RA" : "MS";
