@@ -14,6 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js"></script>
 <style>
 /* ════════════════════════════════════════════════════════════════════
    AHS RAMS — RA & MS APP
@@ -662,6 +663,7 @@ body.ras-render #raActions{left:-99999px;}
       <button class="btn btn-outline btn-sm" onclick="msPreviewOpen()" title="See where the PDF will break, and move the breaks">Preview</button>
       <button class="btn btn-outline btn-sm" onclick="window.print()" title="Browser print">Print</button>
       <button class="btn btn-primary btn-sm" onclick="exportPDF()" title="Export to PDF">PDF</button>
+      <button class="btn btn-primary btn-sm" onclick="exportWord()" title="The same document as the PDF, as an editable Word file">Word</button>
     </div>
   </div>
 
@@ -8613,25 +8615,22 @@ function insertRaSnippet(btn){
   persistContainer(tbody);
   renderArrangements(formPage);
 
-  // Auto-populate the form's reference and task / activity from the snippet
-  // if they are empty / placeholder. Snippet names follow the pattern
-  // "RA — XX — Description": XX gives the reference (RA-XX) and the
-  // description is the assessment's name. Anything already typed is kept.
+  // The assessment follows the snippet: its reference and task / activity
+  // are set to the snippet chosen, every time one is inserted. Snippet names
+  // follow the pattern "RA — XX — Description": XX gives the reference
+  // (RA-XX) and the description is the assessment's name. Other snippets
+  // (the hazard library, client sets) leave both fields as they are.
   const refMatch = (s.name || "").match(/^RA\s*[\-\u2013\u2014]\s*([\w]+)\s*[\-\u2013\u2014]\s*(.*)$/i);
   if(refMatch){
-    const fillIfEmpty = (key, value) => {
+    const set = (key, value) => {
       // The field on THIS form page.
       const el = formPage.querySelector('[data-key^="' + key + '"]');
       if(!el || !value) return;
-      const currentText = (el.innerText || el.textContent || "").trim();
-      // Treat blank, placeholder "Add Text", or just whitespace as empty.
-      if(currentText === "" || currentText.toLowerCase() === "add text"){
-        el.textContent = value;
-        persistField(el);
-      }
+      el.textContent = value;
+      persistField(el);
     };
-    fillIfEmpty("ra.meta.reference", "RA-" + refMatch[1]);
-    fillIfEmpty("ra.meta.task", refMatch[2].trim());
+    set("ra.meta.reference", "RA-" + refMatch[1]);
+    set("ra.meta.task", refMatch[2].trim());
   }
 
   toast(inserted === 1 ? "Hazard row inserted" : (inserted + " hazard rows inserted"));
@@ -9613,6 +9612,427 @@ function msPreviewOpen(){
 
   render();
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   WORD EXPORT
+   The same document as the PDF, written as an editable .docx so a client
+   can change the wording (Simon, 2026-11-04, for Liam at EGS). Built from
+   the on-screen sheet with the docx library: nothing is rasterised, so
+   every word is text Word can edit. Covers the Risk Assessment and Method
+   Statement tabs, the two documents the PDF button makes from the sheets.
+   ════════════════════════════════════════════════════════════════════ */
+const WORD_INK = "111827", WORD_MUTED = "6B7280", WORD_GREY = "757575",
+      WORD_TEAL = "4BBFD6", WORD_RULE = "E5E7EB", WORD_PALE = "F1F5F9";
+const WORD_RISK = { low: ["E8F7EF", "1A7A4A"], med: ["FEF3CD", "B45309"], high: ["FEE2E2", "B91C1C"] };
+const WORD_MARGIN = 567;                 // 10mm, as the PDF
+const WORD_W_LANDSCAPE = 16838 - 2 * WORD_MARGIN;
+const WORD_W_PORTRAIT  = 11906 - 2 * WORD_MARGIN;
+
+function _wSave(blob, name){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/* One line of text from an element. The sheet's own prompts ("Add Text",
+   "Add Name") never print, the same rule as the PDF. */
+function _wText(el){
+  if(!el) return "";
+  const t = (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
+  return (el.hasAttribute && el.hasAttribute("data-persist") && /^add\s+[a-z]+$/i.test(t)) ? "" : t;
+}
+function _wKey(root, key){ return _wText(root.querySelector('[data-key="' + key + '"]')); }
+function _wKeyStart(root, key){ return _wText(root.querySelector('[data-key^="' + key + '"]')); }
+
+/* A cell's HTML as Word paragraphs: lines split at <br>, <p> and <li>,
+   bullets kept, bold kept. The ERIC SP labels and the method's bullets come
+   through as they are on the sheet. */
+function _wParas(el, size, o){
+  const D = window.docx; o = o || {};
+  if(el && el.hasAttribute && el.hasAttribute("data-persist") && /^add\s+[a-z]+$/i.test(_wText(el))) el = null;
+  const paras = []; let runs = [], prefix = "";
+  const flush = () => {
+    if(runs.length) paras.push(new D.Paragraph({ children: runs, spacing: { after: o.after !== undefined ? o.after : 40 } }));
+    runs = [];
+  };
+  const walk = (node, bold) => {
+    if(node.nodeType === 3){
+      let t = node.nodeValue.replace(/\s+/g, " ");
+      if(!t.trim()) return;
+      t = runs.length ? t : prefix + t.replace(/^\s+/, "");
+      runs.push(new D.TextRun({ text: t, bold: bold, italics: o.italics, size: size, color: o.color || WORD_INK, font: o.font }));
+      return;
+    }
+    if(node.nodeType !== 1) return;
+    const tag = node.tagName;
+    if(tag === "BR"){ flush(); return; }
+    if(/^(SCRIPT|STYLE|BUTTON|SELECT|INPUT|TEXTAREA)$/.test(tag)) return;
+    if(node.classList.contains("no-print") || node.classList.contains("row-notes") || node.classList.contains("row-pin")) return;
+    const block = /^(P|DIV|LI|UL|OL|H[1-6]|TR|TABLE|SECTION)$/.test(tag);
+    if(block) flush();
+    const was = prefix;
+    if(tag === "LI") prefix = "• ";
+    const b = bold || tag === "STRONG" || tag === "B" || /^H[1-6]$/.test(tag);
+    node.childNodes.forEach(c => walk(c, b));
+    prefix = was;
+    if(block) flush();
+  };
+  if(el) walk(el, !!o.bold);
+  flush();
+  if(!paras.length) paras.push(new D.Paragraph({ children: [new D.TextRun({ text: "", size: size })] }));
+  return paras;
+}
+
+function _wP(text, o){
+  const D = window.docx; o = o || {};
+  return new D.Paragraph({
+    children: [new D.TextRun({ text: text, bold: o.bold, italics: o.italics, size: o.size || 18,
+      color: o.color || WORD_INK, allCaps: o.caps, characterSpacing: o.caps ? 20 : undefined, font: o.font })],
+    alignment: o.align,
+    spacing: { before: o.before || 0, after: o.after !== undefined ? o.after : 40 },
+    shading: o.fill ? { type: D.ShadingType.CLEAR, fill: o.fill, color: "auto" } : undefined,
+    border: o.border,
+    keepNext: o.keepNext
+  });
+}
+function _wNoBorder(){
+  const D = window.docx; const n = { style: D.BorderStyle.NONE, size: 0, color: "FFFFFF" };
+  return { top: n, bottom: n, left: n, right: n };
+}
+function _wCell(children, o){
+  const D = window.docx; o = o || {};
+  return new D.TableCell({
+    children: Array.isArray(children) ? children : [children],
+    width: o.w ? { size: o.w, type: D.WidthType.DXA } : undefined,
+    shading: o.fill ? { type: D.ShadingType.CLEAR, fill: o.fill, color: "auto" } : undefined,
+    columnSpan: o.span, rowSpan: o.rowSpan,
+    verticalAlign: o.valign || D.VerticalAlign.TOP,
+    margins: { top: 70, bottom: 70, left: 100, right: 100 },
+    borders: o.noBorder ? _wNoBorder() : undefined
+  });
+}
+function _wHead(text, w, span, sub){
+  // keepNext holds a header row to the row after it, so a heading never strands at the foot of a page
+  const kids = [_wP(text, { bold: true, size: 15, color: "FFFFFF", caps: true, after: 0, keepNext: true })];
+  if(sub) kids.push(_wP(sub, { size: 13, color: "E5E7EB", caps: true, after: 0, keepNext: true }));
+  return _wCell(kids, { w: w, span: span, fill: WORD_GREY });
+}
+function _wLabel(text, w){
+  return _wCell(_wP(text, { bold: true, size: 15, color: WORD_GREY, caps: true, after: 0 }), { w: w, fill: WORD_PALE });
+}
+function _wTable(rows, widths, o){
+  const D = window.docx; o = o || {};
+  const b = { style: D.BorderStyle.SINGLE, size: 4, color: WORD_RULE };
+  const n = { style: D.BorderStyle.NONE, size: 0, color: "FFFFFF" };
+  return new D.Table({
+    rows: rows,
+    width: { size: widths.reduce((a, c) => a + c, 0), type: D.WidthType.DXA },
+    columnWidths: widths,
+    layout: D.TableLayoutType.FIXED,
+    borders: o.noBorder
+      ? { top: n, bottom: n, left: n, right: n, insideHorizontal: n, insideVertical: n }
+      : { top: b, bottom: b, left: b, right: b, insideHorizontal: b, insideVertical: b }
+  });
+}
+function _wBreak(){ const D = window.docx; return new D.Paragraph({ children: [new D.PageBreak()] }); }
+function _wGap(){ return _wP("", { size: 8, after: 80 }); }
+function _wH2(text){ return _wP(text, { bold: true, size: 24, before: 200, after: 80 }); }
+
+/* Letterhead: producer, title and subtitle, date chip, then the accent rule. */
+function _wLetterhead(tab, W){
+  const D = window.docx;
+  const ra = tab.id === "tab-ra";
+  const title = _wKey(tab, ra ? "ra.lh.title" : "ms.lh.title") || (ra ? "Risk Assessment" : "Method Statement");
+  const sub = _wKey(tab, ra ? "ra.lh.subtitle" : "ms.lh.subtitle");
+  const date = footerDateStr(tab);
+  const w = [Math.floor(W * 0.25), Math.floor(W * 0.5)]; w.push(W - w[0] - w[1]);
+  const row = new D.TableRow({ children: [
+    _wCell([_wP("Produced by", { caps: true, size: 14, color: WORD_MUTED, after: 0 }),
+            _wP(AHS_PRODUCER, { bold: true, size: 22, color: WORD_GREY, after: 0 })], { w: w[0], noBorder: true, valign: D.VerticalAlign.BOTTOM }),
+    _wCell([_wP(title, { bold: true, size: 30, color: WORD_GREY, align: D.AlignmentType.CENTER, after: 0 }),
+            _wP(sub, { size: 20, color: WORD_MUTED, align: D.AlignmentType.CENTER, after: 0 })], { w: w[1], noBorder: true, valign: D.VerticalAlign.CENTER }),
+    _wCell([_wP("Date", { caps: true, size: 14, color: "1E8FA6", align: D.AlignmentType.CENTER, after: 0 }),
+            _wP(date || " ", { bold: true, size: 20, color: WORD_GREY, align: D.AlignmentType.CENTER, after: 0 })], { w: w[2], noBorder: true, fill: "E4F5F9", valign: D.VerticalAlign.CENTER })
+  ] });
+  return [
+    _wTable([row], w, { noBorder: true }),
+    _wP("", { size: 4, after: 160, border: { bottom: { style: D.BorderStyle.SINGLE, size: 18, color: WORD_TEAL, space: 1 } } })
+  ];
+}
+
+/* Footer on every page: producer and website left, page x of y and the
+   document date right, under a hairline. */
+function _wFooter(tab, W){
+  const D = window.docx;
+  const date = footerDateStr(tab);
+  return new D.Footer({ children: [new D.Paragraph({
+    border: { top: { style: D.BorderStyle.SINGLE, size: 4, color: "D1D5DB", space: 4 } },
+    tabStops: [{ type: D.TabStopType.RIGHT, position: W }],
+    children: [
+      new D.TextRun({ text: AHS_PRODUCER, bold: true, size: 15, color: WORD_INK }),
+      new D.TextRun({ text: "  ·  " + AHS_WEBSITE, size: 14, color: WORD_MUTED }),
+      new D.TextRun({ children: ["\tPage ", D.PageNumber.CURRENT, " of ", D.PageNumber.TOTAL_PAGES], bold: true, size: 14, color: WORD_INK }),
+      new D.TextRun({ text: date ? "  ·  " + date : "", size: 14, color: WORD_MUTED })
+    ]
+  })] });
+}
+
+/* The briefing and sign-off register, one empty line per row on the sheet. */
+function _wSignoffSheet(so, W){
+  const D = window.docx;
+  const ws = [28, 22, 30, 20].map(p => Math.floor(W * p / 100)); ws[3] = W - ws[0] - ws[1] - ws[2];
+  const heads = $$("thead th", so).map(th => _wText(th));
+  const n = $$("tbody tr", so).length || 20;
+  const rows = [new D.TableRow({ tableHeader: true, children: heads.map((h, i) => _wHead(h, ws[i])) })];
+  for(let i = 0; i < n; i++){
+    rows.push(new D.TableRow({ height: { value: 520, rule: D.HeightRule.ATLEAST }, children: ws.map(w => _wCell(_wP("", { size: 17 }), { w: w })) }));
+  }
+  return [
+    _wP(_wText(so.querySelector("h2")), { bold: true, size: 26, after: 60 }),
+    _wP(_wText(so.querySelector(".signoff-intro")), { size: 17, italics: true, color: WORD_MUTED, after: 120 }),
+    _wTable(rows, ws)
+  ];
+}
+
+function _wDoc(tab, children, landscape, W){
+  const D = window.docx;
+  return new D.Document({
+    creator: AHS_PRODUCER,
+    title: document.title,
+    styles: { default: { document: { run: { font: "Arial", size: 18, color: WORD_INK } } } },
+    sections: [{
+      properties: { page: {
+        // docx swaps width and height itself for LANDSCAPE, so both are given portrait
+        size: landscape ? { orientation: D.PageOrientation.LANDSCAPE, width: 11906, height: 16838 } : { width: 11906, height: 16838 },
+        margin: { top: WORD_MARGIN, right: WORD_MARGIN, bottom: WORD_MARGIN + 300, left: WORD_MARGIN, footer: 280 }
+      } },
+      footers: { default: _wFooter(tab, W) },
+      children: children
+    }]
+  });
+}
+
+/* ── Risk Assessment: landscape A4, one section per form page, then the
+   briefing register, the same as the PDF. ── */
+function _wordRa(tab){
+  const D = window.docx, W = WORD_W_LANDSCAPE;
+  const kids = [];
+  const q4 = Math.floor(W / 4), q4s = [q4, q4, q4, W - 3 * q4];
+  $$("#raForms .form-page", tab).forEach((page, idx) => {
+    if(idx) kids.push(_wBreak());
+    kids.push.apply(kids, _wLetterhead(tab, W));
+
+    // Meta band
+    const meta = [["Task / activity", "ra.meta.task"], ["Location", "ra.meta.location"], ["Project name", "ra.meta.project"], ["Risk assessment reference", "ra.meta.reference"]];
+    kids.push(_wTable([new D.TableRow({ children: meta.map((m, i) =>
+      _wCell([_wP(m[0], { caps: true, size: 14, color: WORD_MUTED, after: 20 }), _wP(_wKey(page, m[1]) || " ", { bold: true, size: 19 })], { w: q4s[i], fill: WORD_PALE })) })], q4s));
+    kids.push(_wGap());
+
+    // Evaluation banner
+    kids.push(new D.Paragraph({ shading: { type: D.ShadingType.CLEAR, fill: WORD_GREY, color: "auto" }, indent: { left: 140 }, spacing: { before: 60, after: 160 },
+      children: [new D.TextRun({ text: "Evaluation of risk", bold: true, size: 19, color: WORD_TEAL }), new D.TextRun({ text: " — The procedure is outlined below.", size: 19, color: "FFFFFF" })] }));
+
+    // Likelihood / severity matrix
+    const cols = $$(".matrix-col", page).map(col => {
+      const ps = [_wP(_wText(col.querySelector("h3")), { bold: true, size: 15, caps: true, color: WORD_MUTED, after: 80 })];
+      $$(".level", col).forEach(l => {
+        const b = l.querySelector(".badge"); const lvl = _wText(b);
+        const cls = (b && b.className.match(/\b(low|med|high)\b/) || [])[1] || "low";
+        const desc = (l.textContent || "").replace(lvl, "").replace(/\s+/g, " ").trim();
+        ps.push(new D.Paragraph({ spacing: { after: 60 }, children: [
+          new D.TextRun({ text: lvl + "   ", bold: true, size: 15, color: WORD_RISK[cls][1] }),
+          new D.TextRun({ text: desc, size: 17, color: WORD_INK })] }));
+      });
+      return ps;
+    });
+    const half = Math.floor(W / 2);
+    const key = new D.Paragraph({ alignment: D.AlignmentType.CENTER, children: [["low", "LOW"], ["med", "MEDIUM"], ["high", "HIGH"]].reduce((a, x) => a.concat([
+      new D.TextRun({ text: "■ ", size: 18, color: WORD_RISK[x[0]][1] }), new D.TextRun({ text: x[1] + "      ", bold: true, size: 16, color: WORD_INK })]), []) });
+    kids.push(_wTable([
+      new D.TableRow({ children: [_wHead(_wText(page.querySelector(".matrix-head")), W, 2)] }),
+      new D.TableRow({ children: [_wCell(cols[0] || [_wP("")], { w: half }), _wCell(cols[1] || [_wP("")], { w: W - half })] }),
+      new D.TableRow({ children: [_wCell([key], { w: W, span: 2, fill: WORD_PALE })] })
+    ], [half, W - half]));
+
+    // Evaluation of the risk
+    const ev = page.querySelector(".eval-table");
+    if(ev){
+      const lw = Math.floor(W * 0.2);
+      const rows = [new D.TableRow({ children: [_wHead(_wText(ev.querySelector("thead th")), W, 2)] })];
+      $$("tbody tr", ev).forEach(tr => rows.push(new D.TableRow({ children: [
+        _wCell(_wP(_wText(tr.cells[0]), { bold: true, size: 17 }), { w: lw, fill: WORD_PALE }),
+        _wCell(_wParas(tr.cells[1], 17), { w: W - lw })] })));
+      kids.push(_wGap()); kids.push(_wTable(rows, [lw, W - lw]));
+    }
+
+    // Hazards
+    const ht = page.querySelector(".hazardsTable");
+    if(ht){
+      const hw = [20, 14, 14, 9, 23, 9, 11].map(p => Math.floor(W * p / 100)); hw[6] = W - hw.slice(0, 6).reduce((a, c) => a + c, 0);
+      const heads = $$("thead th", ht).map(th => {
+        const sub = _wText(th.querySelector(".muted"));
+        return [_wText(th).replace(sub, "").trim(), sub];
+      });
+      const rows = [new D.TableRow({ tableHeader: true, children: heads.map((h, i) => _wHead(h[0], hw[i], undefined, h[1])) })];
+      const badge = (td, w) => {
+        const b = td.querySelector(".badge"); const lvl = _wText(b);
+        const cls = (b && b.className.match(/\b(low|med|high)\b/) || [])[1];
+        const col = (lvl && cls) ? WORD_RISK[cls] : [undefined, WORD_INK];
+        return _wCell(_wP(lvl || "", { bold: true, size: 16, color: col[1], align: D.AlignmentType.CENTER }), { w: w, fill: col[0], valign: D.VerticalAlign.CENTER });
+      };
+      const ed = td => td.querySelector(".editable") || td;
+      $$("tbody tr:not(.note-edit)", ht).forEach((tr, n) => {
+        const c = tr.cells;
+        rows.push(new D.TableRow({ cantSplit: true, children: [
+          _wCell([_wP(String(n + 1), { size: 13, color: WORD_MUTED, after: 0 })].concat(_wParas(ed(c[0]), 17, { bold: true })), { w: hw[0] }),
+          _wCell(_wParas(ed(c[1]), 17), { w: hw[1] }),
+          _wCell(_wParas(ed(c[2]), 17), { w: hw[2] }),
+          badge(c[3], hw[3]),
+          _wCell(_wParas(ed(c[4]), 17), { w: hw[4] }),
+          badge(c[5], hw[5]),
+          _wCell(_wParas(ed(c[6]), 17), { w: hw[6] })
+        ] }));
+      });
+      kids.push(_wGap()); kids.push(_wTable(rows, hw));
+    }
+
+    // What we already have in place
+    const arr = page.querySelector("[data-arr]");
+    const items = $$(".arr-list li", arr || page).map(li => ({ kind: _wText(li.querySelector(".arr-kind")), text: _wText(li.querySelector("span:last-child")) }));
+    const pointer = _wText(arr && arr.querySelector(".arr-pointer"));
+    if(items.length || pointer){
+      const body = items.map(i => new D.Paragraph({ spacing: { after: 50 }, tabStops: [{ type: D.TabStopType.LEFT, position: 1700 }], children: [
+        new D.TextRun({ text: i.kind, bold: true, size: 14, color: WORD_MUTED, allCaps: true }),
+        new D.TextRun({ text: "\t" + i.text, size: 17, color: WORD_INK })] }));
+      if(pointer) body.push(_wP(pointer, { size: 17, before: 60 }));
+      kids.push(_wGap());
+      kids.push(_wTable([new D.TableRow({ children: [_wHead("What we already have in place", W)] }), new D.TableRow({ children: [_wCell(body, { w: W })] })], [W]));
+    }
+
+    // PPE
+    const ppe = page.querySelector(".ppe-table");
+    if(ppe){
+      const lw = Math.floor(W * 0.12), cw = W - lw;
+      const checks = $$(".ppe-checks .check", page).map(c => ({ on: !!(c.querySelector("input") || {}).checked, label: _wText(c.querySelector("span")) }));
+      const lines = []; for(let i = 0; i < checks.length; i += 3) lines.push(checks.slice(i, i + 3));
+      const cps = lines.map(l => new D.Paragraph({ spacing: { after: 50 },
+        tabStops: [{ type: D.TabStopType.LEFT, position: Math.floor(cw / 3) }, { type: D.TabStopType.LEFT, position: Math.floor(cw * 2 / 3) }],
+        children: l.reduce((a, c) => a.concat([
+          new D.TextRun({ text: (c.on ? "☑" : "☐") + " ", size: 20, font: "Segoe UI Symbol", color: c.on ? WORD_INK : WORD_MUTED }),
+          new D.TextRun({ text: c.label + "\t", size: 17, color: WORD_INK })]), []) }));
+      kids.push(_wGap());
+      kids.push(_wTable([
+        new D.TableRow({ children: [_wHead(_wText(ppe.querySelector("thead th")), W, 2)] }),
+        new D.TableRow({ children: [_wLabel("Instruction", lw), _wCell(_wParas(page.querySelector('[data-key^="ra.ppe.instruction."]'), 17), { w: cw })] }),
+        new D.TableRow({ children: [_wLabel("Checklist", lw), _wCell(cps.length ? cps : [_wP("")], { w: cw })] }),
+        new D.TableRow({ children: [_wLabel("Notes", lw), _wCell(_wParas(page.querySelector('[data-key^="ra.ppe.notes."]'), 15, { color: WORD_MUTED }), { w: cw })] })
+      ], [lw, cw]));
+    }
+
+    // Sign-off
+    const sig = [["Assessor", "ra.sig.assessor."], ["Position", "ra.sig.position."], ["Signed", "ra.sig.signed."], ["Date", "ra.sig.date."]];
+    kids.push(_wGap());
+    kids.push(_wTable([new D.TableRow({ children: sig.map((x, i) =>
+      _wCell([_wP(x[0], { caps: true, size: 14, color: WORD_MUTED, after: 20 }), _wP(_wKeyStart(page, x[1]) || " ", { bold: true, size: 19 })], { w: q4s[i], fill: WORD_PALE })) })], q4s));
+  });
+
+  const so = tab.querySelector(".signoff-ra");
+  if(so){ kids.push(_wBreak()); kids.push.apply(kids, _wSignoffSheet(so, W)); }
+  return _wDoc(tab, kids, true, W);
+}
+
+/* ── Method Statement: portrait A4, letterhead and project on every method
+   page, the sign-off under the last one, then the briefing register. ── */
+function _wordMs(tab){
+  const D = window.docx, W = WORD_W_PORTRAIT;
+  const kids = [];
+  const pages = $$("#msPages .ms-page", tab);
+  const proj = _wKey(tab, "ms.projectname");
+  const head = () => {
+    kids.push.apply(kids, _wLetterhead(tab, W));
+    if(proj) kids.push(_wP(proj, { bold: true, size: 28, color: WORD_GREY, after: 120 }));
+  };
+  pages.forEach((pg, idx) => {
+    if(idx) kids.push(_wBreak());
+    head();
+    const hs = _wText(pg.querySelector(".headersplitter"));
+    if(hs) kids.push(new D.Paragraph({ alignment: D.AlignmentType.CENTER, border: { top: { style: D.BorderStyle.SINGLE, size: 12, color: WORD_GREY, space: 4 } },
+      spacing: { before: 120, after: 160 }, children: [new D.TextRun({ text: hs, bold: true, size: 18, color: WORD_GREY, allCaps: true, characterSpacing: 20 })] }));
+
+    const f = k => pg.querySelector('[data-key$=".' + k + '"]');
+    const lw = Math.floor(W * 0.14), vw = Math.floor(W * 0.30), pw = W - lw - vw;
+    kids.push(_wTable([
+      new D.TableRow({ children: [_wHead("Method statement", W, 3)] }),
+      new D.TableRow({ children: [_wLabel("Title", lw), _wCell(_wParas(f("title"), 18, { bold: true }), { w: vw }), _wCell(_wParas(f("procedure"), 17), { w: pw, rowSpan: 6 })] }),
+      new D.TableRow({ children: [_wLabel("Equipment", lw), _wCell(_wParas(f("equipment"), 17), { w: vw })] }),
+      new D.TableRow({ children: [_wLabel("PPE", lw), _wCell(_wParas(f("ppe"), 17), { w: vw })] }),
+      new D.TableRow({ children: [_wHead("Training & associated risks", lw + vw, 2)] }),
+      new D.TableRow({ children: [_wCell(_wParas(f("training"), 17), { w: lw + vw, span: 2 })] }),
+      new D.TableRow({ children: [_wLabel("RA ref & guidance", lw), _wCell(_wParas(f("raRef"), 17), { w: vw })] })
+    ], [lw, vw, pw]));
+
+    const seq = pg.querySelector(".seq-section");
+    if(seq && !seq.classList.contains("excluded")){
+      const sw = [Math.floor(W * 0.06), Math.floor(W * 0.30)]; sw.push(W - sw[0] - sw[1]);
+      const rows = [new D.TableRow({ tableHeader: true, children: [_wHead("#", sw[0]), _wHead("Step / operation", sw[1]), _wHead("Detail / method / controls", sw[2])] })];
+      $$('[data-key$=".sequence"] tr', pg).forEach((tr, i) => {
+        const c = tr.cells, ed = td => td.querySelector(".editable") || td;
+        rows.push(new D.TableRow({ cantSplit: true, children: [
+          _wCell(_wP(String(i + 1), { size: 17, align: D.AlignmentType.CENTER }), { w: sw[0] }),
+          _wCell(_wParas(ed(c[1]), 17), { w: sw[1] }),
+          _wCell(_wParas(ed(c[2]), 17), { w: sw[2] })] }));
+      });
+      kids.push(_wH2(_wText(seq.querySelector("h2")) || "Sequence of Operations"));
+      kids.push(_wTable(rows, sw));
+    }
+
+    const em = [["First Aid", "emerg.firstaid"], ["Fire / Evacuation", "emerg.fire"], ["Spill / Environmental", "emerg.spill"], ["Emergency Contacts", "emerg.contacts"]];
+    const ew = Math.floor(W * 0.25);
+    kids.push(_wH2("Emergency Arrangements"));
+    kids.push(_wTable(em.map(e => new D.TableRow({ children: [
+      _wCell(_wP(e[0], { bold: true, size: 17 }), { w: ew, fill: WORD_PALE }),
+      _wCell(_wParas(f(e[1]), 17), { w: W - ew })] })), [ew, W - ew]));
+
+    if(idx === pages.length - 1){
+      const so = tab.querySelector(".ms-signoff");
+      if(so){
+        const sig = [["Author", "ms.sig.author"], ["Position", "ms.sig.position"], ["Signed", "ms.sig.signed"], ["Date", "ms.sig.date"]];
+        const q = Math.floor(W / 4), qs = [q, q, q, W - 3 * q];
+        kids.push(_wH2(_wText(so.querySelector("h2")) || "Sign-off"));
+        kids.push(_wTable([new D.TableRow({ children: sig.map((x, i) =>
+          _wCell([_wP(x[0], { caps: true, size: 14, color: WORD_MUTED, after: 20 }), _wP(_wKey(tab, x[1]) || " ", { bold: true, size: 19 })], { w: qs[i], fill: WORD_PALE })) })], qs));
+      }
+    }
+  });
+  const bs = tab.querySelector(".signoff-ms");
+  if(bs){ kids.push(_wBreak()); head(); kids.push.apply(kids, _wSignoffSheet(bs, W)); }
+  return _wDoc(tab, kids, false, W);
+}
+
+window.exportWord = async function(){
+  if(typeof window.docx === "undefined"){
+    toast("Word library not loaded — check the internet connection and try again", "error"); return;
+  }
+  const activeTab = document.querySelector(".tab-panel.active");
+  if(!activeTab){ toast("No active tab", "error"); return; }
+  if(activeTab.id !== "tab-ra" && activeTab.id !== "tab-ms"){
+    toast("Word export is for the Risk Assessment and Method Statement tabs", "error"); return;
+  }
+  toast("Generating Word document…", "info");
+  try {
+    const doc = activeTab.id === "tab-ra" ? _wordRa(activeTab) : _wordMs(activeTab);
+    const blob = await window.docx.Packer.toBlob(doc);
+    const tabName = activeTab.id === "tab-ra" ? "RA" : "MS";
+    const brandSlug = (localStorage.getItem("brand.name") || "AHS").replace(/[^A-Za-z0-9]+/g, "").slice(0, 24) || "AHS";
+    _wSave(blob, brandSlug + "-" + tabName + "-" + new Date().toISOString().slice(0, 10) + ".docx");
+    toast("Word document saved — everything in it can be edited");
+  } catch (err){
+    console.error(err);
+    toast("Word export failed: " + err.message, "error");
+  }
+};
 
 window.exportPDF = async function(){
   if(typeof window.jspdf === "undefined" && typeof window.jsPDF === "undefined"){
