@@ -8300,7 +8300,8 @@ function _raArisingHtml(items){
 
   if(!items.length){
     return head + '<div class="dra-card"><p class="dra-sub" style="margin:0;">Nothing outstanding. '
-      + 'Anything you mark as still to arrange on a hazard row turns up here.</p></div>';
+      + 'Anything you mark as still to arrange on a hazard row turns up here.</p>'
+      + '<div class="arising-foot"><button type="button" class="btn btn-outline arising-compass" title="A small file of every note on this assessment, for Compass to put against the risk">Send to Compass</button></div></div>';
   }
 
   const meta = [["Risk assessment", d.ref], ["Task or activity", d.task],
@@ -8326,8 +8327,52 @@ function _raArisingHtml(items){
     + '<div class="arising-foot">'
     +   '<button type="button" class="btn btn-primary arising-pdf">Actions sheet PDF</button>'
     +   '<button type="button" class="btn btn-outline arising-copy">Copy to clipboard</button>'
+    +   '<button type="button" class="btn btn-outline arising-compass" title="A small file of every note on this assessment, for Compass to put against the risk">Send to Compass</button>'
     +   '<span class="dra-prog" style="margin-left:auto;">' + items.length + ' outstanding</span>'
     + '</div></div>';
+}
+
+/* ── Send to Compass (Simon, 6 November 2026) ──
+   Compass's risk overview lists "What we're doing about it" and "Already in
+   place"; this assessment's pinned notes are exactly that, hazard by hazard.
+   One small file carries them across: every note on every hazard, with its
+   kind and whether it is still to arrange (todo) or already in place (have),
+   under the assessment's reference. Compass imports it against the risk the
+   assessment belongs to, keyed by the reference and the note, so sending it
+   again updates rather than doubles. The assessment itself is unchanged. */
+function raCompassFile(){
+  const d = _raDocRef();
+  const hazards = [];
+  let no = 0;
+  $$("#raForms .form-page").forEach(page => {
+    $$(".hazardsTable tbody tr", page).filter(tr => !tr.classList.contains("note-edit")).forEach(tr => {
+      no += 1;
+      const hazCell = tr.querySelector("td .editable");
+      const hazard = hazCell ? hazCell.textContent.trim() : "";
+      const notes = _raNotes(tr).map(n => ({ kind: n.getAttribute("data-kind") || "", text: n.textContent.trim(),
+        status: n.getAttribute("data-status") === "todo" ? "todo" : "have" })).filter(n => n.text);
+      if(notes.length) hazards.push({ no: no, hazard: hazard, notes: notes });
+    });
+  });
+  return { app: "oprams", kind: "ra-for-compass", v: 1, made: new Date().toISOString().slice(0, 10),
+    ref: d.ref === "no reference set" ? "" : d.ref, task: d.task, location: d.location, project: d.project,
+    assessor: d.assessor, date: d.date, hazards: hazards };
+}
+/* The one save point, so a test can take the file instead. */
+function _raCompassSave(text, name){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+function raSendToCompass(){
+  const f = raCompassFile();
+  const n = f.hazards.reduce((s, h) => s + h.notes.length, 0);
+  if(!f.ref){ toast("Give the assessment a reference first - Compass files it under that", "error"); return; }
+  if(!n){ toast("Nothing to send - pin a note on a hazard first", "error"); return; }
+  const safe = f.ref.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "") || "assessment";
+  _raCompassSave(JSON.stringify(f, null, 1), "RA-" + safe + "-for-Compass.json");
+  toast("Saved. In Compass, open the risk and press From a risk assessment");
 }
 
 function _wireArisings(host){
@@ -8341,6 +8386,8 @@ function _wireArisings(host){
   }));
   const pdf = host.querySelector(".arising-pdf");
   if(pdf) pdf.addEventListener("click", () => raActionsSheet(items));
+  const cx = host.querySelector(".arising-compass");
+  if(cx) cx.addEventListener("click", raSendToCompass);
   const copy = host.querySelector(".arising-copy");
   if(copy) copy.addEventListener("click", () => {
     const text = items.map(i => i.kind + ": " + i.text + (i.hazard ? "  (" + i.hazard + ")" : "")).join("\n");
