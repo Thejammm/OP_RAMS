@@ -1440,33 +1440,51 @@ const SNIPPETS_RA = [
     "name": "RA — 08 — DSE",
     "rows": [
       {
-        "hazard": "Workstation (chair, desk, screen and keyboard position)",
+        "hazard": "Workstation set-up (chair, desk, keyboard and mouse)",
         "who": "Employees",
-        "how": "Back, neck and upper limb pain from long periods at a badly set up workstation",
+        "how": "Back, neck, shoulder and wrist pain from sitting badly at a workstation that does not fit the user",
         "initial": "medium",
-        "controls": "<strong>Reduce:</strong> Screen work broken up with other tasks or short breaks at least hourly.<br><strong>Control:</strong> Chair, screen and keyboard adjusted to the user using the DSE checklist. Screen at eye level and an arm's length away. Laptop on a stand with a separate keyboard and mouse.<br><strong>Safe system:</strong> Screen work carried out to MS-08.",
+        "controls": "<strong>Reduce:</strong> Workstation set to the user from the DSE self-assessment when they start and when it changes. Chair adjusted so feet are flat or on a footrest, thighs level and back supported. Laptop on a stand with a separate keyboard and mouse, kept close in with wrists straight.<br><strong>Control:</strong> Any ache or pain reported to the line manager and the assessment reviewed.<br><strong>Safe system:</strong> Screen work carried out to MS-08.",
         "residual": "low",
         "action": "Workshop Manager",
         "notes": [
           {
             "kind": "Monitoring",
-            "text": "To be confirmed by Easy Travel: DSE self-assessment completed for each user and reviewed when the workstation changes.",
+            "text": "To be confirmed by Easy Travel: DSE self-assessment completed for each user.",
             "status": "todo"
           }
         ]
       },
       {
-        "hazard": "Display screen (prolonged viewing)",
+        "hazard": "Display screen (position and glare)",
         "who": "Employees",
-        "how": "Eye strain and headaches from long periods looking at the screen",
+        "how": "Eye strain, headaches and neck strain from looking up, down or sideways at the screen",
         "initial": "medium",
-        "controls": "<strong>Reduce:</strong> Regular short breaks looking away from the screen.<br><strong>Control:</strong> Screen positioned to avoid glare from windows and lights.<br><strong>Safe system:</strong> Screen work carried out to MS-08.",
+        "controls": "<strong>Reduce:</strong> Screen at eye level, an arm's length away and square to the user.<br><strong>Isolate:</strong> Screen positioned away from glare from windows and lights, using blinds where fitted.<br><strong>Safe system:</strong> Screen work carried out to MS-08.",
+        "residual": "low",
+        "action": "Workshop Manager"
+      },
+      {
+        "hazard": "Long periods of screen work",
+        "who": "Employees",
+        "how": "Fatigue, eye strain and muscle aches building up over the day",
+        "initial": "medium",
+        "controls": "<strong>Reduce:</strong> Screen work broken up with other tasks or a short break at least every hour. Regular looks away from the screen.<br><strong>Safe system:</strong> Screen work carried out to MS-08.",
+        "residual": "low",
+        "action": "Workshop Manager"
+      },
+      {
+        "hazard": "Eyesight",
+        "who": "Employees",
+        "how": "Uncorrected eyesight problems cause eye strain and headaches",
+        "initial": "low",
+        "controls": "<strong>Control:</strong> Users can ask for an eye test paid for by the company (DSE Regulations 1992, Reg 5).<br><strong>Safe system:</strong> Screen work carried out to MS-08.",
         "residual": "low",
         "action": "Workshop Manager",
         "notes": [
           {
             "kind": "Information",
-            "text": "To be confirmed by Easy Travel: users told they can request an eye test paid for by the company.",
+            "text": "To be confirmed by Easy Travel: eye test offer in place and users told about it.",
             "status": "todo"
           }
         ]
@@ -1519,20 +1537,45 @@ const SNIPPETS_RA = [
     "name": "RA — 10 — Oil barrel lifting and storage",
     "rows": [
       {
-        "hazard": "Full oil barrel (about 200kg)",
-        "who": "Employees",
-        "how": "Serious back injury or crushing if a full barrel is lifted, rolled or tipped by hand",
+        "hazard": "Delivery vehicle in the yard (moving vehicle)",
+        "who": "Employees / Others nearby",
+        "how": "Person struck while the delivery vehicle reverses or is unloaded",
         "initial": "high",
-        "controls": "<strong>Eliminate:</strong> Full barrels never lifted or tipped by hand.<br><strong>Reduce:</strong> Full barrels moved only with the barrel trolley or the fork truck drum attachment.<br><strong>Control:</strong> Barrels stored at floor level. Empty barrels handled by two people.<br><strong>Safe system:</strong> Barrel handling carried out to MS-10.<br><strong>PPE:</strong> Safety footwear and gloves.",
+        "controls": "<strong>Reduce:</strong> Vehicle guided by a banksman to the position nearest the oil store, so the barrels travel the shortest distance.<br><strong>Isolate:</strong> Everyone else kept clear of the vehicle while it moves.<br><strong>Control:</strong> Unloading starts only once the engine is off and the handbrake is on.<br><strong>Safe system:</strong> Barrel handling carried out to MS-10.<br><strong>PPE:</strong> Hi-vis clothing in the yard.",
         "residual": "medium",
         "action": "Workshop Manager"
       },
       {
-        "hazard": "Engine oil (pollutant, slip hazard when spilt)",
-        "who": "Employees / Environment",
-        "how": "A leaking barrel makes the floor slippery and oil reaches the drains",
+        "hazard": "Full oil barrel (about 200kg)",
+        "who": "Employees",
+        "how": "Crush injury to feet, legs or body if the barrel tips, rolls or falls, and serious back injury if handled by hand",
+        "initial": "high",
+        "controls": "<strong>Eliminate:</strong> Full barrels never lifted, tipped or rolled by hand.<br><strong>Reduce:</strong> Full barrels moved only with the barrel trolley or the fork truck drum attachment; fork truck driven to MS-20.<br><strong>Control:</strong> Route checked and cleared before moving. Barrel strapped to the trolley and moved slowly. Nobody walks in front of the load.<br><strong>Safe system:</strong> Barrel handling carried out to MS-10.<br><strong>PPE:</strong> Safety footwear and gloves.",
+        "residual": "medium",
+        "action": "Workshop Manager",
+        "notes": [
+          {
+            "kind": "Equipment",
+            "text": "To be confirmed by Easy Travel: barrel trolley load rating, and fork truck drum attachment rated for 200kg and thoroughly examined under LOLER if it is lifting equipment.",
+            "status": "todo"
+          }
+        ]
+      },
+      {
+        "hazard": "Empty barrels (bulky, awkward shape)",
+        "who": "Employees",
+        "how": "Back strain or trapped fingers handling an empty barrel",
         "initial": "medium",
-        "controls": "<strong>Isolate:</strong> Barrels kept on a bunded pallet.<br><strong>Control:</strong> Barrels checked for damage when delivered and each time they are moved.<br><strong>Safe system:</strong> Barrel handling carried out to MS-10.",
+        "controls": "<strong>Reduce:</strong> Empty barrels moved on the trolley where possible, otherwise by two people.<br><strong>Safe system:</strong> Barrel handling carried out to MS-10.<br><strong>PPE:</strong> Gloves and safety footwear.",
+        "residual": "low",
+        "action": "Workshop Manager"
+      },
+      {
+        "hazard": "Engine oil (leaking or damaged barrel)",
+        "who": "Employees / Environment",
+        "how": "Slip on spilt oil, oil reaching the drains, and skin contact",
+        "initial": "medium",
+        "controls": "<strong>Eliminate:</strong> Damaged or leaking barrels refused on delivery.<br><strong>Isolate:</strong> Barrels stored at floor level on the bunded pallet.<br><strong>Control:</strong> Barrels checked each time they are moved. Any leak covered with absorbent straight away and reported to the Workshop Manager.<br><strong>Safe system:</strong> Barrel handling carried out to MS-10.<br><strong>PPE:</strong> Nitrile gloves.",
         "residual": "low",
         "action": "Workshop Manager",
         "notes": [
@@ -1549,20 +1592,47 @@ const SNIPPETS_RA = [
     "name": "RA — 11 — Personal for manual handling physical conditions",
     "rows": [
       {
-        "hazard": "Manual handling loads (for a person with a health condition, injury or pregnancy)",
-        "who": "Employees",
-        "how": "The condition is made worse by handling loads the person should not be lifting",
+        "hazard": "Loads handled by a person with reduced capability",
+        "who": "The employee concerned",
+        "how": "Their condition or injury is made worse, or they are injured, by loads they would normally handle",
         "initial": "medium",
-        "controls": "<strong>Reduce:</strong> Tasks adjusted for that person: lighter loads, lifting aids, or the task given to someone else.<br><strong>Control:</strong> Operative tells the line manager about any condition, injury or pregnancy that affects lifting. Separate assessment completed for new and expectant mothers.<br><strong>Safe system:</strong> Adjusting the work carried out to MS-11.",
+        "controls": "<strong>Eliminate:</strong> Tasks the person should not do taken off them and given to someone else.<br><strong>Reduce:</strong> Lighter loads, or lifting aids (trolley, sack truck), for the tasks they keep.<br><strong>Control:</strong> Changes agreed with the person, recorded and shared with their supervisor (Manual Handling Operations Regulations 1992, Reg 4(3)). Person stops and tells the supervisor if a task causes pain.<br><strong>Safe system:</strong> Adjusting the work carried out to MS-11.",
+        "residual": "low",
+        "action": "Workshop Manager"
+      },
+      {
+        "hazard": "A condition nobody has been told about",
+        "who": "The employee concerned",
+        "how": "Work is not adjusted because the condition is not known",
+        "initial": "medium",
+        "controls": "<strong>Control:</strong> Health questionnaire completed on starting and when circumstances change. Staff told to report any condition, injury or pregnancy as soon as they know.<br><strong>Safe system:</strong> Adjusting the work carried out to MS-11.",
         "residual": "low",
         "action": "Workshop Manager",
         "notes": [
           {
             "kind": "Monitoring",
-            "text": "To be confirmed by Easy Travel: health questionnaire on starting and when circumstances change.",
+            "text": "To be confirmed by Easy Travel: health questionnaire in place and used.",
             "status": "todo"
           }
         ]
+      },
+      {
+        "hazard": "Manual handling by a new or expectant mother",
+        "who": "The employee and her unborn child",
+        "how": "Heavy lifting, awkward postures and fatigue harm her or the pregnancy",
+        "initial": "medium",
+        "controls": "<strong>Eliminate:</strong> Heavy lifting removed from her work.<br><strong>Control:</strong> Separate new and expectant mother risk assessment completed once the employer is told in writing, and reviewed as the pregnancy progresses (MHSWR 1999, Regs 16 and 18).<br><strong>Safe system:</strong> Adjusting the work carried out to MS-11.",
+        "residual": "low",
+        "action": "Workshop Manager"
+      },
+      {
+        "hazard": "Return to work after absence or injury",
+        "who": "The employee concerned",
+        "how": "Re-injury from going straight back to full duties",
+        "initial": "medium",
+        "controls": "<strong>Reduce:</strong> Phased return with adjusted tasks agreed before starting.<br><strong>Control:</strong> Changes reviewed on return, when the condition changes, and if the person reports any difficulty.<br><strong>Safe system:</strong> Adjusting the work carried out to MS-11.",
+        "residual": "low",
+        "action": "Workshop Manager"
       }
     ]
   },
@@ -1570,38 +1640,54 @@ const SNIPPETS_RA = [
     "name": "RA — 12 — Oil drainer filling and draining",
     "rows": [
       {
-        "hazard": "Waste oil drainer under air pressure",
-        "who": "Employees / Others nearby",
-        "how": "Valves opened in the wrong order or a kinked hose sprays oil",
+        "hazard": "Full oil drainer (weight, top heavy)",
+        "who": "Employees",
+        "how": "Back strain or crushed feet moving the drainer, or it tipping over",
         "initial": "medium",
-        "controls": "<strong>Isolate:</strong> Drainer emptied only at the waste oil storage area.<br><strong>Control:</strong> Valve sequence posted at the drainer. Hose checked for kinks and secured in the receiving container before the valve opens.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.<br><strong>PPE:</strong> Eye protection.",
+        "controls": "<strong>Reduce:</strong> Moved on its own wheels by pushing, never pulled or carried, over a route checked and cleared first.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.<br><strong>PPE:</strong> Safety footwear.",
         "residual": "low",
         "action": "Workshop Manager"
       },
       {
-        "hazard": "Used engine oil (harmful to skin)",
-        "who": "Employees",
-        "how": "Repeated skin contact causes dermatitis; used oil contains harmful contaminants",
-        "initial": "medium",
-        "controls": "<strong>Control:</strong> Washing facilities at hand. Hands washed before eating and at the end of the shift.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.<br><strong>PPE:</strong> Nitrile gloves and eye protection.",
-        "residual": "low",
+        "hazard": "Drainer under compressed air (stored energy)",
+        "who": "Employees / Others nearby",
+        "how": "Hose whips or a coupling blows off and sprays oil into the eyes and face; the vessel could fail if over-pressurised",
+        "initial": "high",
+        "controls": "<strong>Reduce:</strong> Air pressure no higher than the drainer's rating. Air intake opened slowly.<br><strong>Isolate:</strong> Drain hose checked for kinks and secured in the waste container before any valve opens. Nobody else near the hose while it runs.<br><strong>Control:</strong> Taps opened and closed in the posted sequence, with a Take-5 before any valve opens. Air valve closed and airline removed before the oil intake tap is opened.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.<br><strong>PPE:</strong> Eye protection, and a face shield where there is a splash risk.",
+        "residual": "medium",
         "action": "Workshop Manager",
         "notes": [
           {
-            "kind": "Information",
-            "text": "To be confirmed by Easy Travel: COSHH assessment and SDS for used engine oil kept together and available in the workshop.",
+            "kind": "Equipment",
+            "text": "To be confirmed by Easy Travel: drainer make and maximum working pressure, and whether it needs a written scheme of examination (Pressure Systems Safety Regulations 2000).",
             "status": "todo"
           }
         ]
       },
       {
-        "hazard": "Waste oil (pollutant, slip hazard when spilt)",
-        "who": "Employees / Environment",
-        "how": "A spill makes the floor slippery and runs towards the drains",
+        "hazard": "Used engine oil (harmful to skin)",
+        "who": "Employees",
+        "how": "Dermatitis, and a cancer risk from repeated skin contact with used oil",
         "initial": "medium",
-        "controls": "<strong>Control:</strong> Drip tray under the hose connection. Spill kit at hand.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.",
+        "controls": "<strong>Control:</strong> No skin contact. Hands washed before eating and at the end of the shift; washing facilities at hand.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.<br><strong>PPE:</strong> Nitrile gloves and overalls.",
         "residual": "low",
         "action": "Workshop Manager"
+      },
+      {
+        "hazard": "Waste oil (spills and overfilling the container)",
+        "who": "Employees / Environment",
+        "how": "Slips, and oil reaching the drains",
+        "initial": "medium",
+        "controls": "<strong>Isolate:</strong> Emptying done only at the waste oil storage area.<br><strong>Control:</strong> Drip tray under the hose connection. Waste container checked for enough free space before starting. Drainer watched until empty.<br><strong>Safe system:</strong> Emptying the drainer carried out to MS-12.",
+        "residual": "low",
+        "action": "Workshop Manager",
+        "notes": [
+          {
+            "kind": "Equipment",
+            "text": "Spill kits provided on site.",
+            "status": "have"
+          }
+        ]
       }
     ]
   },
@@ -5357,7 +5443,7 @@ const SNIPPETS_MS = [
       "equipment": "Mobile oil drainer; airline; waste oil container",
       "ppe": "Nitrile gloves; safety footwear; eye protection if splash risk; overalls",
       "raRef": "RA-12",
-      "procedure": "Put on nitrile gloves and eye protection.\nTake the oil drainer out to the waste oil storage area.\nPosition the drain hose into the waste oil container.\nCheck the hose for kinks and secure it in the container before any valve opens.\nPlace the drip tray under the hose connection and keep the spill kit at hand.\nOpen the drain hose valve (located directly at the bottom of the barrel).\nEnsure the oil intake tap is in the closed position (located at the top, neck).\nEnsure the airline intake tap is closed (top of the barrel).\nAffix the air line onto the air intake coupling.\nOpen the air intake valve slowly until fully opened.\nConfirm the oil is flowing from the drain hose.\nMonitor the oil draining until no oil remains in the drainer.\nOnce complete, close the air intake valve (top of the barrel).\nRemove the airline coupling.\nOpen the oil intake tap.\nClose the oil drainer tap.\nRemove the drain hose from the waste oil container and re-secure to the drainer.\nClean up any spilled oil immediately.\nWash your hands before eating and at the end of the shift.\n\n**Do a Take-5 before opening any valves. Watch for kinks in the hose. Always close taps in the correct sequence.**",
+      "procedure": "Put on nitrile gloves and eye protection.\nTake the oil drainer out to the waste oil storage area.\nCheck the waste oil container has enough free space for the full contents of the drainer.\nPosition the drain hose into the waste oil container.\nCheck the hose for kinks and secure it in the container before any valve opens.\nPlace the drip tray under the hose connection and keep the spill kit at hand.\nOpen the drain hose valve (located directly at the bottom of the barrel).\nEnsure the oil intake tap is in the closed position (located at the top, neck).\nEnsure the airline intake tap is closed (top of the barrel).\nAffix the air line onto the air intake coupling.\nOpen the air intake valve slowly until fully opened.\nConfirm the oil is flowing from the drain hose.\nMonitor the oil draining until no oil remains in the drainer.\nOnce complete, close the air intake valve (top of the barrel).\nRemove the airline coupling.\nOpen the oil intake tap.\nClose the oil drainer tap.\nRemove the drain hose from the waste oil container and re-secure to the drainer.\nClean up any spilled oil immediately.\nWash your hands before eating and at the end of the shift.\n\n**Do a Take-5 before opening any valves. Watch for kinks in the hose. Always close taps in the correct sequence.**",
       "training": "Before starting: trained on the oil drainer and shown the COSHH assessment for used engine oil (PUWER 1998, Reg 9; COSHH 2002, Reg 12).",
       "risks": "Waste oil drainer under air pressure; Used engine oil (harmful to skin); Waste oil (pollutant, slip hazard when spilt)",
       "sequence": [
@@ -5683,7 +5769,7 @@ const SNIPPETS_MS = [
       "equipment": "Barrel trolley; fork truck with drum attachment; bunded pallet; spill kit at the oil store",
       "ppe": "Safety Footwear; Gloves",
       "raRef": "RA-10",
-      "procedure": "**On delivery**\nCheck each barrel for damage and leaks before accepting it.\nPut on safety footwear and gloves.\n\n**Moving**\nNever lift or tip a full barrel (about 200kg) by hand.\nMove full barrels only with the barrel trolley or the fork truck drum attachment. The fork truck is driven by a trained operator (see MS-20).\nClear the route first and move slowly.\nTwo people handle empty barrels.\n\n**Storing**\nStore barrels at floor level on the bunded pallet.\nCheck barrels for damage each time they are moved.\nCover any leak with absorbent straight away and report a damaged barrel to the Workshop Manager.",
+      "procedure": "**Delivery vehicle**\nGuide the delivery vehicle to the oil store with a banksman. Keep everyone else clear while it moves. Start unloading only once the engine is off and the handbrake is on.\n\n**On delivery**\nCheck each barrel for damage and leaks before accepting it.\nPut on safety footwear and gloves.\n\n**Moving**\nNever lift or tip a full barrel (about 200kg) by hand.\nMove full barrels only with the barrel trolley or the fork truck drum attachment. The fork truck is driven by a trained operator (see MS-20).\nClear the route first and move slowly.\nTwo people handle empty barrels.\n\n**Storing**\nStore barrels at floor level on the bunded pallet.\nCheck barrels for damage each time they are moved.\nCover any leak with absorbent straight away and report a damaged barrel to the Workshop Manager.",
       "training": "Before starting: shown how to use the barrel trolley. Fork truck used only by a trained and authorised operator (see MS-20).",
       "risks": "Full oil barrel (about 200kg); Engine oil (pollutant, slip hazard when spilt)",
       "sequence": [
