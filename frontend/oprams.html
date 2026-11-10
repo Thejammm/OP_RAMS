@@ -8794,6 +8794,24 @@ function renderAllArrangements(){
   $$("#raForms .form-page").forEach(renderArrangements);
 }
 
+/* The pointer line ("Actions arising from RA-xx") and the Actions arising tab
+   name the assessment by its reference, so both are redrawn whenever the
+   reference or the rows change, not only when a note does. Before this they
+   said "no reference set" after a snippet was inserted, and the Word and PDF
+   printed it that way until the page was reloaded (10 November 2026). */
+function _raRedraw(){
+  renderAllArrangements();
+  renderArisings();
+}
+// Typed or pasted into the reference on any form page. Delegated, so it also
+// covers form pages that arrive later from a restored blob or a clone.
+document.addEventListener("input", e => {
+  const el = e.target;
+  if(el && el.closest && el.closest('[data-key^="ra.meta.reference"]')) _raRedraw();
+});
+// The browser's own Print takes the page as it stands, so draw it fresh first.
+window.addEventListener("beforeprint", renderAllArrangements);
+
 /* The identifying details of the assessment, used on both documents so an
    auditor can tie the actions sheet back to the assessment it came from. */
 function _raDocRef(){
@@ -9020,6 +9038,7 @@ function _raActionsHtml(items, d){
    ──────────────────────────────────────────────────────────────────── */
 
 function raActionsSheet(items){
+  renderAllArrangements();   // the assessment's pointer names this sheet: keep the two in step
   items = items || _raAllTodo();
   if(!items.length){ toast("Nothing outstanding to put on a sheet"); return; }
 
@@ -9223,7 +9242,6 @@ function insertRaSnippet(btn){
   }
 
   persistContainer(tbody);
-  renderArrangements(formPage);
 
   // The assessment follows the snippet: its reference and task / activity
   // are set to the snippet chosen, every time one is inserted. Snippet names
@@ -9242,6 +9260,10 @@ function insertRaSnippet(btn){
     set("ra.meta.reference", "RA-" + refMatch[1]);
     set("ra.meta.task", refMatch[2].trim());
   }
+
+  // Only now, with the reference set, draw the pointer line and the Actions
+  // arising tab. Drawn before it, they named "no reference set".
+  _raRedraw();
 
   toast(inserted === 1 ? "Hazard row inserted" : (inserted + " hazard rows inserted"));
 }
@@ -10671,6 +10693,9 @@ window.exportWord = async function(){
   }
   toast("Generating Word document…", "info");
   try {
+    // The pointer line is read off the page: draw it fresh so it names the
+    // reference as it stands now, never a stale one.
+    if(activeTab.id === "tab-ra") renderAllArrangements();
     _wApplyBrand();
     const doc = activeTab.id === "tab-ra" ? _wordRa(activeTab) : _wordMs(activeTab);
     const blob = await window.docx.Packer.toBlob(doc);
@@ -10696,6 +10721,9 @@ window.exportPDF = async function(){
   // Determine the active tab — that is what we render
   const activeTab = document.querySelector(".tab-panel.active");
   if(!activeTab){ toast("No active tab", "error"); return; }
+
+  // As the Word export: the page is what prints, so draw the pointer fresh.
+  if(activeTab.id === "tab-ra") renderAllArrangements();
 
   // Actions arising has no sheets of its own: its PDF is the one page record.
   if(activeTab.id === "tab-actions"){ raActionsSheet(); return; }
