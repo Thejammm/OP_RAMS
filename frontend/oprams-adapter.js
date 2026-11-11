@@ -19,8 +19,54 @@
   const LS_PREFIX = 'easytravel.ramsv1.';
   const BRAND_PREFIX = 'brand.';
 
-  // Track which saved record (if any) is currently loaded.
+  // Track which saved record (if any) is currently loaded, and its name for
+  // the "Cloud: <name>" label, so it is always plain what Cloud Save will
+  // write to.
   let currentId = null;
+  let currentName = null;
+
+  // Which Cloud record the work held in this browser belongs to. It sits in
+  // localStorage beside the work itself, but outside the app's prefixes, so
+  // it is never snapshotted, exported or restored. It lets a refresh tell
+  // "this is still that record, unsaved edits and all" from "the screen now
+  // holds something else". The app's restore and Reset remove it too
+  // (detachFromCloudRecord in oprams.html), so the key is named there as well.
+  const HELD_KEY = 'oprams.cloud.record';
+  function readHeld() {
+    try {
+      const h = JSON.parse(localStorage.getItem(HELD_KEY) || 'null');
+      return h && h.id ? h : null;
+    } catch { return null; }
+  }
+  function writeHeld(id, name) {
+    try {
+      if (id) localStorage.setItem(HELD_KEY, JSON.stringify({ id, name: name || '' }));
+      else localStorage.removeItem(HELD_KEY);
+    } catch {}
+  }
+
+  function setCurrent(id, name) {
+    currentId = id || null;
+    currentName = currentId ? (name || null) : null;
+    writeHeld(currentId, currentName);
+    updateCloudLabel();
+  }
+
+  function updateCloudLabel() {
+    const el = document.getElementById('op-cloudLabel');
+    if (!el) return;
+    const text = currentId ? 'Cloud: ' + (currentName || 'record open') : 'Not saved to Cloud';
+    el.textContent = text;
+    el.title = currentId
+      ? 'Cloud Save will update the Cloud record “' + (currentName || '') + '”'
+      : 'Cloud Save will ask for a name and create a new Cloud record';
+  }
+
+  // A JSON restore in the app replaces what is on screen, so it lets go of
+  // the open record (it also takes ?id= out of the address). Drop it here
+  // too, so a Cloud Save in the moment before the reload cannot write the
+  // restored client into the other client's record.
+  window.addEventListener('oprams:cloud-detach', () => setCurrent(null));
 
   // ---------- Auth gate ----------
   (async function gate() {
@@ -56,7 +102,7 @@
 
     // Build cloud buttons matching the existing header style.
     const cloudWrap = document.createElement('div');
-    cloudWrap.style.cssText = 'display:inline-flex;gap:6px;align-items:center;padding-right:8px;margin-right:4px;border-right:1px solid rgba(0,0,0,0.12)';
+    cloudWrap.style.cssText = 'display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;padding-right:8px;margin-right:4px;border-right:1px solid rgba(0,0,0,0.12)';
 
     const btnCloudOpen = document.createElement('button');
     btnCloudOpen.type = 'button';
@@ -72,11 +118,28 @@
     btnCloudSave.className = 'btn btn-primary btn-sm';
     btnCloudSave.title = 'Save this RAMS to your account';
     btnCloudSave.textContent = 'Cloud Save';
-    btnCloudSave.addEventListener('click', handleCloudSave);
+    btnCloudSave.addEventListener('click', () => handleCloudSave(false));
 
+    // Always creates a new record, so a client can be split off without
+    // overwriting the one that is open.
+    const btnSaveAsNew = document.createElement('button');
+    btnSaveAsNew.type = 'button';
+    btnSaveAsNew.id = 'op-btnSaveAsNew';
+    btnSaveAsNew.className = 'btn btn-outline btn-sm';
+    btnSaveAsNew.title = 'Save this RAMS as a new Cloud record, leaving the open one as it is';
+    btnSaveAsNew.textContent = 'Save as new…';
+    btnSaveAsNew.addEventListener('click', () => handleCloudSave(true));
+
+    const cloudLabel = document.createElement('span');
+    cloudLabel.id = 'op-cloudLabel';
+    cloudLabel.style.cssText = 'font-size:12px;color:var(--text-muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+
+    cloudWrap.appendChild(cloudLabel);
     cloudWrap.appendChild(btnCloudOpen);
     cloudWrap.appendChild(btnCloudSave);
+    cloudWrap.appendChild(btnSaveAsNew);
     actions.insertBefore(cloudWrap, actions.firstChild);
+    updateCloudLabel();
 
     // User badge + logout
     const badge = document.createElement('div');
@@ -92,20 +155,22 @@
       window.location.href = LOGIN_PAGE;
     });
 
-    // If the URL has ?id=<uuid>, auto-load that record on entry — but use
-    // sessionStorage to break the load -> reload -> load loop. After loadById
-    // applies state and reloads, on the next page-load we see the flag and
-    // skip re-loading (the record's state is already in localStorage).
+    // Which record is on screen. The address names one (?id=) after Cloud
+    // Open or Cloud Save; the held marker says which record the work in this
+    // browser belongs to. When they agree, or there is no address, the work
+    // in the browser IS that record, so keep it: a refresh, Reset branding or
+    // signing in again must not fetch the record back over unsaved edits
+    // (it used to, every time). Only an address naming a DIFFERENT record
+    // fetches it, which is also what stops the load -> reload -> load loop.
     const params = new URLSearchParams(window.location.search);
     const idFromUrl = params.get('id');
-    if (idFromUrl) {
-      const justLoaded = sessionStorage.getItem('op-just-loaded-id');
-      if (justLoaded === idFromUrl) {
-        sessionStorage.removeItem('op-just-loaded-id');
-        currentId = idFromUrl;
-      } else {
-        loadById(idFromUrl);
-      }
+    const held = readHeld();
+    if (idFromUrl && (!held || held.id !== idFromUrl)) {
+      loadById(idFromUrl);
+    } else if (held) {
+      setCurrent(held.id, held.name);
+      rewriteUrlWithId(held.id);
+      confirmHeld(held.id);
     }
   }
 
@@ -126,8 +191,9 @@
     return { keys, savedAt: new Date().toISOString() };
   }
 
+  // Returns false if nothing was reloaded because the write failed.
   function applyStateAndReload(state) {
-    if (!state || typeof state !== 'object') return;
+    if (!state || typeof state !== 'object') return false;
     const keys = state.keys || {};
     try {
       const toDelete = [];
@@ -144,14 +210,18 @@
     } catch (err) {
       console.error('[oprams-adapter] apply state failed', err);
       alert('Could not load record into local storage: ' + (err && err.message || 'unknown'));
-      return;
+      return false;
     }
     location.reload();
+    return true;
   }
 
   // ---------- Save (push to server) ----------
-  async function handleCloudSave() {
-    const btn = document.getElementById('op-btnCloudSave');
+  // asNew = the "Save as new\u2026" button: always ask for a name and create a
+  // new record, even when one is open. Plain Cloud Save is as before: update
+  // the open record, or ask for a name when none is open.
+  async function handleCloudSave(asNew) {
+    const btn = document.getElementById(asNew ? 'op-btnSaveAsNew' : 'op-btnCloudSave');
     const original = btn ? btn.textContent : '';
     if (btn) { btn.disabled = true; btn.textContent = 'Saving\u2026'; }
 
@@ -159,17 +229,21 @@
       const state = snapshotState();
       const name = derivePrettyName();
 
-      if (currentId) {
-        await window.api.updateAssessment(currentId, { name, state });
+      if (currentId && !asNew) {
+        // State only: the record keeps the name it was given. Sending the
+        // derived name here renamed the record on every save and undid any
+        // Rename.
+        const { assessment } = await window.api.updateAssessment(currentId, { state });
+        setCurrent(currentId, assessment && assessment.name);
       } else {
-        const userName = prompt('Save this RAMS to your account as:', name);
+        const userName = prompt(asNew ? 'Save as a new Cloud record, named:' : 'Save this RAMS to your account as:', name);
         if (userName == null) {
           if (btn) { btn.disabled = false; btn.textContent = original; }
           return;
         }
         const finalName = (userName.trim() || name).slice(0, 250);
         const { assessment } = await window.api.createAssessment(finalName, state);
-        currentId = assessment.id;
+        setCurrent(assessment.id, assessment.name);
         rewriteUrlWithId(currentId);
       }
       if (btn) btn.textContent = 'Saved \u2713';
@@ -249,7 +323,7 @@
     document.getElementById('op-modal-close').addEventListener('click', close);
     document.getElementById('op-modal-new').addEventListener('click', () => {
       if (!confirm('Start a blank RAMS? Unsaved changes in the current form will be lost.')) return;
-      currentId = null;
+      setCurrent(null);
       rewriteUrlWithId('');
       try {
         const toDelete = [];
@@ -283,7 +357,7 @@
             <div style="display:flex;gap:6px;flex-shrink:0">
               <button type="button" data-load="${a.id}" class="btn btn-primary btn-sm">Load</button>
               <button type="button" data-rename="${a.id}" class="btn btn-outline btn-sm">Rename</button>
-              <button type="button" data-del="${a.id}" class="btn btn-outline btn-sm" style="color:#c0392b;border-color:#c0392b">Delete</button>
+              <button type="button" data-del="${a.id}" class="btn btn-outline btn-sm" style="color:var(--danger);border-color:var(--danger-brd)">Delete</button>
             </div>
           </div>
         `;
@@ -304,8 +378,10 @@
         const newName = prompt('Rename to:', currentName);
         if (!newName || newName.trim() === currentName) return;
         try {
-          await window.api.updateAssessment(id, { name: newName.trim().slice(0, 250) });
-          if (row) row.querySelector('div > div').textContent = newName.trim();
+          const { assessment } = await window.api.updateAssessment(id, { name: newName.trim().slice(0, 250) });
+          const saved = (assessment && assessment.name) || newName.trim();
+          if (row) row.querySelector('div > div').textContent = saved;
+          if (currentId === id) setCurrent(id, saved);
         } catch (err) {
           alert('Rename failed: ' + (err && err.message || 'unknown'));
         }
@@ -319,7 +395,7 @@
           const row = container.querySelector(`[data-row="${id}"]`);
           if (row) row.remove();
           if (currentId === id) {
-            currentId = null;
+            setCurrent(null);
             rewriteUrlWithId('');
           }
           if (!container.querySelector('[data-row]')) {
@@ -330,23 +406,41 @@
         }
       }));
     } catch (err) {
-      container.innerHTML = '<div style="color:#c0392b">Could not load your saved records: ' + escapeHtml(err && err.message ? err.message : 'unknown error') + '</div>';
+      container.innerHTML = '<div style="color:var(--danger)">Could not load your saved records: ' + escapeHtml(err && err.message ? err.message : 'unknown error') + '</div>';
     }
   }
 
   async function loadById(id) {
     try {
       const { assessment } = await window.api.getAssessment(id);
-      currentId = assessment.id;
+      // Sets the held marker too, so the reload that follows keeps this
+      // record's work rather than fetching it again.
+      setCurrent(assessment.id, assessment.name);
       rewriteUrlWithId(currentId);
-      // Mark that we just loaded this record. On the post-reload page-load
-      // the auto-load block in injectHeader sees this flag and skips
-      // re-fetching, breaking the load -> reload -> load loop.
-      try { sessionStorage.setItem('op-just-loaded-id', String(currentId)); } catch {}
-      applyStateAndReload(assessment.state);
+      if (applyStateAndReload(assessment.state) === false) {
+        // Only part of the record reached this browser: it is not that
+        // record, so do not let Cloud Save write it back over the record.
+        setCurrent(null);
+        rewriteUrlWithId('');
+      }
     } catch (err) {
       console.error('[oprams-adapter] loadById failed', err);
       alert('Load failed: ' + (err && err.message || 'unknown'));
     }
+  }
+
+  // The held record still there for this account? Picks up its current name
+  // (it may have been renamed on another device). If it has gone (deleted
+  // elsewhere, or another sign-in on this browser) let go of it, so Cloud
+  // Save asks for a name instead of failing. The list call carries names
+  // only, never the saved state. No answer (offline) changes nothing.
+  async function confirmHeld(id) {
+    try {
+      const { assessments } = await window.api.listAssessments();
+      if (currentId !== id) return;
+      const hit = (assessments || []).find(a => a.id === id);
+      if (hit) setCurrent(id, hit.name);
+      else { setCurrent(null); rewriteUrlWithId(''); }
+    } catch {}
   }
 })();

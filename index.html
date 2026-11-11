@@ -9929,6 +9929,9 @@ window.resetApp = function(){
   try {
     Object.keys(localStorage).filter(k => k.startsWith(LS_PREFIX)).forEach(k => localStorage.removeItem(k));
   } catch(e) {}
+  // A cleared screen is no longer the Cloud record that was open: let go of
+  // it, or Cloud Save would write the blank form over that record.
+  detachFromCloudRecord();
   location.reload();
 };
 
@@ -9943,18 +9946,33 @@ function exportJSON(){
   const blob = new Blob([JSON.stringify(out, null, 2)], {type:"application/json"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  // The file carries the producer's name, not the first client the app
-  // was ever built for. The KEYS inside stay easytravel.ramsv1. — they are
-  // the storage keys, and renaming them would orphan every saved form and
-  // break every backup already taken.
-  a.download = "AHS-RAMS-export-" + new Date().toISOString().slice(0,10) + ".json";
+  // The file is named for the client whose work it holds (the brand name),
+  // so one client's backup can be told from another's:
+  // <Company>_Oprams_Backup_<YYYY-MM-DD>.json, or AHS_... with no brand set.
+  // Only the NAME changed: the KEYS inside stay easytravel.ramsv1. — they
+  // are the storage keys, and renaming them would orphan every saved form
+  // and break every backup already taken.
+  a.download = backupFileName(localStorage.getItem("brand.name"), new Date());
   a.click();
   URL.revokeObjectURL(a.href);
   toast("Export saved");
 }
+/* "Acme Building Services" -> "Acme-Building-Services_Oprams_Backup_2026-11-11.json".
+   Spaces become hyphens; characters Windows will not take in a file name
+   (< > : " / \ | ? * and control characters) are dropped. */
+function backupFileName(brandName, when){
+  const company = String(brandName || "")
+    .replace(/[<>:"\/\\|?*\u0000-\u001f]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-{2,}/g, "-")
+    .replace(/^[-.]+|[-.]+$/g, "");
+  return (company || "AHS") + "_Oprams_Backup_" + when.toISOString().slice(0,10) + ".json";
+}
 function importJSON(){ $("#restoreFile").click(); }
 $("#restoreFile").addEventListener("change", e=>{
   const f = e.target.files[0]; if(!f) return;
+  e.target.value = "";   // so picking the same file again (after a Cancel) still fires
   const r = new FileReader();
   r.onload = ()=>{
     // "Bad backup file" used to be the answer to every failure here, including
@@ -9979,19 +9997,76 @@ $("#restoreFile").addEventListener("change", e=>{
       toast("No saved work in " + f.name + ". Nothing restored.", "error");
       return;
     }
-    let done = 0;
-    try{
-      entries.forEach(([k,v])=>{ localStorage.setItem(k, String(v)); done++; });
-    }catch(err){
-      toast("Storage is full: restored " + done + " of " + entries.length
-        + " items. Use Clear, then restore again.", "error");
+    // A restore means "open this client": it REPLACES what is on screen,
+    // brand included, rather than writing over the top. Writing over the top
+    // left any field or brand key the backup did not carry (a logo, a company
+    // name, an RA row) behind from the previous client.
+    if(!confirm("Restoring this backup replaces everything on screen, including the branding. "
+      + "Anything not saved to the Cloud or exported will be lost. Continue?")) return;
+    const res = replaceSavedWork(entries);
+    if(!res.ok){
+      toast(res.rolledBack
+        ? "Storage is full: only " + res.done + " of " + entries.length
+          + " items fit in this browser, so nothing was restored. Your previous work is back as it was."
+        : "Storage is full: restored " + res.done + " of " + entries.length
+          + " items, and the previous work could not be put back. Restore again or use Reset.", "error");
       return;
     }
-    toast("Restored " + done + " items — reloading…");
+    detachFromCloudRecord();
+    toast("Restored " + res.done + " items — reloading…");
     setTimeout(()=> location.reload(), 600);
   };
   r.readAsText(f);
 });
+
+/* Clear every saved-work key (LS_PREFIX and brand.) and write the given
+   [key, value] pairs in their place: the same wipe-and-write the Cloud Open
+   path does, so a restore leaves nothing of the previous client behind.
+   If the new set will not fit, the previous keys are put back, so a full
+   browser never leaves you with half of one client and none of the other. */
+function replaceSavedWork(entries){
+  const isOurs = k => k && (k.startsWith(LS_PREFIX) || k.startsWith("brand."));
+  const before = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(isOurs(k)) before.push([k, localStorage.getItem(k)]);
+  }
+  const wipe = ()=> before.concat(entries).forEach(([k])=>{ if(isOurs(k)) localStorage.removeItem(k); });
+  wipe();
+  let done = 0;
+  try{
+    entries.forEach(([k,v])=>{ localStorage.setItem(k, String(v)); done++; });
+    return { ok:true, done };
+  }catch(err){
+    try{
+      wipe();
+      before.forEach(([k,v])=> localStorage.setItem(k, v));
+      return { ok:false, done, rolledBack:true };
+    }catch(e){
+      return { ok:false, done, rolledBack:false };
+    }
+  }
+}
+
+/* After a restore or a Reset the screen no longer matches the Cloud record
+   that was open, so let go of it: take ?id= out of the address and remove
+   the cloud adapter's held-record marker ("oprams.cloud.record", the record
+   the work in this browser belongs to), or the reload would fetch that
+   record straight back over the restore, and the next Cloud Save would
+   write this client into the other client's record. Tells the adapter too,
+   when it is loaded. On the offline copy there is no id, no marker and no
+   adapter, so this does nothing there. */
+function detachFromCloudRecord(){
+  try{ localStorage.removeItem("oprams.cloud.record"); }catch(e){}
+  try{
+    const u = new URL(location.href);
+    if(u.searchParams.has("id")){
+      u.searchParams.delete("id");
+      history.replaceState(null, "", u.toString());
+    }
+  }catch(e){}
+  try{ window.dispatchEvent(new CustomEvent("oprams:cloud-detach")); }catch(e){}
+}
 
 /* ════════════════════════════════════════════════════════════════════
    PDF EXPORT — renders the visible tab via html2canvas, then jsPDF.
