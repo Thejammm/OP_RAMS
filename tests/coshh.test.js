@@ -157,6 +157,19 @@ const SDS = [
     }));
     check("fill: shown on screen as saved", screen.sub === "Example Primer TP-100" && screen.g === "C" && screen.rows === 3 && screen.gloves === "true", JSON.stringify(screen));
 
+    // ── PPE signs: BS EN ISO 7010 mandatory signs, worded as the Safety Signs
+    //    and Signals Regulations 1996 Sch 1 (13 Nov 2026) ──
+    const signs = await page.evaluate(() => Array.from(document.querySelectorAll("#coshhBody .coshh-ppe > div")).map(d => ({
+      iso: d.getAttribute("data-iso"), words: d.querySelector(".cx").textContent.trim(),
+      blue: (d.querySelector("svg.pic").innerHTML.match(/#005387/gi) || []).length,
+      round: d.querySelector("svg.pic").getAttribute("viewBox") === "0 0 265 265" })));
+    const wantSigns = [["M016", "Mask must be worn"], ["M008", "Safety boots must be worn"], ["M003", "Ear protection must be worn"],
+      ["M009", "Safety gloves must be worn"], ["M014", "Safety helmet must be worn"], ["M017", "Respiratory equipment must be worn"],
+      ["M013", "Face protection must be worn"], ["M004", "Eye protection must be worn"]];
+    check("PPE: the eight ISO 7010 mandatory signs with the Regulations' wording",
+      signs.length === 8 && wantSigns.every((w, i) => signs[i] && signs[i].iso === w[0] && signs[i].words === w[1] && signs[i].blue >= 1 && signs[i].round),
+      JSON.stringify(signs.map(s => s.iso + " " + s.words + " blue:" + s.blue)));
+
     // ── flash point: only the value after the label (13 Nov 2026: an R-134a
     //    SDS saying "Not applicable" came out as 5 °C, the 5 taken from
     //    "...found in Section 5.") ──
@@ -232,7 +245,7 @@ const SDS = [
       const zip = await JSZip.loadAsync(Buffer.from(word.data, "base64"));
       const xml = await zip.file("word/document.xml").async("string");
       const text = xml.replace(/<w:tab\/>/g, " ").replace(/<\/w:p>/g, "\n").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&apos;/g, "'");
-      const want = ["COSHH Risk Assessment", "Example Primer TP-100", "Example Coatings Ltd", "H317", "May cause an allergic skin reaction.", "P501", "Group C", "MEDIUM", "LOW", "EN 166", "EN ISO 374", "23 \u00b0C", "12/11/2027", "Simon Archer", "Absorb with sand"];
+      const want = ["COSHH Risk Assessment", "Example Primer TP-100", "Example Coatings Ltd", "H317", "May cause an allergic skin reaction.", "P501", "Group C", "MEDIUM", "LOW", "EN 166", "EN ISO 374", "Eye protection must be worn", "Safety gloves must be worn", "23 \u00b0C", "12/11/2027", "Simon Archer", "Absorb with sand"];
       const missing = want.filter(w => !text.includes(w));
       check("Word: carries the assessment", missing.length === 0, "missing: " + missing.join(", "));
       check("Word: landscape", /w:orient="landscape"/.test(xml), "");
