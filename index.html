@@ -13842,10 +13842,22 @@ function sdsParse(rawPages, fileName){
 
   // First aid (S4), fire (S5), release (S6), storage (S7), disposal (S13)
   m.firstAid = sdsBlock(sdsSub(S.firstaid, "4.1") || S.firstaid);
-  const isFp = l => /flash\s*-?\s*point/i.test(l) && /\d/.test(l);
-  const fp = (S.phys || []).find(isFp) || all.find(isFp) || "";
-  const fpm = fp.replace(/^.*?flash\s*-?\s*point/i, "").match(/([<>\u2264\u2265]=?|approx\.?|ca\.?)?\s*(-?\d+(?:[.,]\d+)?)\s*(?:\u00b0|deg)?\s*([CF])?/i);
-  if(fpm) m.flashPoint = ((fpm[1] ? fpm[1].replace(/approx\.?|ca\.?/i, "c.") + " " : "") + fpm[2] + " \u00b0" + (fpm[3] || "C").toUpperCase()).trim();
+  /* Flash point: only the value on a line that STARTS with the label. Not the
+     "flash point method" line, and never a number from a reference such as
+     "(...found in Section 5.)": that is how an R-134a SDS that says "Not
+     applicable" came out as 5 \u00b0C (Simon, 13 Nov 2026). "Not applicable" is
+     an answer and is kept as one. */
+  for(const l of (S.phys || []).concat(all)){
+    // a dash is a separator only with a space after it: "-40 \u00b0C" is a value
+    const mm = l.trim().match(/^flash\s*-?\s*point\b(?!\s*(?:method|test))\s*(?:\([^)]*\))?\s*(?:[:\u2013]|-(?=\s))?\s*(.*)$/i);
+    if(!mm || !mm[1].trim()) continue;
+    const v = mm[1].trim();
+    const num = v.match(/^([<>\u2264\u2265]=?|approx\.?|ca\.?)?\s*(-?\d+(?:[.,]\d+)?)\s*(?:\u00b0|deg\.?)?\s*([CF])\b/i);
+    if(num){ m.flashPoint = ((num[1] ? num[1].replace(/approx\.?|ca\.?/i, "c.") + " " : "") + num[2] + " \u00b0" + num[3].toUpperCase()).trim(); break; }
+    const bare = v.match(/^([<>\u2264\u2265]=?)?\s*(-?\d+(?:[.,]\d+)?)\s*$/);
+    if(bare){ m.flashPoint = (bare[1] || "") + bare[2]; break; }
+    if(/not\s+applicable|\bn\/a\b|not\s+relevant|\bgas\b|does\s+not\s+flash|no\s+flash\s*point|^none\b/i.test(v)){ m.flashPoint = "Not applicable"; break; }
+  }
   m.fireFighting = sdsBlock(sdsSub(S.fire, "5.3") || S.fire, { drop: /^(advice\s+for\s+fire|special\s+protective\s+equipment|precautions\s+for\s+fire)/i });
   const rel = (sdsSub(S.release, "6.1") || []).concat(sdsSub(S.release, "6.3") || []);
   const relText = sdsBlock(rel.length ? rel : S.release, { dropRefs: true, drop: /^reference\s+to\s+other\s+sections/i });

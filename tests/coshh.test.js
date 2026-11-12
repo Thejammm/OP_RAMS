@@ -157,6 +157,27 @@ const SDS = [
     }));
     check("fill: shown on screen as saved", screen.sub === "Example Primer TP-100" && screen.g === "C" && screen.rows === 3 && screen.gloves === "true", JSON.stringify(screen));
 
+    // ── flash point: only the value after the label (13 Nov 2026: an R-134a
+    //    SDS saying "Not applicable" came out as 5 °C, the 5 taken from
+    //    "...found in Section 5.") ──
+    const fp = await page.evaluate(() => {
+      const one = lines => window._coshh.parse([["SECTION 9: Physical and chemical properties"].concat(lines)], "t.pdf").model.flashPoint;
+      return {
+        gas: one(["FLASH POINT:  Not applicable", "(Flash point method and additional flammability data are found in Section 5.)"]),
+        dot: one(["FLASH POINT:  Gas, not applicable per DOT regulations", "FLASH POINT METHOD:  Not applicable"]),
+        cup: one(["Flash point (closed cup)  -40 °C"]),
+        bare: one(["Flash point  >100"]),
+        methodOnly: one(["Flash point method  ASTM D93", "See Section 5 for details."]),
+        f: one(["Flash point:  73.4 °F"])
+      };
+    });
+    check("flash point: 'Not applicable' kept, no number taken from 'Section 5'", fp.gas === "Not applicable", JSON.stringify(fp.gas));
+    check("flash point: 'Gas, not applicable' is Not applicable", fp.dot === "Not applicable", JSON.stringify(fp.dot));
+    check("flash point: closed cup -40 °C", fp.cup === "-40 °C", JSON.stringify(fp.cup));
+    check("flash point: a bare >100 kept as given", fp.bare === ">100", JSON.stringify(fp.bare));
+    check("flash point: a method line alone gives nothing (left to check)", fp.methodOnly === "", JSON.stringify(fp.methodOnly));
+    check("flash point: °F kept as °F", fp.f === "73.4 °F", JSON.stringify(fp.f));
+
     // ── the assessor rates and edits ──
     await page.click('#coshhBody [data-f="ref"]'); await page.keyboard.type("CO-001");
     await page.select('#coshhBody select[data-f="riskBefore"]', "medium");
