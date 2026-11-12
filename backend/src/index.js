@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
 import assessmentRoutes from './routes/assessments.js';
+import { passwordViewStatus } from './auth/passwordView.js';
 
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
@@ -72,7 +73,14 @@ app.use((err, req, res, _next) => {
   res.status(500).json({ error: { code: 'INTERNAL', message: 'Something went wrong.' } });
 });
 
+// Say once at start-up whether the admin password view is on (never the key).
+const pwView = passwordViewStatus();
+if (pwView === 'invalid') logger.error('PASSWORD_VIEW_KEY is set but is not 32 bytes of base64: no viewable password copies will be stored.');
+else logger.info({ passwordView: pwView }, 'admin password view');
+
+// Tests drive the app through supertest and need no port. With two test files
+// importing this module in parallel workers, both listening on 3000 failed the run.
 const port = Number(process.env.PORT) || 3000;
-app.listen(port, () => logger.info({ port }, 'listening'));
+if (process.env.NODE_ENV !== 'test') app.listen(port, () => logger.info({ port }, 'listening'));
 
 export default app;

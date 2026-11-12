@@ -43,6 +43,8 @@
 
     // admin
     listUsers:       () => request('GET', '/admin/users'),
+    // The stored copy of one user's password, or { password: null }. Every call is logged on the server.
+    getUserPassword: (id) => request('GET', `/admin/users/${encodeURIComponent(id)}/password`),
     createUser:      (data) => request('POST', '/admin/users', data),
     updateUser:      (id, patch) => request('PATCH', `/admin/users/${encodeURIComponent(id)}`, patch),
     revokeSessions:  (id) => request('POST', `/admin/users/${encodeURIComponent(id)}/revoke-sessions`),

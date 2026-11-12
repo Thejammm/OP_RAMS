@@ -50,6 +50,25 @@
   .msg{padding:10px;border:1px solid transparent;font-size:13px;margin-top:10px;display:none}
   .msg.ok{background:#e8f7ef;border-color:#a7e3c0;color:#1a7a4a;display:block}
   .msg.err{background:#fee2e2;border-color:#fca5a5;color:#b91c1c;display:block}
+  /* Show/hide eye inside a password box (pw-eye.js), and the Password column */
+  .pw-wrap{position:relative}
+  .pw-wrap input{padding-right:42px}
+  button.pw-eye{position:absolute;top:0;right:0;bottom:0;width:40px;margin:0;padding:0;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--text-muted);cursor:pointer}
+  button.pw-eye:hover{background:transparent;color:var(--accent-dark)}
+  button.pw-eye:focus-visible,button.pw-view:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  button.pw-eye svg,button.pw-view svg{width:18px;height:18px}
+  .pw-cell{display:flex;align-items:center;gap:6px;min-width:150px}
+  .pw-val{font-size:13px;letter-spacing:.08em;color:var(--text-muted)}
+  .pw-val.shown{font-family:ui-monospace,Consolas,monospace;letter-spacing:0;color:var(--text);user-select:all;word-break:break-all}
+  .pw-none{font-size:12px;color:var(--text-muted)}
+  button.pw-view{width:36px;height:32px;padding:0;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);color:var(--text-muted);flex-shrink:0}
+  button.pw-view:hover{background:var(--accent-light);border-color:var(--accent);color:var(--accent-dark)}
+  tr.setpw-row td{background:var(--accent-light);border-bottom:1px solid var(--accent)}
+  .setpw-form{display:flex;flex-wrap:wrap;align-items:end;gap:10px}
+  .setpw-form .field{flex:1 1 260px;max-width:380px}
+  button.ghost{background:var(--surface);color:var(--text-muted);border:1px solid var(--border)}
+  button.ghost:hover{background:var(--surface);color:var(--text);border-color:var(--accent)}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 </style>
 </head>
 <body>
@@ -77,7 +96,10 @@
         </div>
         <div>
           <label for="new-password">Password (min 12 chars)</label>
-          <input type="password" id="new-password" minlength="12" required>
+          <div class="pw-wrap">
+            <input type="password" id="new-password" minlength="12" autocomplete="new-password" required>
+            <button type="button" class="pw-eye" data-pw-eye aria-label="Show password"></button>
+          </div>
         </div>
         <div>
           <label for="new-role">Role</label>
@@ -97,17 +119,21 @@
 
     <div class="card">
       <h2>Users</h2>
+      <div class="table-scroll">
       <table id="users-table">
         <thead><tr>
-          <th>Email</th><th>Role</th><th>Status</th><th>Access expires</th><th>Actions</th>
+          <th>Email</th><th>Role</th><th>Status</th><th>Password</th><th>Access expires</th><th>Actions</th>
         </tr></thead>
         <tbody></tbody>
       </table>
+      </div>
+      <div class="msg" id="users-msg"></div>
     </div>
   </div>
 
   <script src="config.js"></script>
   <script src="api.js"></script>
+  <script src="pw-eye.js"></script>
   <script>
     let currentUser = null;
 
@@ -122,22 +148,67 @@
       }
     }
 
+    // Passwords on screen: shown on request, hidden again after 30 seconds.
+    const PW_DOTS = '••••••••••';
+    const PW_SHOW_MS = 30000;
+    const NOT_STORED = 'Not stored, reset to set';
+    const pwTimers = new Map();
+
+    function hidePassword(id) {
+      clearTimeout(pwTimers.get(id)); pwTimers.delete(id);
+      const val = document.querySelector(`.pw-val[data-id="${id}"]`);
+      const btn = document.querySelector(`button.pw-view[data-id="${id}"]`);
+      if (val) { val.textContent = PW_DOTS; val.classList.remove('shown'); }
+      if (btn) { btn.innerHTML = window.pwEye.icons.show; btn.setAttribute('aria-label', 'Show password'); btn.title = 'Show password'; btn.setAttribute('aria-pressed', 'false'); }
+    }
+
+    async function showPassword(id) {
+      const val = document.querySelector(`.pw-val[data-id="${id}"]`);
+      const btn = document.querySelector(`button.pw-view[data-id="${id}"]`);
+      if (!val || !btn) return;
+      btn.disabled = true;
+      try {
+        const { password } = await window.api.getUserPassword(id);
+        if (password === null || password === undefined) {
+          val.closest('.pw-cell').innerHTML = `<span class="pw-none">${NOT_STORED}</span>`;
+          return;
+        }
+        val.textContent = password;
+        val.classList.add('shown');
+        btn.innerHTML = window.pwEye.icons.hide; btn.setAttribute('aria-label', 'Hide password'); btn.title = 'Hide password'; btn.setAttribute('aria-pressed', 'true');
+        clearTimeout(pwTimers.get(id));
+        pwTimers.set(id, setTimeout(() => hidePassword(id), PW_SHOW_MS));
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function passwordCell(u) {
+      if (!u.password_stored) return `<span class="pw-none">${NOT_STORED}</span>`;
+      return `<div class="pw-cell"><span class="pw-val" data-id="${u.id}">${PW_DOTS}</span>`
+        + `<button type="button" class="pw-view" data-action="view-pw" data-id="${u.id}" aria-label="Show password" title="Show password" aria-pressed="false">${window.pwEye.icons.show}</button></div>`;
+    }
+
     async function loadUsers() {
+      pwTimers.forEach((t) => clearTimeout(t)); pwTimers.clear();
       const { users } = await window.api.listUsers();
       const tbody = document.querySelector('#users-table tbody');
       tbody.innerHTML = '';
       users.forEach((u) => {
         const tr = document.createElement('tr');
+        tr.dataset.id = u.id;
         const expiry = u.access_expires_at ? new Date(u.access_expires_at).toLocaleDateString() : '—';
         tr.innerHTML = `
           <td>${escapeHtml(u.email)}</td>
           <td><span class="badge ${u.role === 'admin' ? 'admin' : ''}">${u.role}</span></td>
           <td><span class="badge ${u.is_active ? 'ok' : 'off'}">${u.is_active ? 'active' : 'inactive'}</span></td>
+          <td>${passwordCell(u)}</td>
           <td>
             <input type="date" class="expiry-input" data-id="${u.id}" value="${u.access_expires_at ? u.access_expires_at.slice(0,10) : ''}" style="width:150px">
             <button class="small" data-action="save-expiry" data-id="${u.id}">Save</button>
           </td>
           <td>
+            <button class="small" data-action="set-pw" data-id="${u.id}" data-email="${escapeHtml(u.email)}">Set password</button>
             <button class="small amber" data-action="revoke" data-id="${u.id}">Revoke sessions</button>
             ${u.is_active ? '' : `<button class="small" data-action="reactivate" data-id="${u.id}">Reactivate</button>`}
             <button class="small red" data-action="delete" data-id="${u.id}" data-email="${escapeHtml(u.email)}" ${u.id === currentUser.id ? 'disabled' : ''}>Delete</button>
@@ -145,6 +216,68 @@
         tbody.appendChild(tr);
       });
     }
+
+    // Set password: one inline form under the user's row.
+    function closeSetPassword() {
+      document.querySelectorAll('tr.setpw-row').forEach((r) => r.remove());
+    }
+
+    function openSetPassword(id, email) {
+      closeSetPassword();
+      const row = document.querySelector(`#users-table tbody tr[data-id="${id}"]`);
+      if (!row) return;
+      const tr = document.createElement('tr');
+      tr.className = 'setpw-row';
+      tr.innerHTML = `<td colspan="6">
+          <form class="setpw-form" data-id="${id}" data-email="${escapeHtml(email)}">
+            <div class="field">
+              <label for="setpw-input">New password for <span style="text-transform:none">${escapeHtml(email)}</span> (min 12 chars)</label>
+              <div class="pw-wrap">
+                <input type="password" id="setpw-input" minlength="12" autocomplete="new-password" required>
+                <button type="button" class="pw-eye" data-pw-eye aria-label="Show password"></button>
+              </div>
+            </div>
+            <button type="submit">Save password</button>
+            <button type="button" class="ghost" data-action="cancel-pw">Cancel</button>
+          </form>
+          <div class="msg" id="setpw-msg"></div>
+        </td>`;
+      row.after(tr);
+      window.pwEye.wire(tr);
+      tr.querySelector('input').focus();
+    }
+
+    document.querySelector('#users-table').addEventListener('submit', async (e) => {
+      const form = e.target.closest('form.setpw-form');
+      if (!form) return;
+      e.preventDefault();
+      const id = form.dataset.id;
+      const email = form.dataset.email;
+      const input = form.querySelector('input');
+      const msg = document.getElementById('setpw-msg');
+      const password = input.value;
+      if (password.length < 12) {
+        msg.className = 'msg err'; msg.textContent = 'The password must be at least 12 characters.';
+        return;
+      }
+      const self = currentUser && id === currentUser.id;
+      if (self && !confirm('This signs you out of every session, including this one.\n\nNote: the admin password is set back to the server\'s ADMIN_PASSWORD setting each time the app is redeployed.')) return;
+      const saveBtn = form.querySelector('button[type="submit"]');
+      saveBtn.disabled = true;
+      try {
+        await window.api.updateUser(id, { password });
+        input.value = '';
+        if (self) { window.location.href = 'index.html'; return; }
+        await loadUsers();
+        const done = document.getElementById('users-msg');
+        done.className = 'msg ok';
+        done.textContent = `Password set for ${email}. They have been signed out and need the new password to sign in.`;
+      } catch (err) {
+        msg.className = 'msg err'; msg.textContent = err.message;
+      } finally {
+        saveBtn.disabled = false;
+      }
+    });
 
     function escapeHtml(s) {
       return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -165,6 +298,7 @@
         });
         msg.className = 'msg ok'; msg.textContent = 'User created.';
         e.target.reset();
+        window.pwEye.hideAll(e.target);
         await loadUsers();
       } catch (err) {
         msg.className = 'msg err'; msg.textContent = err.message;
@@ -176,6 +310,16 @@
       if (!btn) return;
       const id = btn.dataset.id;
       const action = btn.dataset.action;
+      // Buttons without an action (the eye in a box, Save password) are handled elsewhere,
+      // and must not reload the table under an open form.
+      if (!action) return;
+      if (action === 'view-pw') {
+        if (btn.getAttribute('aria-pressed') === 'true') hidePassword(id);
+        else await showPassword(id).catch((err) => alert(err.message));
+        return;
+      }
+      if (action === 'set-pw') { openSetPassword(id, btn.dataset.email); return; }
+      if (action === 'cancel-pw') { closeSetPassword(); return; }
       try {
         if (action === 'revoke') {
           if (!confirm('Kick this user out of all active sessions?')) return;
