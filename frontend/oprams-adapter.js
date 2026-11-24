@@ -294,6 +294,18 @@
   }
 
   // ---------- Saved records modal ----------
+  // The same guard is in oprams.html; this file keeps its own copy so it never depends
+  // on which version of the page the browser has in its cache.
+  // A pop-up closes on a click outside it ONLY when the press AND the release were both
+  // outside. Selecting text by dragging past the edge of the box also fires a click on
+  // the backdrop, which closed the box under the user's hands and lost what they had typed.
+  // Every pop-up uses this guard; never write a bare click-to-close backdrop.
+  function _backdropClose(ov, fn){
+    if(!ov) return;
+    ov.addEventListener('mousedown', function(e){ ov._downSelf = (e.target === ov); }, true);
+    ov.addEventListener('mouseup', function(e){ if(e.target !== ov) ov._downSelf = false; }, true);
+    ov.addEventListener('click', function(e){ if(ov._downSelf && e.target === ov) fn(); ov._downSelf = false; });
+  }
   async function openSavedModal() {
     const backdrop = document.createElement('div');
     backdrop.id = 'op-saved-backdrop';
@@ -319,7 +331,7 @@
     document.body.appendChild(backdrop);
 
     const close = () => backdrop.remove();
-    backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+    _backdropClose(backdrop, close);
     document.getElementById('op-modal-close').addEventListener('click', close);
     document.getElementById('op-modal-new').addEventListener('click', () => {
       if (!confirm('Start a blank RAMS? Unsaved changes in the current form will be lost.')) return;

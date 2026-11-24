@@ -11829,6 +11829,16 @@ function msPlanBreaks(c, idx){
 }
 
 /* ── the preview ─────────────────────────────────────────────────────── */
+// A pop-up closes on a click outside it ONLY when the press AND the release were both
+// outside. Selecting text by dragging past the edge of the box also fires a click on
+// the backdrop, which closed the box under the user's hands and lost what they had typed.
+// Every pop-up uses this guard; never write a bare click-to-close backdrop.
+function _backdropClose(ov, fn){
+  if(!ov) return;
+  ov.addEventListener('mousedown', function(e){ ov._downSelf = (e.target === ov); }, true);
+  ov.addEventListener('mouseup', function(e){ if(e.target !== ov) ov._downSelf = false; }, true);
+  ov.addEventListener('click', function(e){ if(ov._downSelf && e.target === ov) fn(); ov._downSelf = false; });
+}
 function msPreviewOpen(){
   const tab = $("#tab-ms");
   const sheet = tab ? tab.querySelector(".sheet") : null;
@@ -11854,12 +11864,9 @@ function msPreviewOpen(){
   document.body.appendChild(back);
   const body = back.querySelector(".prev-body");
 
-  /* A backdrop click closes it ONLY if the mousedown started on the
-     backdrop. Bare click-to-close means a drag that finishes outside the
-     window shuts the preview from under you mid-drag. */
-  let downOnBack = false;
-  back.addEventListener('mousedown', e => { downOnBack = (e.target === back); });
-  back.addEventListener('click', e => { if(e.target === back && downOnBack) back.remove(); });
+  /* Bare click-to-close means a drag that finishes outside the window shuts
+     the preview from under you mid-drag. */
+  _backdropClose(back, () => back.remove());
   back.querySelector(".prev-close").addEventListener("click", () => back.remove());
 
   const render = () => {
